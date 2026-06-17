@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mappning lärandemål – IAGG</title>
+<link rel="stylesheet" href="https://use.typekit.net/zkx2sji.css">
+<style>
+  :root {
+    --dark: #24273a;
+    --accent: #e2005e;
+    --link: #0077cc;
+    --bg: #fefefe;
+    --border: #e4e4e4;
+    --text: #24273a;
+    --muted: #737272;
+    --match: #2d7a45;
+    --match-bg: #e8f5ec;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: acumin-pro, Helvetica, sans-serif; font-weight: 300; font-size: 1rem; color: var(--text); background: var(--bg); line-height: 1.55; }
+  .topbar { background: var(--dark); padding: 0.6rem 2.5rem; font-size: 0.875rem; }
+  .topbar a { display: inline-block; color: #fff; background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.32); padding: 0.28rem 0.95rem; border-radius: 999px; text-decoration: none; font-weight: 400; transition: background 0.15s, border-color 0.15s; }
+  .topbar a:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .topbar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .prog-switch { display: flex; align-items: center; gap: 0.45rem; font-size: 0.75rem; color: rgba(254,254,254,0.45); white-space: nowrap; }
+  .prog-switch a { color: rgba(254,254,254,0.75); text-decoration: none; padding: 0.18rem 0.65rem; border: 1px solid rgba(255,255,255,0.18); border-radius: 999px; font-size: 0.75rem; font-weight: 400; transition: background 0.15s, color 0.15s, border-color 0.15s; }
+  .prog-switch a:hover { color: #fff; border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.08); }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 2.5rem 2rem 4rem; }
+  h1 { font-weight: 300; font-size: 2rem; margin-bottom: 0.5rem; }
+  .subtitle { font-size: 1rem; color: var(--muted); margin-bottom: 1.5rem; }
+
+  .intro { font-size: 0.9375rem; color: var(--muted); margin-bottom: 1.5rem; line-height: 1.65; max-width: 780px; }
+  .intro p { margin-bottom: 0.6rem; }
+  .intro strong { color: var(--text); font-weight: 500; }
+
+  .legend { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1.75rem; font-size: 0.8125rem; color: var(--muted); }
+  .legend-item { display: flex; align-items: center; gap: 0.4rem; }
+  .legend-swatch { width: 14px; height: 14px; border-radius: 2px; flex-shrink: 0; background: var(--match-bg); border: 1px solid var(--match); }
+  .legend-none { background: #f4f4f4; border: 1px solid var(--border); }
+  .legend-miss { background: repeating-linear-gradient(-45deg, #e8e8e8, #e8e8e8 3px, #f2f2f2 3px, #f2f2f2 6px); border: 1px solid #ccc; }
+
+  .section-label { font-size: 0.8125rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin: 2rem 0 0.5rem; }
+
+  .matrix-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 4px; margin-bottom: 1.5rem; }
+  table.matrix { border-collapse: collapse; font-size: 0.8125rem; min-width: 100%; }
+  table.matrix th, table.matrix td { border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); padding: 0.4rem 0.5rem; text-align: center; vertical-align: middle; }
+  table.matrix th:last-child, table.matrix td:last-child { border-right: none; }
+  table.matrix tr:last-child th, table.matrix tr:last-child td { border-bottom: none; }
+
+  table.matrix thead th.course-col {
+    background: #f9f9f9;
+    font-family: "SF Mono", Menlo, monospace;
+    font-size: 0.75rem; font-weight: 500;
+    color: var(--text);
+    white-space: nowrap;
+    min-width: 42px;
+    height: 110px;
+    vertical-align: bottom;
+    padding: 0.25rem;
+  }
+  table.matrix thead th.course-col span {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    display: inline-block;
+    padding-bottom: 0.5rem;
+  }
+  table.matrix thead th.course-col a { color: var(--link); text-decoration: none; }
+  table.matrix thead th.course-col a:hover { text-decoration: underline; }
+  table.matrix thead th.course-col.missing a { color: #aaa; }
+
+  table.matrix tbody th.goal {
+    text-align: left; font-weight: 400; font-size: 0.8125rem;
+    background: #fafafa; padding: 0.55rem 0.75rem; line-height: 1.4;
+    min-width: 440px; max-width: 540px;
+    border-right: 2px solid var(--border);
+  }
+  table.matrix tbody th.goal .goal-id {
+    display: inline-block;
+    font-family: "SF Mono", Menlo, monospace; font-weight: 600;
+    font-size: 0.6875rem; color: var(--accent); margin-right: 0.4rem;
+    background: #fff; padding: 0.05rem 0.3rem; border-radius: 2px; border: 1px solid var(--border);
+  }
+
+  tr.cat-row th {
+    background: #1e4faa;
+    color: #fff;
+    text-align: left;
+    font-weight: 500;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    padding: 0.45rem 0.75rem;
+  }
+  tr.cat-row.cat-row-generell th { background: var(--dark); color: #fff; }
+
+  td.match { background: var(--match-bg); color: var(--match); font-weight: 600; cursor: pointer; transition: background 0.12s; }
+  td.match:hover { background: #d3edda; }
+  td.match::before { content: '●'; font-size: 0.875rem; }
+  td.nomatch { color: transparent; }
+  td.missing { background: repeating-linear-gradient(-45deg, #e8e8e8, #e8e8e8 3px, #f2f2f2 3px, #f2f2f2 6px); color: transparent; }
+
+  /* Evidence modal */
+  .ev-modal { position: fixed; inset: 0; z-index: 1000; display: none; }
+  .ev-modal.open { display: block; }
+  .ev-backdrop { position: absolute; inset: 0; background: rgba(36,39,58,0.55); }
+  .ev-dialog { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); background: #fff; border-radius: 6px; width: min(620px, 92vw); max-height: 82vh; overflow-y: auto; box-shadow: 0 12px 48px rgba(0,0,0,0.25); }
+  .ev-header { padding: 1rem 1.25rem 0.75rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; }
+  .ev-header-text .ev-course { font-family: "SF Mono", Menlo, monospace; font-size: 0.8125rem; color: var(--muted); margin-bottom: 0.2rem; }
+  .ev-header-text .ev-goal-id { display: inline-block; font-family: "SF Mono", Menlo, monospace; font-weight: 600; font-size: 0.6875rem; color: var(--accent); background: #fff; padding: 0.05rem 0.3rem; border-radius: 2px; border: 1px solid var(--border); margin-right: 0.4rem; }
+  .ev-header-text .ev-goal-text { font-size: 0.9375rem; font-weight: 400; line-height: 1.4; color: var(--text); }
+  .ev-close { background: none; border: none; font-size: 1.5rem; line-height: 1; color: var(--muted); cursor: pointer; padding: 0 0.25rem; flex-shrink: 0; }
+  .ev-close:hover { color: var(--accent); }
+  .ev-body { padding: 1rem 1.25rem 1.25rem; }
+  .ev-body .ev-section-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin-bottom: 0.6rem; }
+  .ev-body ul { list-style: none; padding: 0; margin: 0 0 1rem; }
+  .ev-body li { padding: 0.5rem 0.75rem; margin-bottom: 0.4rem; background: var(--match-bg); border-left: 3px solid var(--match); font-size: 0.875rem; line-height: 1.5; color: var(--text); border-radius: 0 3px 3px 0; }
+  .ev-body li::before { content: '\201C'; margin-right: 0.1rem; color: var(--match); }
+  .ev-body li::after { content: '\201D'; margin-left: 0.1rem; color: var(--match); }
+  .ev-body .ev-link { display: inline-block; font-size: 0.8125rem; color: var(--link); text-decoration: none; margin-top: 0.25rem; }
+  .ev-body .ev-link:hover { text-decoration: underline; }
+
+  .caveat { background: #fdf6e3; border: 1px solid #e8d9a5; border-radius: 4px; padding: 0.85rem 1rem; font-size: 0.875rem; color: #6a5a20; margin-bottom: 2rem; line-height: 1.55; }
+  footer { background: var(--dark); color: rgba(254,254,254,0.6); text-align: center; padding: 1.5rem 2.5rem; font-size: 0.875rem; font-weight: 300; }
+</style>
+</head>
+<body>
+  <div class="topbar"><a href="s2iag.html">&larr; IAGG-programmet</a><span class="prog-switch"><span>Byt program:</span><a href="s1stv-mappning.html">SVEP</a><a href="s2psc-mappning.html">MaPS</a></span></div>
+  <div class="container">
+    <h1>Mappning: l&auml;randem&aring;l &rarr; examensm&aring;l</h1>
+    <p class="subtitle">IAGG (S2IAG) &middot; Utbildningsplan vs. g&auml;llande kursplaner</p>
+
+    <div class="intro">
+      <p>
+        Matrisen visar vilka examensm&aring;l som <strong>uttryckligen t&auml;cks</strong> av l&auml;randem&aring;len
+        i respektive kursplan. F&ouml;rst visas <strong>generella examensm&aring;l fr&aring;n h&ouml;gskolef&ouml;rordningen</strong>
+        (m&auml;rkta G-KF/G-FF/G-VF), d&auml;refter <strong>lokala examensm&aring;l fr&aring;n utbildningsplanen</strong>.
+      </p>
+      <p>
+        En <span style="color:var(--match); font-weight:600">&#9679;</span> i en cell betyder att
+        kursplanens l&auml;randem&aring;l svarar mot examensm&aring;let.
+      </p>
+    </div>
+
+        <div class="legend">
+      <div class="legend-item"><span class="legend-swatch"></span> Kursplanens l&auml;randem&aring;l motsvarar examensm&aring;let</div>
+      <div class="legend-item"><span class="legend-swatch legend-none"></span> Ingen explicit koppling i kursplanen</div>
+      <div class="legend-item"><span class="legend-swatch legend-miss"></span> Kursplan saknas</div>
+      <div class="legend-item"><em>KF = Knowledge &middot; FF = Skills &middot; VF = Judgement</em></div>
+    </div>
+
+    <div class="section-label">Mappningsmatris</div>
+
+    <div class="matrix-wrap">
+      <table class="matrix">
+        <thead>
+          <tr>
+            <th class="goal" style="text-align:left; background:#fafafa;">Examensm&aring;l</th>
+            <th class="course-col" data-tip="Theoretical and Historical Perspectives on Global Governance"><span><a href="s2iag.html#kurs-AG2110">AG2110</a></span></th>
+            <th class="course-col" data-tip="International Administration and Policy"><span><a href="s2iag.html#kurs-AG2120">AG2120</a></span></th>
+            <th class="course-col" data-tip="The Quality of Government in a Comparative Perspective"><span><a href="s2iag.html#kurs-SK2212">SK2212</a></span></th>
+            <th class="course-col" data-tip="Internship (15 hp)"><span><a href="s2iag.html#kurs-AG2440">AG2440</a></span></th>
+            <th class="course-col" data-tip="Internship (30 hp)"><span><a href="s2iag.html#kurs-AG2450">AG2450</a></span></th>
+            <th class="course-col" data-tip="The Performance of Democracies"><span><a href="s2iag.html#kurs-SK2211">SK2211</a></span></th>
+            <th class="course-col" data-tip="European Environment and Energy"><span><a href="s2iag.html#kurs-EU2210">EU2210</a></span></th>
+            <th class="course-col" data-tip="Europe in the World"><span><a href="s2iag.html#kurs-EU2215">EU2215</a></span></th>
+            <th class="course-col" data-tip="Applied Qualitative Research Methods, Problems and Design"><span><a href="s2iag.html#kurs-SF2323">SF2323</a></span></th>
+            <th class="course-col" data-tip="Applied Research Design and Quantitative Research Methods"><span><a href="s2iag.html#kurs-SF2324">SF2324</a></span></th>
+            <th class="course-col" data-tip="Advanced Quantitative Methods in the Social Sciences"><span><a href="s2iag.html#kurs-SK2301">SK2301</a></span></th>
+            <th class="course-col" data-tip="Master's Thesis for IAGG"><span><a href="s2iag.html#kurs-AG2500">AG2500</a></span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="cat-row cat-row-generell"><th colspan="13">Generella examensm&aring;l (h&ouml;gskolef&ouml;rordningen) &mdash; Kunskap och förståelse</th></tr>
+          <tr>
+            <th class="goal"><span class="goal-id">G-KF1</span> visa kunskap och förståelse inom huvudområdet för utbildningen, inbegripet såväl brett kunnande inom området som väsentligt fördjupade kunskaper inom vissa delar av området samt fördjupad insikt i aktuellt forsknings- och utvecklingsarbete</th>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="match"></td>
+          </tr>
+          <tr>
+            <th class="goal"><span class="goal-id">G-KF2</span> visa fördjupad metodkunskap inom huvudområdet för utbildningen</th>
+            <td class="nomatch"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="match"></td>
+            <td class="nomatch"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+          </tr>
+          <tr class="cat-row cat-row-generell"><th colspan="13">Generella examensm&aring;l (h&ouml;gskolef&ouml;rordningen) &mdash; Färdighet och förmåga</th></tr>
+          <tr>
+            <th class="goal"><span class="goal-id">G-FF1</span> visa förmåga att kritiskt och systematiskt integrera kunskap och att analysera, bedöma och hantera komplexa företeelser, frågeställningar och situationer även med begränsad information</th>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="nomatch"></td>
+            <td class="match"></td>
+          </tr>
+          <tr>
+            <th class="goal"><span class="goal-id">G-FF2</span> visa förmåga att kritiskt, självständigt och kreativt identifiera och formulera frågeställningar, att planera och med adekvata metoder genomföra kvalificerade uppgifter inom givna tidsramar och därigenom bidra till kunskapsutvecklingen samt att utvärdera detta arbete</th>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="nomatch"></td>
+            <td class="match"></td>
+          </tr>
+          <tr>
+            <th class="goal"><span class="goal-id">G-FF3</span> visa förmåga att i såväl nationella som internationella sammanhang muntligt och skriftligt klart redogöra för och diskutera sina slutsatser och den kunskap och de argument som ligger till grund för dessa i dialog med olika grupper</th>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="nomatch"></td>
+            <td class="match"></td>
+          </tr>
+          <tr>
+            <th class="goal"><span class="goal-id">G-FF4</span> visa sådan färdighet som fordras för att deltaga i forsknings- och utvecklingsarbete eller för att självständigt arbeta i annan kvalificerad verksamhet</th>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="nomatch"></td>
+            <td class="match"></td>
+          </tr>
+          <tr class="cat-row cat-row-generell"><th colspan="13">Generella examensm&aring;l (h&ouml;gskolef&ouml;rordningen) &mdash; Värderingsförmåga och förhållningssätt</th></tr>
+          <tr>
+            <th class="goal"><span class="goal-id">G-VF1</span> visa förmåga att inom huvudområdet för utbildningen göra bedömningar med hänsyn till relevanta vetenskapliga, samhälleliga och etiska aspekter samt visa medvetenhet om etiska aspekter på forsknings- och utvecklingsarbete</th>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+          </tr>
+          <tr>
+            <th class="goal"><span class="goal-id">G-VF2</span> visa insikt om vetenskapens möjligheter och begränsningar, dess roll i samhället och människors ansvar för hur den används</th>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+          </tr>
+          <tr>
+            <th class="goal"><span class="goal-id">G-VF3</span> visa förmåga att identifiera sitt behov av ytterligare kunskap och att ta ansvar för sin kunskapsutveckling</th>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="nomatch"></td>
+            <td class="match"></td>
+          </tr>
+          <tr class="cat-row"><th colspan="13">Lokala examensm&aring;l &mdash; Knowledge and understanding</th></tr>
+
+          <tr>
+            <th class="goal"><span class="goal-id">KF1</span> Have in-depth knowledge of the main issues addressed at the international level and an understanding of how these issues are interrelated</th>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="match"></td>
+          </tr>
+
+          <tr class="cat-row"><th colspan="13">Lokala examensm&aring;l &mdash; Competence and skills</th></tr>
+
+          <tr>
+            <th class="goal"><span class="goal-id">FF1</span> Demonstrate advanced ability to evaluate and apply insights and findings from multiple fields of study in order to analytically elucidate political and societal issues of international significance</th>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="nomatch"></td>
+            <td class="match"></td>
+            <td class="nomatch"></td>
+            <td class="match"></td>
+          </tr>
+
+          <tr>
+            <th class="goal"><span class="goal-id">FF2</span> Demonstrate advanced ability to independently produce and present research reports</th>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="nomatch"></td>
+            <td class="match"></td>
+          </tr>
+
+          <tr class="cat-row"><th colspan="13">Lokala examensm&aring;l &mdash; Judgement and approach</th></tr>
+
+          <tr>
+            <th class="goal"><span class="goal-id">VF1</span> Demonstrate advanced ability to analyze international issues and research topics from different perspectives</th>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="nomatch"></td>
+            <td class="match"></td>
+          </tr>
+
+          <tr>
+            <th class="goal"><span class="goal-id">VF2</span> Demonstrate advanced ability to critically evaluate theories and hypothesis using established research methods</th>
+            <td class="nomatch"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="match"></td>
+            <td class="nomatch"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+            <td class="match"></td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <footer>Statsvetenskapliga institutionen, G&ouml;teborgs universitet</footer>
+
+  <div class="ev-modal" id="evModal" role="dialog" aria-modal="true">
+    <div class="ev-backdrop" data-close></div>
+    <div class="ev-dialog">
+      <div class="ev-header">
+        <div class="ev-header-text">
+          <div class="ev-course" id="evCourse"></div>
+          <div><span class="ev-goal-id" id="evGoalId"></span><span class="ev-goal-text" id="evGoalText"></span></div>
+        </div>
+        <button class="ev-close" data-close aria-label="Stäng">&times;</button>
+      </div>
+      <div class="ev-body">
+        <div class="ev-section-label">Relevanta l&auml;randem&aring;l i kursplanen</div>
+        <ul id="evQuotes"></ul>
+        <a class="ev-link" id="evPdfLink" target="_blank">&Ouml;ppna hela kursplanen (PDF) &rarr;</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  (function() {
+    // Generella examensmål från högskoleförordningen (masterexamen, bilaga 2)
+    const GENERAL_GOALS = {
+      'G-KF1': 'visa kunskap och förståelse inom huvudområdet för utbildningen, inbegripet såväl brett kunnande inom området som väsentligt fördjupade kunskaper inom vissa delar av området samt fördjupad insikt i aktuellt forsknings- och utvecklingsarbete',
+      'G-KF2': 'visa fördjupad metodkunskap inom huvudområdet för utbildningen',
+      'G-FF1': 'visa förmåga att kritiskt och systematiskt integrera kunskap och att analysera, bedöma och hantera komplexa företeelser, frågeställningar och situationer även med begränsad information',
+      'G-FF2': 'visa förmåga att kritiskt, självständigt och kreativt identifiera och formulera frågeställningar, att planera och med adekvata metoder genomföra kvalificerade uppgifter inom givna tidsramar och därigenom bidra till kunskapsutvecklingen samt att utvärdera detta arbete',
+      'G-FF3': 'visa förmåga att i såväl nationella som internationella sammanhang muntligt och skriftligt klart redogöra för och diskutera sina slutsatser och den kunskap och de argument som ligger till grund för dessa i dialog med olika grupper',
+      'G-FF4': 'visa sådan färdighet som fordras för att deltaga i forsknings- och utvecklingsarbete eller för att självständigt arbeta i annan kvalificerad verksamhet',
+      'G-VF1': 'visa förmåga att inom huvudområdet för utbildningen göra bedömningar med hänsyn till relevanta vetenskapliga, samhälleliga och etiska aspekter samt visa medvetenhet om etiska aspekter på forsknings- och utvecklingsarbete',
+      'G-VF2': 'visa insikt om vetenskapens möjligheter och begränsningar, dess roll i samhället och människors ansvar för hur den används',
+      'G-VF3': 'visa förmåga att identifiera sitt behov av ytterligare kunskap och att ta ansvar för sin kunskapsutveckling'
+    };
+
+    const GENERAL_TO_LOCAL = {
+      'G-KF1': ['KF1'],
+      'G-KF2': ['VF2'],
+      'G-FF1': ['FF1','VF1'],
+      'G-FF2': ['FF2'],
+      'G-FF3': ['FF2'],
+      'G-FF4': ['FF2'],
+      'G-VF1': ['FF1','VF1','VF2'],
+      'G-VF2': ['VF1','VF2'],
+      'G-VF3': []
+    };
+
+    const GOALS = {
+      'KF1': 'Have in-depth knowledge of the main issues addressed at the international level and an understanding of how these issues are interrelated',
+      'FF1': 'Demonstrate advanced ability to evaluate and apply insights and findings from multiple fields of study in order to analytically elucidate political and societal issues of international significance',
+      'FF2': 'Demonstrate advanced ability to independently produce and present research reports',
+      'VF1': 'Demonstrate advanced ability to analyze international issues and research topics from different perspectives',
+      'VF2': 'Demonstrate advanced ability to critically evaluate theories and hypothesis using established research methods'
+    };
+
+const EV = {
+      'AG2110': {
+        KF1: ['identifiera hur internationella organisationers roll har utvecklats under efterkrigstiden', 'utvärdera stora trender och tankeskolor i internationella policy områden som mänskliga rättigheter, utveckling, säkerhet, globalisering, internationell handel och internationellt bistånd'],
+        FF1: ['undersöka teoretiska ramar på globala styrningsåtgärder och hur det kan tillämpas på olika internationella utmaningar', 'argumentera övertygande för att uppmärksamma en internationell fråga och främja möjliga lösningar för globala utmaningar'],
+        FF2: ['presentera teorier om global styrning och analyser av globala utmaningar', 'självständigt arbeta fram text i enlighet med god akademisk standard'],
+        VF1: ['analysera och utvärdera teoretiska tillvägagångssätt inom den global styrning genom att kritiskt bedöma deras användbarhet på nuvarande utmaningar inom den globala styrningen', 'visa på medvetenhet om vilka utmaningarna är för den globala styrningen och hur de kan lösas']
+      },
+      'AG2120': {
+        KF1: ['fördjupat analysera några policy nyckelfrågor som styrs (eller inte styrs) på internationell nivå, och hur de relaterar med varandra'],
+        FF1: ['analysera hur internationella policy insatser interagerar med nationella förhållanden - politiska, rättsliga, institutionella, ekonomiska och kulturella – och hur de påverkar resultaten', 'kartlägga och sammanfatta befintlig kunskap om specifika policy insatser och deras effekter'],
+        FF2: ['kommunicera resultat av en policyanalys till en akademisk publik och praktiker, muntligt så väl som skriftligt', 'argumentera på ett övertygande sätt för att uppmärksamma en fråga', 'självständigt arbeta fram text'],
+        VF1: ['utvärdera policy behov, genomförande och resultat, både ur ett akademiskt och ett policy perspektiv', 'få en fördjupad förståelse och kritiskt värdera samhällsvetenskaplig forskning på grundval av olika analytiska perspektiv'],
+        VF2: ['undersöka och kritiskt analysera de metoder som används i praktiken inom dessa policyområden, särskilt inom utvecklingsbiståndet', 'få en fördjupad förståelse och kritiskt värdera samhällsvetenskaplig forskning']
+      },
+      'SK2212': {
+        KF1: ['visa fördjupad kunskap om begreppet den samhällsstyrningens kvalitet (Quality of Government, QoG)', 'visa fördjupad kunskap om avancerade teoretiska ramverk som visar på vilken effekt hög/låg kvalitet på samhällsstyrningen har på den mänskliga utvecklingen'],
+        FF1: ['kritiskt utvärdera och jämföra avancerade teoretiska ramverk', 'granska och kritiskt utvärdera empiriska fynd från litteraturen'],
+        FF2: ['självständigt utarbeta en originalartikel om några centrala aspekter av QoGs forskningsagenda', 'effektivt kommunicera komplexa idéer till en akademisk publik'],
+        VF2: ['kritiskt utvärdera teoretiska ramverk och empiriska fynd för att identifiera motsägelser och områden som är underforskade']
+      },
+      'AG2440': {
+        FF2: ['självständigt producera analytiskt arbete av betydande relevans för praktikorganisationen', 'muntligt och skriftligt diskutera, presentera och värdera erfarenheter från praktiken']
+      },
+      'AG2450': {
+        FF2: ['självständigt producera analytiskt arbete av betydande relevans för praktikorganisationen', 'muntligt och skriftligt diskutera, presentera och värdera erfarenheter från praktiken']
+      },
+      'SK2211': {
+        KF1: ['Visa fördjupad kunskap om institutionella skillnader mellan demokratier, samt hur dessa skillnader kan relateras till demokratiers prestationsförmåga'],
+        FF1: ['Granska och jämföra empiriska resultat från olika typer av akademisk litteratur', 'Kritiskt värdera forskningsresultat samt identifiera motsättningar eller luckor'],
+        FF2: ['Självständigt utforma ett förslag på ett mindre forskningsprojekt', 'Självständigt arbeta fram text'],
+        VF1: ['Systematisera och integrera, samt kritiskt värdera, olika teorier om vilka faktorer som påverkar demokratiers prestationsförmåga'],
+        VF2: ['Kritiskt värdera forskningsresultat samt identifiera motsättningar eller luckor']
+      },
+      'EU2210': {
+        KF1: ['Ha fördjupade kunskaper om de ekonomiska, rättsliga och politiska förutsättningarna för miljö- och energipolitik i Europeiska unionen'],
+        FF1: ['Analysera specifika miljöfrågor med avseende på vilken roll EU-institutioner, olika medlemsstater, icke-statliga organisationer och lobbygrupper spelar i policyprocessen, och EU:s roll i internationellt miljöarbete'],
+        FF2: ['Presentera och argumentera för egna analyser av Europeisk energi- eller miljöpolitik', 'Formulera och argumentera för intressanta forskningsproblem inom området miljö och energi i Europa', 'Självständigt arbeta fram text'],
+        VF1: ['Förklara och utvärdera Europeisk politik med avseende på specifika miljö- eller energipolitiska frågor']
+      },
+      'EU2215': {
+        KF1: ['ha fördjupad kunskap om hur Europas roll i världen har utvecklats och hur Europas närvaro i internationella politiska och ekonomiska system kan förstås', 'ha fördjupad kunskap om Europas roll i världen i frågor som rör säkerhet, handel och migration'],
+        FF1: ['ha förmåga att välja och tillämpa begrepp och teorier på specifika empiriska forskningsproblem och bedöma de grundläggande för- och nackdelarna med dessa val'],
+        FF2: ['ha förmåga att planera och presentera forskning', 'självständigt arbeta fram text i enlighet med god akademisk standard'],
+        VF1: ['kunna kritiskt analysera och tänka teoretiskt om Europas roll i världen, på basis av underbyggda argument'],
+        VF2: ['ha förmåga att kritiskt bedöma nyttan av olika teoretiska och metodologiska ansatser', 'ha fördjupad kunskap om nyttan av olika teorier och metoder som används för att studera säkerhet, handel och migration i ett globalt sammanhang']
+      },
+      'SF2323': {
+        FF2: ['Visa fördjupad förmåga att utforma en kvalitativ studie', 'Visa fördjupad förmåga att genomföra jämförande fallstudier, observationer, intervjuer och olika former av textanalys', 'Självständigt arbeta fram text'],
+        VF1: ['Identifiera och bedöma etiska problem som är relevanta för kvalitativ forskning'],
+        VF2: ['Värdera hur valet av metod och design påverkas av problemformulering och teoretiska utgångspunkter', 'Kritiskt värdera hur de val som görs möjliggör respektive begränsar vilka slutsatser som kan dras av en undersökning'],
+        'G-VF3': ['Visa fördjupad förmåga att utforma en kvalitativ studie', 'Kritiskt värdera hur de val som görs möjliggör respektive begränsar vilka slutsatser som kan dras av en undersökning']
+      },
+      'SF2324': {
+        FF1: ['Utvärdera och argumentera för hur olika forskningsdesign passar specifika forskningsfrågor'],
+        FF2: ['Specificera, utvärdera och testa hypoteser och förklarande modeller', 'Presentera och tydligt tolka resultat från kvantitativa analyser', 'Självständigt arbeta fram text'],
+        VF1: ['Identifiera och bedöma etiska problem relaterade till forskning om mänskligt beteende'],
+        VF2: ['Utvärdera validiteten och reliabiliteten i sekundärdata och olika slags datakällor', 'Utvärdera och argumentera för hur olika forskningsdesign passar specifika forskningsfrågor'],
+        'G-VF3': ['Utforma och planera ett självständigt forskningsprojekt med hjälp av kvantitativa metoder', 'Utvärdera och argumentera för hur olika forskningsdesign passar specifika forskningsfrågor']
+      },
+      'AG2500': {
+        KF1: ['Förstå och självständigt tillämpa forskningens perspektiv och angreppssätt för att genomföra ett samhällsvetenskaplig forskningsprojekt som är relevant för ämnet Internationell administration och global samhällsstyrning'],
+        FF1: ['Kritiskt utvärdera tillförlitligheten av slutsatser och resultat av den akademiska forskningen och policy utredningar'],
+        FF2: ['Självständigt planera, genomföra och presentera ett medelstort forskningsprojekt som uppfyller akademiska normer vad gäller tillförlitlighet, validitet, originalitet, organisation och effektiv kommunikation', 'Kommunicera resultaten muntligt och skriftligt till olika målgrupper'],
+        VF1: ['Identifiera och kritiskt bedöma etiska problem relaterade till forskning om mänskligt beteende'],
+        VF2: ['Kreativt och självständig välja ett lämpligt metodiskt tillvägagångssätt för att svara på en specificerad policy fråga eller samhällsvetenskaplig fråga', 'Kritiskt utvärdera tillförlitligheten av slutsatser och resultat'],
+        'G-VF3': ['Kreativt, kritiskt och självständigt identifiera, formulera och avgränsa en originell vetenskaplig fråga som är relevant för ämnet Internationell administration och global samhällsstyrning', 'Systematiskt och kritiskt samla in och sammanställa empiriska data och / eller identifiera och utvärdera befintlig empirisk data och bedöma om uppgifterna är tillräckliga och lämplig för att med tillförlitlighet svara på en forskningsfråga']
+      },
+      'SK2301': {
+        VF2: ['Critically assess quantitative studies by evaluating research design, data quality, assumptions, and interpretations, and identify reasonable alternative explanations and limitations']
+      }
+    };
+
+    const PDF = {
+      'AG2110': 'underlag/1_kursplaner/kursplaner_individuella/kursplan_AG2110.pdf',
+      'AG2120': 'underlag/1_kursplaner/kursplaner_individuella/kursplan_AG2120.pdf',
+      'SK2212': 'https://www.gu.se/syllabus/68ac6bec-9a1b-11f0-9057-117f39d847e2',
+      'AG2440': 'https://www.gu.se/syllabus/e3392acd-b579-11f0-aa27-85c3b3d64a85',
+      'AG2450': 'https://www.gu.se/syllabus/dd3e560e-b5a0-11f0-aa27-85c3b3d64a85',
+      'SK2211': 'https://www.gu.se/syllabus/46b00214-fc6d-11f0-95d1-a55d9bf44f52',
+      'EU2210': 'https://www.gu.se/syllabus/b7784bf3-cade-11f0-a255-650837bd40cf',
+      'EU2215': 'https://www.gu.se/syllabus/e3cebf21-fdc4-11f0-a175-d5cca53741e2',
+      'SF2323': 'https://www.gu.se/syllabus/87278888-cae2-11f0-a255-650837bd40cf',
+      'SF2324': 'https://www.gu.se/syllabus/a62d27fb-cf6c-11f0-9d49-fd72c5714a36',
+      'AG2500': 'underlag/1_kursplaner/kursplaner_individuella/kursplan_AG2500.pdf',
+      'SK2301': 'https://www.gu.se/en/syllabus/b827e7ae-1173-11f1-a595-2099b7b04bbf'
+    };
+
+    const table = document.querySelector('table.matrix');
+    const courseCodes = Array.from(table.querySelectorAll('thead th.course-col'))
+      .map(th => th.textContent.trim());
+
+    table.querySelectorAll('tbody tr').forEach(tr => {
+      const goalEl = tr.querySelector('th.goal .goal-id');
+      if (!goalEl) return;
+      const goalId = goalEl.textContent.trim();
+      const cells = tr.querySelectorAll('td');
+      cells.forEach((td, i) => {
+        if (td.classList.contains('match')) {
+          const course = courseCodes[i];
+          td.setAttribute('title', 'Klicka för att se citat ur kursplanen');
+          td.addEventListener('click', () => showModal(course, goalId));
+        }
+      });
+    });
+
+    const modal = document.getElementById('evModal');
+    const elCourse = document.getElementById('evCourse');
+    const elGoalId = document.getElementById('evGoalId');
+    const elGoalText = document.getElementById('evGoalText');
+    const elQuotes = document.getElementById('evQuotes');
+    const elPdf = document.getElementById('evPdfLink');
+
+    function appendQuoteWithTag(tagText, quote) {
+      const li = document.createElement('li');
+      const tag = document.createElement('span');
+      tag.textContent = tagText;
+      tag.style.cssText = 'display:inline-block;font-family:JetBrains Mono,ui-monospace,monospace;font-size:0.7rem;font-weight:600;background:#fff;border:1px solid var(--match);color:var(--match);padding:1px 6px;border-radius:3px;margin-right:8px;vertical-align:1px;';
+      li.appendChild(tag);
+      li.appendChild(document.createTextNode(quote));
+      elQuotes.appendChild(li);
+    }
+
+    function showModal(course, goal) {
+      elCourse.textContent = course;
+      elGoalId.textContent = goal;
+      elQuotes.innerHTML = '';
+      if (goal.indexOf('G-') === 0) {
+        elGoalText.textContent = ' ' + (GENERAL_GOALS[goal] || '');
+        let any = false;
+        const directQs = (EV[course] && EV[course][goal]) || [];
+        directQs.forEach(q => { appendQuoteWithTag(goal, q); any = true; });
+        const localGoals = GENERAL_TO_LOCAL[goal] || [];
+        localGoals.forEach(lg => {
+          const qs = (EV[course] && EV[course][lg]) || [];
+          qs.forEach(q => { appendQuoteWithTag(lg, q); any = true; });
+        });
+        if (!any) {
+          const li = document.createElement('li');
+          li.textContent = 'Inget citat registrerat.';
+          li.style.background = '#f4f4f4';
+          li.style.borderLeftColor = '#aaa';
+          elQuotes.appendChild(li);
+        }
+      } else {
+        elGoalText.textContent = ' ' + (GOALS[goal] || '');
+        const quotes = (EV[course] && EV[course][goal]) || [];
+        if (quotes.length === 0) {
+          const li = document.createElement('li');
+          li.textContent = 'Inget citat registrerat.';
+          li.style.background = '#f4f4f4';
+          li.style.borderLeftColor = '#aaa';
+          elQuotes.appendChild(li);
+        } else {
+          quotes.forEach(q => {
+            const li = document.createElement('li');
+            li.textContent = q;
+            elQuotes.appendChild(li);
+          });
+        }
+      }
+      elPdf.href = PDF[course] || '#';
+      modal.classList.add('open');
+    }
+
+    function closeModal() { modal.classList.remove('open'); }
+    modal.querySelectorAll('[data-close]').forEach(el => el.addEventListener('click', closeModal));
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
+    });
+  })();
+  </script>
+
+<script>
+(function() {
+  var tip = document.createElement('div');
+  tip.style.cssText = [
+    'position:fixed', 'z-index:9999', 'pointer-events:none',
+    'background:#24273a', 'color:#fff',
+    'font-family:acumin-pro,Helvetica,sans-serif', 'font-weight:400',
+    'font-size:0.8125rem', 'padding:6px 11px', 'border-radius:4px',
+    'white-space:nowrap', 'opacity:0', 'transition:opacity 0.12s',
+    'box-shadow:0 4px 14px rgba(0,0,0,0.18)'
+  ].join(';');
+  document.body.appendChild(tip);
+
+  function show(e) {
+    var el = e.currentTarget;
+    var text = el.getAttribute('data-tip');
+    if (!text) return;
+    tip.textContent = text;
+    var r = el.getBoundingClientRect();
+    tip.style.opacity = '0';
+    tip.style.left = '0px';
+    tip.style.top = '0px';
+    var tr = tip.getBoundingClientRect();
+    var x = r.left + r.width / 2 - tr.width / 2;
+    var y = r.top - tr.height - 6;
+    if (y < 4) y = r.bottom + 6;
+    if (x < 4) x = 4;
+    if (x + tr.width > window.innerWidth - 4) x = window.innerWidth - tr.width - 4;
+    tip.style.left = x + 'px';
+    tip.style.top = y + 'px';
+    tip.style.opacity = '1';
+  }
+  function hide() { tip.style.opacity = '0'; }
+
+  function attach() {
+    document.querySelectorAll('th.course-col[data-tip]').forEach(function(el) {
+      if (el.__tipBound) return;
+      el.__tipBound = true;
+      el.addEventListener('mouseenter', show);
+      el.addEventListener('mouseleave', hide);
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', attach);
+  } else {
+    attach();
+  }
+})();
+</script>
+</body>
+</html>

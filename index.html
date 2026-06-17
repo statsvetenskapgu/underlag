@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Underlagsportal – Utbildningsutvärdering Statsvetenskap GU</title>
+<link rel="stylesheet" href="https://use.typekit.net/zkx2sji.css">
+<style>
+  :root {
+    --dark: #24273a;
+    --accent: #e2005e;
+    --link: #0077cc;
+    --bg: #fefefe;
+    --bg-gray: #f8f8f8;
+    --border: #e4e4e4;
+    --border-hover: #d2d2d2;
+    --text: #24273a;
+    --muted: #737272;
+    --muted-light: #949494;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: acumin-pro, Helvetica, sans-serif;
+    font-weight: 300;
+    font-size: 1.125rem;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.6;
+  }
+
+  header {
+    background: var(--dark);
+    color: var(--bg);
+    padding: 0 2.5rem 2.25rem;
+  }
+  .header-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    display: flex;
+    align-items: flex-start;
+    gap: 2rem;
+  }
+  .gu-logo {
+    flex-shrink: 0;
+    width: 110px;
+    height: auto;
+    display: block;
+  }
+  .header-text { padding-top: 2.25rem; }
+  header h1 {
+    font-size: 2.25rem;
+    font-weight: 300;
+    letter-spacing: -0.3px;
+    line-height: 1.25;
+  }
+  header p {
+    margin-top: 0.6rem;
+    font-size: 1.0625rem;
+    opacity: 0.75;
+    max-width: 600px;
+    font-weight: 300;
+  }
+  @media (max-width: 700px) {
+    .header-inner { flex-direction: column; gap: 1rem; }
+    .gu-logo { width: 80px; }
+    .header-text { padding-top: 0; }
+  }
+
+  /* Introtext under bannern */
+  .portal-intro {
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    color: var(--text);
+    max-width: 720px;
+    margin-bottom: 2.75rem;
+  }
+  .portal-intro p { margin-bottom: 0.75rem; }
+  .portal-intro p:last-child { margin-bottom: 0; }
+
+  /* Programmen-rubrik */
+  .programmen-rubrik {
+    font-size: 1.5rem;
+    font-weight: 300;
+    color: var(--text);
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 2px solid var(--accent);
+  }
+
+  /* Utlyft kort: institutionens reflektion — samma stil som programkorten, horisontell */
+  .feature-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    background: var(--bg);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-top: 4px solid var(--accent);
+    border-radius: 0.25rem;
+    padding: 1.5rem 1.5rem;
+    text-decoration: none;
+    margin-bottom: 2.75rem;
+    transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+  }
+  .feature-card:hover {
+    border-color: var(--accent);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.10);
+    transform: translateY(-2px);
+  }
+  .feature-card .fc-text .fc-title {
+    font-size: 1.25rem;
+    font-weight: 500;
+    margin-bottom: 0.3rem;
+    line-height: 1.3;
+    color: var(--text);
+  }
+  .feature-card .fc-text .fc-desc {
+    font-size: 0.9375rem;
+    color: var(--muted);
+    line-height: 1.5;
+    font-weight: 300;
+  }
+  .feature-card .fc-go {
+    flex-shrink: 0;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+  .feature-card .fc-go::after { content: " \2192"; transition: margin-left 0.15s; }
+  .feature-card:hover .fc-go::after { margin-left: 0.3rem; }
+  @media (max-width: 600px) {
+    .feature-card { flex-direction: column; align-items: flex-start; gap: 0.85rem; }
+  }
+
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2.5rem 2.5rem 4rem;
+  }
+
+  /* Sektionsrubrik */
+  .section-label {
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+
+  /* Dokumentlänkar */
+  .doc-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-bottom: 3rem;
+    border-top: 1px solid var(--border);
+  }
+
+  /* Grupperat kort med underlänkar */
+  .doc-group {
+    border-bottom: 1px solid var(--border);
+    padding: 1.25rem 0;
+  }
+  .doc-group .group-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+  .doc-group .group-header .label {
+    font-weight: 500;
+    font-size: 1.125rem;
+    color: var(--text);
+  }
+  .doc-group .sub-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding-left: 0.25rem;
+  }
+  .doc-group .sub-link {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    padding: 0.4rem 0;
+    text-decoration: none;
+    color: var(--link);
+    font-size: 1.0625rem;
+    font-weight: 300;
+    transition: color 0.1s;
+    border-bottom: 1px solid transparent;
+  }
+  .doc-group .sub-link:hover {
+    color: var(--accent);
+  }
+  .doc-group .sub-link::before {
+    content: "\2192";
+    font-size: 0.875rem;
+    color: var(--muted-light);
+    flex-shrink: 0;
+  }
+  .doc-group .sub-link:hover::before {
+    color: var(--accent);
+  }
+  .doc-group .sub-link.placeholder {
+    opacity: 0.45;
+    pointer-events: none;
+    color: var(--muted);
+  }
+  .doc-group .sub-link .desc-inline {
+    font-weight: 300;
+    font-size: 0.9375rem;
+    color: var(--muted);
+    margin-left: 0.25rem;
+  }
+  .doc-group .sub-link .arrow { display: none; }
+
+  .doc-group.placeholder {
+    opacity: 0.45;
+  }
+
+  /* Programkort */
+  .program-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+    margin-top: 0.25rem;
+  }
+  @media (max-width: 700px) {
+    .program-grid { grid-template-columns: 1fr; }
+  }
+  .program-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-top: 4px solid var(--pc-accent, var(--accent));
+    border-radius: 0.25rem;
+    padding: 1.75rem 1.5rem 1.5rem;
+    text-decoration: none;
+    color: var(--text);
+    transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+    display: flex;
+    flex-direction: column;
+  }
+  /* Programspecifika accentfärger (samma som programtaggarna) */
+  .program-card.pc-svep { --pc-accent: #2d7a45; }
+  .program-card.pc-maps { --pc-accent: #1e4faa; }
+  .program-card.pc-iagg { --pc-accent: #8a6000; }
+  .program-card:hover {
+    border-color: var(--pc-accent, var(--accent));
+    box-shadow: 0 6px 20px rgba(0,0,0,0.10);
+    transform: translateY(-2px);
+  }
+  .program-card .level {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+  .program-card .name {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.35;
+    margin-bottom: 0.25rem;
+  }
+  .program-card .code {
+    font-family: "SF Mono", Menlo, monospace;
+    font-size: 0.8125rem;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+  }
+  .program-card .go {
+    margin-top: auto;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--pc-accent, var(--accent));
+  }
+  .program-card .go::after {
+    content: " \2192";
+    transition: margin-left 0.15s;
+  }
+  .program-card:hover .go::after { margin-left: 0.3rem; }
+
+  footer {
+    background: var(--dark);
+    color: rgba(254,254,254,0.6);
+    text-align: center;
+    padding: 1.5rem 2.5rem;
+    font-size: 0.9375rem;
+    font-weight: 300;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <img class="gu-logo" src="assets/gu-logo-white.svg" alt="Göteborgs universitet">
+    <div class="header-text">
+      <h1>Utbildningsutvärdering – Statsvetenskap</h1>
+      <p>Underlag till den externa bedömargruppen. Samhällsvetenskapliga fakulteten, Göteborgs universitet.</p>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="portal-intro">
+    <p>Den här portalen samlar underlaget till den externa bedömning av Statsvetenskapliga institutionens
+    tre utbildningsprogram som genomförs 2026 inom ramen för Göteborgs universitets kvalitetssäkringssystem.
+    Underlaget är organiserat per program &mdash; varje programsida innehåller kursdokument, lärarkompetens,
+    statistik, examinationsöversikter, måluppfyllelsemappning och kvalitetsarbete.
+    Gemensamma resurser och styrdokument finns längre ner på sidan.</p>
+  </div>
+
+  <a class="feature-card" href="reflektion.html">
+    <div class="fc-text">
+      <div class="fc-title">Institutionens reflektion och studenternas kommentar</div>
+      <div class="fc-desc">Läs först &mdash; institutionens kommentar till underlaget och utbildningen, samt studenternas synpunkter.</div>
+    </div>
+    <span class="fc-go">Läs</span>
+  </a>
+
+  <h2 class="programmen-rubrik">Programmen</h2>
+  <div class="program-grid">
+    <a class="program-card pc-svep" href="s1stv.html">
+      <div class="level">Grundnivå &middot; 180 hp</div>
+      <div class="name">Statsvetarprogrammet</div>
+      <div class="code">S1STV</div>
+      <div class="go">Till programsidan</div>
+    </a>
+    <a class="program-card pc-maps" href="s2psc.html">
+      <div class="level">Avancerad nivå &middot; 120 hp</div>
+      <div class="name">Masterprogrammet i statsvetenskap (MaPS)</div>
+      <div class="code">S2PSC</div>
+      <div class="go">Till programsidan</div>
+    </a>
+    <a class="program-card pc-iagg" href="s2iag.html">
+      <div class="level">Avancerad nivå &middot; 120 hp</div>
+      <div class="name">International Administration and Global Governance (IAGG)</div>
+      <div class="code">S2IAG</div>
+      <div class="go">Till programsidan</div>
+    </a>
+  </div>
+
+  <div class="doc-links" style="margin-top: 2.5rem;">
+    <div class="doc-group">
+      <div class="group-header">
+        <div class="label">Institutionen</div>
+      </div>
+      <div class="sub-links">
+        <a class="sub-link" href="https://pol.gu.se/" target="_blank" rel="noopener">
+          Statsvetenskapliga institutionens hemsida <span class="desc-inline">pol.gu.se</span>
+        </a>
+        <a class="sub-link" href="personal.html">
+          Personal <span class="desc-inline">Personal efter tjänstebenämning, med pedagogiska meriter</span>
+        </a>
+      </div>
+    </div>
+    <div class="doc-group">
+      <div class="group-header">
+        <div class="label">Förra cykelns utvärdering (2018)</div>
+      </div>
+      <div class="sub-links">
+        <a class="sub-link" href="underlag/15_tidigare_utvarderingar/Bedömarutlåtande_Statsvetenskap_kandidat_master.pdf">
+          Bedömarutlåtande
+        </a>
+        <a class="sub-link" href="underlag/15_tidigare_utvarderingar/Åtgärdsplan_Statsvetenskap_kandidat_master.pdf">
+          Åtgärdsplan
+        </a>
+        <a class="sub-link" href="underlag/15_tidigare_utvarderingar/Återkoppling på genomförd åtgärdsplan.pdf">
+          Uppföljning av åtgärdsplan
+        </a>
+      </div>
+    </div>
+    <div class="doc-group">
+      <div class="group-header">
+        <div class="label">Styrdokument</div>
+      </div>
+      <div class="sub-links">
+        <a class="sub-link" href="Dokument/GU 2026-439 Statsvetenskapliga institutionen Verksamhetsplan 2026.pdf">
+          Verksamhetsplan 2026 <span class="desc-inline">Institutionens mål och aktiviteter med årlig uppföljning</span>
+        </a>
+        <a class="sub-link" href="Dokument/GU 2026-448 Målsättning och strategi för utbildning vid Statsvetenskapliga institutionen.pdf">
+          Målsättning och strategi för utbildning <span class="desc-inline">Institutionens inriktning och prioriteringar inom utbildning</span>
+        </a>
+        <a class="sub-link" href="Dokument/GU 2025-16 Regler för studier på grundnivå och avancerad nivå.pdf">
+          Regler för studier <span class="desc-inline">GU:s samlade studie- och examinationsregler</span>
+        </a>
+        <a class="sub-link" href="Dokument/GU 2022-2839 Policy för kvalitetssäkring och kvalitetsutveckling av utbildning.pdf">
+          Policy för kvalitetssäkring av utbildning <span class="desc-inline">GU:s övergripande kvalitetspolicy</span>
+        </a>
+        <a class="sub-link" href="Dokument/GU 2024-3116 Handläggningsordning för utbildningsutvärdering med extern bedömning på grundnivå och avancerad nivå vid Samhällsvetenskapliga fakulteten.pdf">
+          Handläggningsordning för utbildningsutvärdering <span class="desc-inline">Fakultetens process för extern utvärdering</span>
+        </a>
+        <a class="sub-link" href="Dokument/GU 2024-3296 Arbetsordning 2025.pdf">
+          Arbetsordning vid GU <span class="desc-inline">Universitetets organisations- och beslutsstruktur</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  Statsvetenskapliga institutionen, Göteborgs universitet &middot;
+  Utbildningsutvärdering med extern bedömning, Dnr GU 2021/494
+</footer>
+
+</body>
+</html>

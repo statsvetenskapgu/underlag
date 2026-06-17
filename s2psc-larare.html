@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lärare och kompetens – MaPS</title>
+  <link rel="stylesheet" href="https://use.typekit.net/zkx2sji.css">
+  <style>
+    :root {
+      --dark: #24273a;
+      --accent: #e2005e;
+      --link: #0077cc;
+      --bg: #fefefe;
+      --border: #e4e4e4;
+      --text: #24273a;
+      --muted: #737272;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: acumin-pro, Helvetica, sans-serif; font-weight: 300; font-size: 1.125rem; color: var(--text); background: var(--bg); line-height: 1.6; }
+    .topbar { background: var(--dark); padding: 0.6rem 2.5rem; font-size: 0.875rem; }
+    .topbar a { display: inline-block; color: #fff; background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.32); padding: 0.28rem 0.95rem; border-radius: 999px; text-decoration: none; font-weight: 400; transition: background 0.15s, border-color 0.15s; }
+    .topbar a:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .topbar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .prog-switch { display: flex; align-items: center; gap: 0.45rem; font-size: 0.75rem; color: rgba(254,254,254,0.45); white-space: nowrap; }
+  .prog-switch a { color: rgba(254,254,254,0.75); text-decoration: none; padding: 0.18rem 0.65rem; border: 1px solid rgba(255,255,255,0.18); border-radius: 999px; font-size: 0.75rem; font-weight: 400; transition: background 0.15s, color 0.15s, border-color 0.15s; }
+  .prog-switch a:hover { color: #fff; border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.08); }
+    .container { max-width: 860px; margin: 0 auto; padding: 2.5rem 2.5rem 4rem; }
+    h1 { font-weight: 300; font-size: 2rem; margin-bottom: 0.5rem; }
+    .subtitle { font-size: 1rem; color: var(--muted); margin-bottom: 2rem; }
+    .section-label { font-size: 0.8125rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin-bottom: 0.75rem; }
+    .course-block { border-bottom: 1px solid var(--border); padding: 1rem 0; }
+    .course-block:first-of-type { border-top: 1px solid var(--border); }
+    .cb-header { display: flex; align-items: baseline; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 0.35rem; }
+    .cb-code { font-family: "SF Mono", Menlo, monospace; font-size: 0.8125rem; color: var(--muted); flex-shrink: 0; }
+    .cb-name { font-size: 1rem; font-weight: 400; }
+    .cb-ansvarig { display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.25rem; }
+    .cb-ansvarig .role { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px; color: var(--accent); flex-shrink: 0; }
+    .cb-ansvarig a { color: var(--link); text-decoration: none; font-size: 0.9375rem; }
+    .cb-ansvarig a:hover { text-decoration: underline; }
+    .cb-ansvarig .title { color: var(--muted); font-size: 0.8125rem; }
+    .cb-ansvarig .t-name-only { color: var(--muted); font-size: 0.9375rem; }
+    .cb-note { font-size: 0.8125rem; color: var(--muted); font-style: italic; margin-top: 0.25rem; }
+    .note-box { background: #fdf6e3; border: 1px solid #e8d9a5; border-radius: 4px; padding: 0.75rem 1rem; font-size: 0.9375rem; color: #6a5a20; margin: 1rem 0 2rem; }
+    footer { background: var(--dark); color: rgba(254,254,254,0.6); text-align: center; padding: 1.5rem 2.5rem; font-size: 0.9375rem; font-weight: 300; }
+    .cb-teachers {
+      margin-top: 0.15rem;
+      padding-left: 0;
+    }
+    .cb-teachers {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+    .cb-teacher-row {
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+      font-size: 0.9375rem;
+    }
+    .cb-teacher-row a {
+      color: var(--muted);
+      text-decoration: none;
+    }
+    .cb-teacher-row a:hover { color: var(--link); text-decoration: underline; }
+    .cb-teacher-row .t-title {
+      font-size: 0.8125rem;
+      color: #aaa;
+    }
+    .cb-teacher-row .t-name-only {
+      color: var(--muted);
+    }
+
+  </style>
+</head>
+<body>
+  <div class="topbar"><a href="s2psc.html">&larr; Masterprogrammet i statsvetenskap (MaPS)</a><span class="prog-switch"><span>Byt program:</span><a href="s1stv-larare.html">SVEP</a><a href="s2iag-larare.html">IAGG</a></span></div>
+  <div class="container">
+    <h1>L&auml;rare och kompetens</h1>
+    <p class="subtitle">Masterprogrammet i statsvetenskap (S2PSC) &middot; HT 2025 &ndash; VT 2026</p>
+
+    <div class="section-label">Studierektor</div>
+    <div class="course-block">
+      <div class="cb-ansvarig">
+        <a href="https://www.gu.se/om-universitetet/hitta-person/agnescornell">Agnes Cornell</a>
+        <span class="title">Universitetslektor, docent</span>
+      </div>
+    </div>
+    <div class="section-label" style="margin-top: 2rem;">Kurser och l&auml;rare</div>
+
+    <!-- SK2121 -->
+    <div class="course-block">
+      <div class="cb-header"><span class="cb-code">SK2121</span> <span class="cb-name">Introduction to Political Science Analysis</span></div>
+      <div class="cb-ansvarig">
+        <span class="role">Kursansvarig</span>
+        <a href="https://www.gu.se/om-universitetet/hitta-person/fridaborang">Frida Bor&auml;ng</a>
+        <span class="title">Professor</span>
+      </div>
+      <div class="cb-teachers">
+        <div class="cb-teacher-row"><a href="https://www.gu.se/om-universitetet/hitta-person/georgiosxezonakis" target="_blank" rel="noopener">Georgios Xezonakis</a> <span class="t-title">Universitetslektor</span></div>
+        <div class="cb-teacher-row"><a href="https://www.gu.se/om-universitetet/hitta-person/jacobgunderson" target="_blank" rel="noopener">Jacob Gunderson</a> <span class="t-title">Biträdande lektor</span></div>
+        <div class="cb-teacher-row"><a href="https://www.gu.se/om-universitetet/hitta-person/linaeriksson" target="_blank" rel="noopener">Lina Eriksson</a> <span class="t-title">Professor</span></div>
+        <div class="cb-teacher-row"><a href="https://www.gu.se/om-universitetet/hitta-person/nikolaymarinov" target="_blank" rel="noopener">Nikolay Marinov</a> <span class="t-title">Universitetslektor</span></div>
+        <div class="cb-teacher-row"><a href="https://www.gu.se/om-universitetet/hitta-person/victorlapuentegine" target="_blank" rel="noopener">Victor Lapuente Gine</a> <span class="t-title">Professor</span></div>
+      </div>
+
+    </div>
+
+    <!-- SK2302 -->
+    <div class="course-block">
+      <div class="cb-header"><span class="cb-code">SK2302</span> <span class="cb-name">Research Design in Political Science</span></div>
+      <div class="cb-ansvarig">
+        <span class="role">Kursansvarig</span>
+        <a href="https://www.gu.se/om-universitetet/hitta-person/lovechristensen" target="_blank" rel="noopener">Love Christensen</a>
+        <span class="title">Bitr&auml;dande lektor</span>
+      </div>
+    </div>
+
+    <!-- SK2301 -->
+    <div class="course-block">
+      <div class="cb-header"><span class="cb-code">SK2301</span> <span class="cb-name">Advanced Quantitative Methods in the Social Sciences</span></div>
+      <div class="cb-ansvarig">
+        <span class="role">Kursansvarig</span>
+        <a href="https://www.gu.se/om-universitetet/hitta-person/mattiasagerberg" target="_blank" rel="noopener">Mattias Agerberg</a>
+        <span class="title">Universitetslektor, docent</span>
+      </div>
+    </div>
+
+    <!-- SF2324 -->
+    <div class="course-block">
+      <div class="cb-header"><span class="cb-code">SF2324</span> <span class="cb-name">Introduction to Applied Research Design and Quantitative Research Methods</span></div>
+      <div class="cb-ansvarig">
+        <span class="role">Kursansvarig</span>
+        <a href="https://www.gu.se/om-universitetet/hitta-person/georgiosxezonakis">Georgios Xezonakis</a>
+        <span class="title">Universitetslektor</span>
+      </div>
+      <div class="cb-teachers">
+        <div class="cb-teacher-row"><a href="https://www.gu.se/om-universitetet/hitta-person/hilmalindskog" target="_blank" rel="noopener">Hilma Lindskog</a> <span class="t-title">Doktorand</span></div>
+        <div class="cb-teacher-row"><a href="https://www.gu.se/om-universitetet/hitta-person/janaschwenk" target="_blank" rel="noopener">Jana Schwenk</a> <span class="t-title">Postdoktor</span></div>
+        <div class="cb-teacher-row"><a href="https://www.gu.se/om-universitetet/hitta-person/leoniereicheneder" target="_blank" rel="noopener">Leonie Reicheneder</a> <span class="t-title">Doktorand</span></div>
+        <div class="cb-teacher-row"><a href="https://www.gu.se/om-universitetet/hitta-person/marinanistotskaya" target="_blank" rel="noopener">Marina Nistotskaya</a> <span class="t-title">Professor</span></div>
+        <div class="cb-teacher-row"><a href="https://www.gu.se/om-universitetet/hitta-person/nicholascharron" target="_blank" rel="noopener">Nicholas Charron</a> <span class="t-title">Professor</span></div>
+      </div>
+
+    </div>
+
+    <!-- SF2321 -->
+    <div class="course-block">
+      <div class="cb-header"><span class="cb-code">SF2321</span> <span class="cb-name">Applied Statistical Analysis</span></div>
+      <div class="cb-ansvarig">
+        <span class="role">Kursansvarig</span>
+        <a href="https://www.gu.se/om-universitetet/hitta-person/mariasolevid">Maria Solevid</a>
+        <span class="title">Universitetslektor, docent</span>
+      </div>
+      <div class="cb-teachers">
+        <div class="cb-teacher-row"><a href="https://www.gu.se/om-universitetet/hitta-person/mattiasagerberg" target="_blank" rel="noopener">Mattias Agerberg</a> <span class="t-title">Universitetslektor, docent</span></div>
+        <div class="cb-teacher-row"><a href="https://www.gu.se/om-universitetet/hitta-person/rasmusbroms" target="_blank" rel="noopener">Rasmus Broms</a> <span class="t-title">Biträdande lektor, docent</span></div>
+        <div class="cb-teacher-row"><a href="https://www.gu.se/om-universitetet/hitta-person/florenceso" target="_blank" rel="noopener">Florence So</a> <span class="t-title">Universitetslektor</span></div>
+      </div>
+
+    </div>
+
+    <!-- SK2212 -->
+    <div class="course-block">
+      <div class="cb-header"><span class="cb-code">SK2212</span> <span class="cb-name">The Quality of Government in a Comparative Perspective</span></div>
+      <div class="cb-ansvarig">
+        <span class="role">Kursansvarig</span>
+        <a href="https://www.gu.se/om-universitetet/hitta-person/marinanistotskaya">Marina Nistotskaya</a>
+        <span class="title">Universitetslektor, docent</span>
+      </div>
+      <div class="cb-teachers">
+        <div class="cb-teacher-row"><a href="https://www.gu.se/om-universitetet/hitta-person/georgiosxezonakis" target="_blank" rel="noopener">Georgios Xezonakis</a> <span class="t-title">Universitetslektor</span></div>
+        <div class="cb-teacher-row"><a href="https://www.gu.se/om-universitetet/hitta-person/marciagrimes" target="_blank" rel="noopener">Marcia Grimes</a> <span class="t-title">Professor</span></div>
+        <div class="cb-teacher-row"><a href="https://www.gu.se/om-universitetet/hitta-person/victorlapuentegine" target="_blank" rel="noopener">Victor Lapuente Gine</a> <span class="t-title">Professor</span></div>
+      </div>
+
+    </div>
+
+    <!-- SF2222 -->
+    <div class="course-block">
+      <div class="cb-header"><span class="cb-code">SF2222</span> <span class="cb-name">Citizens, Politicians and the Media: Evaluating Democratic Processes</span></div>
+      <div class="cb-ansvarig">
+        <span class="role">Kursansvarig</span>
+        <a href="https://www.gu.se/om-universitetet/hitta-person/nicklashakansson">Nicklas H&aring;kansson</a>
+        <span class="title">Universitetslektor, JMG</span>
+      </div>
+      <div class="cb-teachers">
+        <div class="cb-teacher-row"><a href="https://www.gu.se/om-universitetet/hitta-person/ann-kristinkolln" target="_blank" rel="noopener">Ann-Kristin Kölln</a> <span class="t-title">Professor</span></div>
+        <div class="cb-teacher-row"><a href="https://www.gu.se/om-universitetet/hitta-person/isabellaglogger" target="_blank" rel="noopener">Isabella Glogger</a> <span class="t-title">Universitetslektor, biträdande, JMG</span></div>
+        <div class="cb-teacher-row"><a href="https://www.gu.se/om-universitetet/hitta-person/jacobgunderson" target="_blank" rel="noopener">Jacob Gunderson</a> <span class="t-title">Biträdande lektor</span></div>
+      </div>
+
+    </div>
+
+    <!-- SK2221 -->
+    <div class="course-block">
+      <div class="cb-header"><span class="cb-code">SK2221</span> <span class="cb-name">Environmental Politics and Institutions</span></div>
+      <div class="cb-ansvarig">
+        <span class="role">Kursansvariga</span>
+        <a href="https://www.gu.se/om-universitetet/hitta-person/akselsundstrom">Aksel Sundstr&ouml;m</a>
+        <span class="title">Universitetslektor, docent</span>
+      </div>
+      <div class="cb-ansvarig">
+        <span class="role"></span>
+        <a href="https://www.gu.se/om-universitetet/hitta-person/bjornronnerstrand">Bj&ouml;rn R&ouml;nnerstrand</a>
+        <span class="title">Forskare</span>
+      </div>
+      <div class="cb-teachers">
+        <div class="cb-teacher-row"><a href="https://www.gu.se/om-universitetet/hitta-person/frederikpfeiffer2" target="_blank" rel="noopener">Frederik Pfeiffer</a> <span class="t-title">Doktorand</span></div>
+        <div class="cb-teacher-row"><a href="https://www.gu.se/om-universitetet/hitta-person/markusjohansson" target="_blank" rel="noopener">Markus Johansson</a> <span class="t-title">Forskare</span></div>
+        <div class="cb-teacher-row"><a href="https://www.gu.se/om-universitetet/hitta-person/niklasharring" target="_blank" rel="noopener">Niklas Harring</a> <span class="t-title">Professor</span></div>
+      </div>
+
+    </div>
+
+    <!-- SK2222 -->
+    <div class="course-block">
+      <div class="cb-header"><span class="cb-code">SK2222</span> <span class="cb-name">Varieties of Democracy and Democratization</span></div>
+      <div class="cb-ansvarig">
+        <span class="role">Kursansvariga</span>
+        <a href="https://www.gu.se/om-universitetet/hitta-person/staffanilindberg">Staffan Lindberg</a>
+        <span class="title">Professor</span>
+      </div>
+      <div class="cb-ansvarig">
+        <span class="role"></span>
+        <a href="https://www.gu.se/om-universitetet/hitta-person/fabioangiolillo">Fabio Angiolillo</a>
+        <span class="title">Postdoktor</span>
+      </div>
+      <div class="cb-teachers">
+        <div class="cb-teacher-row"><a href="https://www.gu.se/om-universitetet/hitta-person/martinlundstedt" target="_blank" rel="noopener">Martin Lundstedt</a> <span class="t-title">Doktorand</span></div>
+        <div class="cb-teacher-row"><a href="https://www.gu.se/om-universitetet/hitta-person/valeriyamechkova" target="_blank" rel="noopener">Valeriya Mechkova</a> <span class="t-title">Biträdande lektor</span></div>
+      </div>
+
+    </div>
+
+    <!-- SK2211 -->
+    <div class="course-block">
+      <div class="cb-header"><span class="cb-code">SK2211</span> <span class="cb-name">The Performance of Democracies</span></div>
+      <div class="cb-ansvarig">
+        <span class="role">Kursansvariga</span>
+        <a href="https://www.gu.se/om-universitetet/hitta-person/amyalexander">Amy Alexander</a>
+        <span class="title">Universitetslektor, docent</span>
+      </div>
+      <div class="cb-ansvarig">
+        <span class="role"></span>
+        <a href="https://www.gu.se/om-universitetet/hitta-person/georgiosxezonakis">Georgios Xezonakis</a>
+        <span class="title">Universitetslektor</span>
+      </div>
+      <div class="cb-teachers">
+        <div class="cb-teacher-row"><a href="https://www.gu.se/om-universitetet/hitta-person/fridaborang" target="_blank" rel="noopener">Frida Boräng</a> <span class="t-title">Professor</span></div>
+      </div>
+
+    </div>
+
+    <!-- EU2210 -->
+    <div class="course-block">
+      <div class="cb-header"><span class="cb-code">EU2210</span> <span class="cb-name">European Environment and Energy</span></div>
+      <div class="cb-ansvarig">
+        <span class="role">Kursansvarig</span>
+        <a href="https://www.gu.se/om-universitetet/hitta-person/niklasharring">Niklas Harring</a>
+        <span class="title">Professor</span>
+      </div>
+      <div class="cb-teachers">
+        <div class="cb-teacher-row"><a href="https://www.gu.se/om-universitetet/hitta-person/olofglarsson" target="_blank" rel="noopener">Olof Larsson</a> <span class="t-title">Forskare</span></div>
+        <div class="cb-teacher-row"><a href="https://www.gu.se/om-universitetet/hitta-person/urbanstrandberg" target="_blank" rel="noopener">Urban Strandberg</a> <span class="t-title">Universitetslektor, juridiska institutionen</span></div>
+      </div>
+
+    </div>
+
+    <!-- SK2303 -->
+    <div class="course-block">
+      <div class="cb-header"><span class="cb-code">SK2303</span> <span class="cb-name">Methodological Specialization</span></div>
+      <div class="cb-ansvarig">
+        <span class="role">Kursansvarig</span>
+        <a href="https://www.gu.se/om-universitetet/hitta-person/agnescornell" target="_blank" rel="noopener">Agnes Cornell</a>
+        <span class="title">Universitetslektor, docent</span>
+      </div>
+    </div>
+
+    <!-- SK2412 -->
+    <div class="course-block">
+      <div class="cb-header"><span class="cb-code">SK2412</span> <span class="cb-name">Internship (15 hp)</span></div>
+      <div class="cb-ansvarig">
+        <span class="role">Kursansvariga</span>
+        <span class="t-name-only">Karin Ekberg</span>
+        <span class="title">Utbildningssamordnare</span>
+      </div>
+      <div class="cb-ansvarig">
+        <span class="role"></span>
+        <a href="https://www.gu.se/om-universitetet/hitta-person/agnescornell">Agnes Cornell</a>
+        <span class="title">Universitetslektor, docent</span>
+      </div>
+    </div>
+
+    <!-- SK2420 -->
+    <div class="course-block">
+      <div class="cb-header"><span class="cb-code">SK2420</span> <span class="cb-name">Internship (30 hp)</span></div>
+      <div class="cb-ansvarig">
+        <span class="role">Kursansvariga</span>
+        <span class="t-name-only">Karin Ekberg</span>
+        <span class="title">Utbildningssamordnare</span>
+      </div>
+      <div class="cb-ansvarig">
+        <span class="role"></span>
+        <a href="https://www.gu.se/om-universitetet/hitta-person/agnescornell">Agnes Cornell</a>
+        <span class="title">Universitetslektor, docent</span>
+      </div>
+    </div>
+
+    <!-- SK2532 -->
+    <div class="course-block">
+      <div class="cb-header"><span class="cb-code">SK2532</span> <span class="cb-name">Master's Thesis in Political Science</span></div>
+      <div class="cb-ansvarig">
+        <span class="role">Kursansvarig</span>
+        <a href="https://www.gu.se/om-universitetet/hitta-person/fridaborang">Frida Bor&auml;ng</a>
+        <span class="title">Professor</span>
+      </div>
+    </div>
+
+  </div>
+  <footer>Statsvetenskapliga institutionen, G&ouml;teborgs universitet</footer>
+</body>
+</html>

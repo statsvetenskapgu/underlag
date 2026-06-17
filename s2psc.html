@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>S2PSC – Masterprogrammet i statsvetenskap (MaPS) – Underlagsportal</title>
+<link rel="stylesheet" href="https://use.typekit.net/zkx2sji.css">
+<style>
+  :root {
+    --dark: #24273a;
+    --accent: #e2005e;
+    --link: #0077cc;
+    --bg: #fefefe;
+    --border: #e4e4e4;
+    --text: #24273a;
+    --muted: #737272;
+    --guide: #2a6a4a;
+    --lit: #5a3a8a;
+    --rapport: #8a6000;
+    --canvas: #b5332b;
+  }
+  html { scroll-behavior: smooth; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: acumin-pro, Helvetica, sans-serif;
+    font-weight: 300;
+    font-size: 1.125rem;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.6;
+  }
+
+  /* Navigering integrerad i headern */
+  header { position: relative; }
+  .header-nav { position: absolute; z-index: 5; top: 1.4rem; right: 2.5rem; display: flex; align-items: center; gap: 0.85rem; }
+  .back-link { display: inline-block; color: #fff; background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.32); padding: 0.28rem 0.95rem; border-radius: 999px; text-decoration: none; font-weight: 400; font-size: 0.875rem; transition: background 0.15s, border-color 0.15s; }
+  .back-link:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .prog-switch { display: flex; align-items: center; gap: 0.45rem; font-size: 0.75rem; color: rgba(254,254,254,0.45); white-space: nowrap; }
+  .prog-switch a { color: rgba(254,254,254,0.75); text-decoration: none; padding: 0.18rem 0.65rem; border: 1px solid rgba(255,255,255,0.18); border-radius: 999px; font-size: 0.75rem; font-weight: 400; transition: background 0.15s, color 0.15s, border-color 0.15s; }
+  .prog-switch a:hover { color: #fff; border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.08); }
+  @media (max-width: 700px) { .header-nav { position: static; margin: 0.75rem 0; flex-wrap: wrap; } }
+
+  header { background: var(--dark); color: var(--bg); padding: 1.5rem 2.5rem 2rem; }
+  header .level { font-size: 0.9375rem; opacity: 0.6; margin-bottom: 0.25rem; font-weight: 300; }
+  header h1 { font-size: 2.5rem; font-weight: 300; letter-spacing: -0.3px; line-height: 1.25; }
+  header .code { font-family: "SF Mono", Menlo, monospace; font-size: 0.9375rem; opacity: 0.45; margin-top: 0.35rem; }
+
+  .intro { max-width: 900px; margin: 0 auto; padding: 2rem 2.5rem 0; }
+  .intro-text { font-size: 1.0625rem; color: var(--muted); margin-bottom: 1.25rem; line-height: 1.6; }
+  .intro-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.65rem;
+  }
+  .intro-card {
+    display: block;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    text-decoration: none;
+    color: var(--text);
+    background: #fff;
+    transition: border-color 0.15s, box-shadow 0.15s, transform 0.12s;
+  }
+  .intro-card:hover {
+    border-color: var(--accent);
+    box-shadow: 0 4px 12px rgba(226, 0, 94, 0.08);
+    transform: translateY(-1px);
+  }
+
+  .intro-card .card-title {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+    color: var(--text);
+    line-height: 1.3;
+  }
+  .intro-card .card-desc {
+    font-size: 0.75rem;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+  @media (max-width: 850px) {
+    .intro-cards { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 480px) {
+    .intro-cards { grid-template-columns: 1fr; }
+  }
+
+  .side-by-side { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 0.5rem 0 0.75rem; }
+  @media (max-width: 650px) { .side-by-side { grid-template-columns: 1fr; } }
+  .track-col { border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+  .track-col-header { background: #f4f4f4; padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 500; color: var(--muted); }
+
+  .container { max-width: 900px; margin: 0 auto; padding: 2.5rem 2.5rem 4rem; }
+
+  .term-heading { font-size: 1.125rem; font-weight: 600; margin: 2.5rem 0 0.75rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--dark); }
+  .term-heading:first-of-type { margin-top: 0; }
+
+  .course-row { background: #fff; border-bottom: 1px solid var(--border); padding: 0.75rem 1rem; }
+  .course-top { display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap; }
+  .course-code { font-family: "SF Mono", Menlo, monospace; font-size: 0.875rem; color: var(--muted); flex-shrink: 0; }
+  .course-name { flex: 1; font-weight: 400; }
+  .course-hp { font-size: 0.875rem; color: var(--muted); white-space: nowrap; flex-shrink: 0; }
+  .course-note { font-size: 0.8125rem; color: var(--muted); margin-top: 0.15rem; font-style: italic; }
+
+  .doc-links-row { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; margin-top: 0.35rem; }
+  .doc-links-row a { font-size: 0.8125rem; text-decoration: none; font-weight: 400; transition: opacity 0.1s; }
+  .doc-links-row a:hover { text-decoration: underline; }
+  .doc-links-row .dl-kp { color: var(--link); }
+  .doc-links-row .dl-kg { color: var(--guide); }
+  .doc-links-row .dl-ll { color: var(--lit); }
+  .doc-links-row .dl-kr { color: var(--rapport); }
+  .doc-links-row .dl-canvas { color: var(--canvas); font-weight: 500; }
+  .doc-links-row .unavail { color: #aaa; font-style: italic; pointer-events: none; cursor: default; font-size: 0.8125rem; }
+
+  .info-box { background: #f6f8fa; border: 1px solid var(--border); border-radius: 4px; padding: 0.75rem 1rem; font-size: 0.9375rem; color: var(--muted); margin-bottom: 1rem; }
+
+  /* ── PROGRAM VISUALIZATION (16-col grid för 4-terminsprogram) ── */
+  .viz-wrap { max-width: 900px; margin: 0 auto; padding: 0 2.5rem 0.5rem; }
+  .viz { display: grid; grid-template-columns: repeat(16, 1fr); column-gap: 3px; }
+  .viz-yr { padding-bottom: 5px; font-size: 1.125rem; font-weight: 400; color: var(--text); }
+  .viz-yr-1 { grid-column: 1/9; grid-row: 1; }
+  .viz-yr-2 { grid-column: 9/17; grid-row: 1; }
+  .viz-sem { grid-row: 2; padding: 5px 0 4px; border-bottom: 1px solid var(--border); font-size: 0.8125rem; font-weight: 400; color: var(--muted); }
+  .viz > [style*="grid-row:3"] { align-self: center; margin-top: 8px; }
+
+  .viz-blk { border-radius: 5px; min-height: 36px; cursor: pointer; transition: transform 0.12s, box-shadow 0.12s; text-decoration: none; display: flex; align-items: center; justify-content: center; position: relative; }
+  .viz-code { font-family: "SF Mono", Menlo, monospace; font-size: 0.5625rem; font-weight: 500; color: rgba(255,255,255,0.75); letter-spacing: 0.3px; }
+  .viz-blk:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 20; }
+
+  [data-tip] { position: relative; }
+  [data-tip]::after { content: attr(data-tip); position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: var(--dark); color: #fff; font-size: 0.6875rem; font-weight: 400; padding: 5px 10px; border-radius: 4px; white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity 0.15s; z-index: 100; }
+  [data-tip]:hover::after { opacity: 1; }
+
+  .viz-c-blue { background: linear-gradient(135deg, #3a6fd8 0%, #1e4faa 100%); }
+  .viz-c-teal { background: linear-gradient(135deg, #2a8a6a 0%, #1a6a4a 100%); }
+  .viz-c-amber { background: linear-gradient(135deg, #d49a2a 0%, #b07a10 100%); }
+  .viz-c-rose { background: linear-gradient(135deg, #c8104e 0%, #a00a3a 100%); }
+
+  .viz-vstack { display: flex; flex-direction: column; gap: 3px; }
+  .viz-vstack > .viz-blk { min-height: 36px; }
+  .viz-vstack .viz-opt { min-height: 36px; }
+
+  .viz-track-label, .viz-eller { text-align: center; font-size: 0.48rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #c0c0c0; line-height: 1; padding: 1px 0; }
+
+  .viz-subgrid { display: grid; grid-template-columns: repeat(4, 1fr); column-gap: 3px; row-gap: 3px; }
+  .viz-subgrid .viz-blk { min-height: 36px; }
+
+  .viz-alt { border-radius: 5px; min-height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; text-decoration: none; transition: transform 0.12s, box-shadow 0.12s; }
+  .viz-alt:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+  .viz-alt-label { font-size: 0.56rem; font-weight: 600; letter-spacing: 0.5px; color: #fff; }
+
+  .viz-opt { border-radius: 5px; flex: 1; display: flex; align-items: center; padding: 0 8px; text-decoration: none; cursor: pointer; transition: transform 0.12s, box-shadow 0.12s; }
+  .viz-opt:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,0,0,0.1); z-index: 20; }
+  .viz-opt-label { font-size: 0.56rem; font-weight: 500; color: #fff; line-height: 1.25; }
+
+  @media (max-width: 600px) {
+    .viz-wrap { padding: 0 1.25rem 0.5rem; }
+  }
+
+  footer { background: var(--dark); color: rgba(254,254,254,0.6); text-align: center; padding: 1.5rem 2.5rem; font-size: 0.9375rem; font-weight: 300; }
+
+  @media (max-width: 600px) {
+    header { padding: 1.25rem 1.25rem 1.5rem; }
+    header h1 { font-size: 1.75rem; }
+    .container { padding: 1.5rem 1.25rem 3rem; }
+    .course-top { flex-direction: column; gap: 0.15rem; }
+    .course-hp { align-self: flex-start; }
+  }
+
+  /* Innehållsmeny i vänsterkanten */
+  .toc { position: fixed; top: 215px; left: 1.25rem; width: 200px; display: none; font-size: 0.8125rem; z-index: 10;
+         background: rgba(255,255,255,0.97); border: 1px solid var(--border); border-radius: 6px;
+         padding: 0.85rem 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.05); max-height: calc(100vh - 120px); overflow-y: auto; }
+  @media (min-width: 1400px) { .toc { display: block; } }
+  .toc .toc-label { font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin-bottom: 0.5rem; }
+  .toc a { display: block; padding: 0.28rem 0 0.28rem 0.7rem; color: var(--muted); text-decoration: none; line-height: 1.35; border-left: 2px solid var(--border); transition: color 0.12s, border-color 0.12s; }
+  .toc a:hover { color: var(--accent); border-left-color: var(--accent); }
+  .toc a.sub { padding-left: 1.4rem; font-size: 0.75rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-nav"><span class="prog-switch"><span>Byt program:</span><a href="s1stv.html">SVEP</a><a href="s2iag.html">IAGG</a></span><a class="back-link" href="index.html">&larr; Tillbaka till portalen</a></div>
+  <div class="level">Avancerad niv&aring; &middot; 120 hp &middot; Engelskspr&aring;kigt</div>
+  <h1>Masterprogrammet i statsvetenskap &ndash; MaPS</h1>
+  <div class="code">S2PSC</div>
+</header>
+
+<!-- Intro -->
+<div class="intro">
+  <p class="intro-text">
+    <a href="https://www.gu.se/studera/hitta-utbildning/masterprogrammet-i-statsvetenskap-s2psc" target="_blank" rel="noopener">Masterprogrammet i statsvetenskap (MaPS)</a>
+    &auml;r en tv&aring;&aring;rig utbildning p&aring; engelska som leder till en politices masterexamen. Programmet ger dig avancerad
+    kompetens att arbeta med samh&auml;lleliga och politiska problem utifr&aring;n ett statsvetenskapligt och forskningsorienterat
+    f&ouml;rh&aring;llningss&auml;tt. Du tr&auml;nas i kritisk bed&ouml;mning, forskningsdesign och dataanalys &ndash; f&auml;rdigheter
+    som &auml;r eftertraktade f&ouml;r kvalificerade yrkeskarri&auml;rer inom politik, offentlig f&ouml;rvaltning, ideella
+    organisationer och n&auml;ringsliv.
+  </p>
+  <div class="intro-cards">
+    <a class="intro-card" href="s2psc-framtid.html">
+      <div class="card-title">Utbildningsplan och framtiden</div>
+      <div class="card-desc">Programmets utbildningsplan och kommande förändringar</div>
+    </a>
+    <a class="intro-card" href="s2psc-larare.html">
+      <div class="card-title">Lärare och kompetens</div>
+      <div class="card-desc">Kursansvariga och undervisande lärare</div>
+    </a>
+    <a class="intro-card" href="s2psc-statistik.html">
+      <div class="card-title">Statistik</div>
+      <div class="card-desc">Söktryck, kvarvaro och examensgrad</div>
+    </a>
+    <a class="intro-card" href="s2psc-mappning.html">
+      <div class="card-title">Mappning lärandemål</div>
+      <div class="card-desc">Examensmål mot kursplaner</div>
+    </a>
+    <a class="intro-card" href="s2psc-examination-matris.html">
+      <div class="card-title">Examination</div>
+      <div class="card-desc">Examinationsformer per kurs</div>
+    </a>
+    <a class="intro-card" href="s2psc-kvalitet.html">
+      <div class="card-title">Kvalitetsarbete</div>
+      <div class="card-desc">Studentinflytande och kvalitetsuppföljning</div>
+    </a>
+    <a class="intro-card" href="s2psc-uppsatser.html">
+      <div class="card-title">Examensuppsatser</div>
+      <div class="card-desc">Senaste uppsatserna och GUPEA-länk</div>
+    </a>
+    <a class="intro-card" href="underlag/14_alumni/alumniundersokning_2023.pdf">
+      <div class="card-title">Alumniundersökning 2023</div>
+      <div class="card-desc">Karriär och anställning efter examen</div>
+    </a>
+  </div>
+</div>
+
+<div style="max-width: 900px; margin: 2rem auto 0; padding: 0 2.5rem;">
+  <div class="term-heading" id="programstruktur">Programstruktur och kurser</div>
+</div>
+
+<!-- Program visualization -->
+<div class="viz-wrap">
+  <div class="viz">
+
+    <div class="viz-yr viz-yr-1">&Aring;r 1</div>
+    <div class="viz-yr viz-yr-2">&Aring;r 2</div>
+
+    <div class="viz-sem" style="grid-column:1/5">Termin 1</div>
+    <div class="viz-sem" style="grid-column:5/9">Termin 2</div>
+    <div class="viz-sem" style="grid-column:9/13">Termin 3</div>
+    <div class="viz-sem" style="grid-column:13/17">Termin 4</div>
+
+    <!-- T1: SK2121 + SK2302 (var 7.5 hp) + metodval SK2301/SF2324 (15 hp) -->
+    <a class="viz-blk viz-c-blue" style="grid-row:3; grid-column:1/2" href="#kurs-SK2121" data-tip="Introduction to Political Science Analysis (7,5 hp)"><span class="viz-code">SK2121</span></a>
+    <a class="viz-blk viz-c-blue" style="grid-row:3; grid-column:2/3" href="#kurs-SK2302" data-tip="Research Design in Political Science (7,5 hp)"><span class="viz-code">SK2302</span></a>
+    <div class="viz-vstack" style="grid-row:3; grid-column:3/5">
+      <a class="viz-blk viz-c-blue" href="#kurs-SK2301" data-tip="Advanced Quantitative Methods in the Social Sciences (15 hp)"><span class="viz-code">SK2301</span></a>
+      <span class="viz-eller">eller</span>
+      <a class="viz-blk viz-c-blue" href="#kurs-SF2324" data-tip="Introduction to Applied Research Design and Quantitative Research Methods (15 hp)"><span class="viz-code">SF2324</span></a>
+    </div>
+
+    <!-- T2: Modul 1 (SK2212/SF2222) + Modul 2 (SK2221/SK2222) -->
+    <div class="viz-vstack" style="grid-row:3; grid-column:5/7">
+      <a class="viz-blk viz-c-blue" href="#kurs-SK2212" data-tip="The Quality of Government in a Comparative Perspective (15 hp)"><span class="viz-code">SK2212</span></a>
+      <span class="viz-eller">eller</span>
+      <a class="viz-blk viz-c-blue" href="#kurs-SF2222" data-tip="Citizens, Politicians and the Media (15 hp)"><span class="viz-code">SF2222</span></a>
+    </div>
+    <div class="viz-vstack" style="grid-row:3; grid-column:7/9">
+      <a class="viz-blk viz-c-blue" href="#kurs-SK2221" data-tip="Environmental Politics and Institutions (15 hp)"><span class="viz-code">SK2221</span></a>
+      <span class="viz-eller">eller</span>
+      <a class="viz-blk viz-c-blue" href="#kurs-SK2222" data-tip="Varieties of Democracy and Democratization (15 hp)"><span class="viz-code">SK2222</span></a>
+    </div>
+
+    <!-- T3: praktik/utbyte/delad termin -->
+    <div class="viz-vstack" style="grid-row:3; grid-column:9/13">
+      <div class="viz-track-label">Delad termin</div>
+      <div class="viz-subgrid">
+        <div class="viz-vstack" style="grid-column:1/3">
+          <a class="viz-blk viz-c-blue" href="#kurs-SK2211" data-tip="The Performance of Democracies (15 hp)"><span class="viz-code">SK2211</span></a>
+          <span class="viz-eller">eller</span>
+          <a class="viz-blk viz-c-blue" href="#kurs-EU2210" data-tip="European Environment and Energy (15 hp)"><span class="viz-code">EU2210</span></a>
+          <span class="viz-eller">eller</span>
+          <a class="viz-blk viz-c-amber" href="#kurs-SK2412" data-tip="Internship (15 hp)"><span class="viz-code">SK2412</span></a>
+        </div>
+        <div class="viz-vstack" style="grid-column:3/5">
+          <a class="viz-blk viz-c-blue" href="#kurs-SK2303" data-tip="Methodological Specialization (15 hp)"><span class="viz-code">SK2303</span></a>
+          <span class="viz-eller">eller</span>
+          <a class="viz-blk viz-c-amber" href="#kurs-SK2412" data-tip="Internship (15 hp)"><span class="viz-code">SK2412</span></a>
+        </div>
+      </div>
+      <span class="viz-eller">eller</span>
+      <a class="viz-opt viz-c-amber" href="#kurs-SK2420" data-tip="Internship (30 hp)">
+        <span class="viz-opt-label">SK2420 &middot; Praktik (30 hp)</span>
+      </a>
+      <span class="viz-eller">eller</span>
+      <a class="viz-opt viz-c-teal" href="#termin-3" data-tip="Utbytesstudier vid partneruniversitet (30 hp)">
+        <span class="viz-opt-label">Utbytesstudier (30 hp)</span>
+      </a>
+    </div>
+
+    <!-- T4: Examensarbete -->
+    <a class="viz-blk viz-c-rose" style="grid-row:3; grid-column:13/17" href="#kurs-SK2532" data-tip="Master's Thesis in Political Science (30 hp)"><span class="viz-code">SK2532</span></a>
+
+  </div>
+</div>
+
+  <nav class="toc" aria-label="Innehåll">
+    <div class="toc-label">Innehåll</div>
+    <a href="#programstruktur">Programstruktur</a>
+    <a href="#termin-1" class="sub">Termin 1</a>
+    <a href="#termin-2" class="sub">Termin 2</a>
+    <a href="#termin-3" class="sub">Termin 3</a>
+    <a href="#termin-4" class="sub">Termin 4</a>
+  </nav>
+
+  <div class="container">
+
+  <!-- TERMIN 1 -->
+  <div class="term-heading" id="termin-1">Termin 1: K&auml;rnkurser och metod (30 hp)</div>
+
+  <div class="course-row" id="kurs-SK2121">
+    <div class="course-top">
+      <span class="course-code">SK2121</span>
+      <span class="course-name">Introduction to Political Science Analysis</span>
+      <span class="course-hp">7,5 hp</span>
+    </div>
+    <div class="course-note">Kursplan reviderad &mdash; ny kod SK2122 g&auml;ller fr&aring;n HT26 (kursguide och rapport nedan avser tidigare g&aring;ngar under koden SK2121)</div>
+    <div class="doc-links-row">
+      <a class="dl-kp" href="underlag/1_kursplaner/kursplaner_individuella/kursplan_SK2122.pdf">Kursplan (SK2122, HT26&ndash;)</a>
+      <a class="dl-kg" href="underlag/2_kursguider/kursguide_SK2121_H25.pdf">Guide H25</a>
+      <a class="dl-ll" href="underlag/2_kursguider/kursguide_SK2121_H25.pdf" title="Litteraturen specificeras i kursguiden">Litteratur i guide</a>
+      <a class="dl-kr" href="underlag/9_kursrapporter/kursrapport_SK2121_Course_Report_H25.pdf">Rapport H25</a>
+      <a class="dl-canvas" href="https://canvas.gu.se/courses/92738" target="_blank" rel="noopener">Canvas</a>
+    </div>
+  </div>
+
+  <div class="course-row" id="kurs-SK2302">
+    <div class="course-top">
+      <span class="course-code">SK2302</span>
+      <span class="course-name">Research Design in Political Science</span>
+      <span class="course-hp">7,5 hp</span>
+    </div>
+    <div class="course-note">Nystartad HT26 &ndash; kursguide, litteraturlista och kursrapport finns &auml;nnu inte</div>
+    <div class="doc-links-row">
+      <a class="dl-kp" href="https://www.gu.se/en/syllabus/f822c3cb-163d-11f1-9ed1-51bcbc0e4a82">Kursplan</a>
+    </div>
+  </div>
+
+  <div class="info-box">Studenten v&auml;ljer en av f&ouml;ljande tv&aring; metodkurser (15 hp):</div>
+  <div class="side-by-side">
+    <div class="track-col">
+      <div class="course-row" id="kurs-SK2301">
+        <div class="course-top">
+          <span class="course-code">SK2301</span>
+          <span class="course-name">Advanced Quantitative Methods in the Social Sciences</span>
+          <span class="course-hp">15 hp</span>
+        </div>
+        <div class="doc-links-row">
+          <a class="dl-kp" href="https://www.gu.se/en/syllabus/b827e7ae-1173-11f1-a595-2099b7b04bbf">Kursplan</a>
+        </div>
+      </div>
+    </div>
+    <div class="track-col">
+      <div class="course-row" id="kurs-SF2324">
+        <div class="course-top">
+          <span class="course-code">SF2324</span>
+          <span class="course-name">Introduction to Applied Research Design and Quantitative Research Methods</span>
+          <span class="course-hp">15 hp</span>
+        </div>
+        <div class="doc-links-row">
+          <a class="dl-kp" href="https://www.gu.se/syllabus/a62d27fb-cf6c-11f0-9d49-fd72c5714a36">Kursplan</a>
+          <a class="dl-kg" href="underlag/2_kursguider/kursguide_SF2324_H25.docx">Guide H25 (docx)</a>
+          <a class="dl-ll" href="underlag/2_kursguider/kursguide_SF2324_H25.docx" title="Litteraturen specificeras i kursguiden">Litteratur i guide</a>
+          <a class="dl-kr" href="underlag/9_kursrapporter/kursrapport_SF2324_Course_Report_2025.docx">Rapport H25</a>
+          <a class="dl-canvas" href="https://canvas.gu.se/courses/89476" target="_blank" rel="noopener">Canvas</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TERMIN 2 -->
+  <div class="term-heading" id="termin-2">Termin 2: F&ouml;rdjupningskurser (30 hp)</div>
+
+  <div class="info-box">Studenten v&auml;ljer en kurs i modul 1 och en kurs i modul 2.</div>
+
+  <div class="side-by-side">
+    <div class="track-col">
+      <div class="track-col-header">Modul 1 (15 hp)</div>
+      <div class="course-row" id="kurs-SK2212">
+        <div class="course-top">
+          <span class="course-code">SK2212</span>
+          <span class="course-name">The Quality of Government in a Comparative Perspective</span>
+          <span class="course-hp">15 hp</span>
+        </div>
+        <div class="doc-links-row">
+          <a class="dl-kp" href="https://www.gu.se/syllabus/68ac6bec-9a1b-11f0-9057-117f39d847e2">Kursplan</a>
+          <a class="dl-kg" href="underlag/2_kursguider/kursguide_SK2212_V26.docx">Guide V26</a>
+          <a class="dl-ll" href="underlag/3_litteraturlistor/littlista_SK2212_V26.docx">Litteratur</a>
+          <a class="dl-kr" href="underlag/9_kursrapporter/kursrapport_Kursrapport_SK2212_V24.pdf">Rapport V24</a>
+          <a class="dl-canvas" href="https://canvas.gu.se/courses/95736" target="_blank" rel="noopener">Canvas</a>
+        </div>
+      </div>
+      <div class="course-row" id="kurs-SF2222">
+        <div class="course-top">
+          <span class="course-code">SF2222</span>
+          <span class="course-name">Citizens, Politicians and the Media: Evaluating Democratic Processes</span>
+          <span class="course-hp">15 hp</span>
+        </div>
+        <div class="doc-links-row">
+          <a class="dl-kp" href="underlag/1_kursplaner/kursplaner_individuella/kursplan_SF2222.pdf">Kursplan</a>
+          <a class="dl-kg" href="underlag/2_kursguider/kursguide_SF2222_V26.pdf">Guide V26</a>
+          <a class="dl-ll" href="underlag/2_kursguider/kursguide_SF2222_V26.pdf" title="Litteraturen specificeras i kursguiden">Litteratur i guide</a>
+          <a class="dl-kr" href="underlag/9_kursrapporter/kursrapport_SF2222_Course_Report_2025.pdf">Rapport V25</a>
+          <a class="dl-canvas" href="https://canvas.gu.se/courses/95451" target="_blank" rel="noopener">Canvas</a>
+        </div>
+      </div>
+    </div>
+    <div class="track-col">
+      <div class="track-col-header">Modul 2 (15 hp)</div>
+      <div class="course-row" id="kurs-SK2221">
+        <div class="course-top">
+          <span class="course-code">SK2221</span>
+          <span class="course-name">Environmental Politics and Institutions</span>
+          <span class="course-hp">15 hp</span>
+        </div>
+        <div class="doc-links-row">
+          <a class="dl-kp" href="underlag/1_kursplaner/kursplaner_individuella/kursplan_SK2221.pdf">Kursplan</a>
+          <a class="dl-kg" href="underlag/2_kursguider/kursguide_SK2221_V26.pdf">Guide V26</a>
+          <a class="dl-ll" href="underlag/2_kursguider/kursguide_SK2221_V26.pdf" title="Litteraturen specificeras i kursguiden">Litteratur i guide</a>
+          <a class="dl-kr" href="underlag/9_kursrapporter/kursrapport_SK2221_Course_Report_2025.docx">Rapport V25</a>
+          <a class="dl-canvas" href="https://canvas.gu.se/courses/95613" target="_blank" rel="noopener">Canvas</a>
+        </div>
+      </div>
+      <div class="course-row" id="kurs-SK2222">
+        <div class="course-top">
+          <span class="course-code">SK2222</span>
+          <span class="course-name">Varieties of Democracy and Democratization</span>
+          <span class="course-hp">15 hp</span>
+        </div>
+        <div class="doc-links-row">
+          <a class="dl-kp" href="https://www.gu.se/syllabus/e3033bf7-c554-11f0-905a-aee84a7a4808">Kursplan</a>
+          <a class="dl-kg" href="underlag/2_kursguider/kursguide_SK2222_V26.pdf">Guide V26</a>
+          <a class="dl-ll" href="underlag/2_kursguider/kursguide_SK2222_V26.pdf" title="Litteraturen specificeras i kursguiden">Litteratur i guide</a>
+          <a class="dl-kr" href="underlag/9_kursrapporter/kursrapport_SK2222_Course_Report_V25.pdf">Rapport V25</a>
+          <a class="dl-canvas" href="https://canvas.gu.se/courses/95744" target="_blank" rel="noopener">Canvas</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TERMIN 3 -->
+  <div class="term-heading" id="termin-3">Termin 3: Praktik, utbyte eller f&ouml;rdjupning (30 hp)</div>
+
+  <div class="info-box">
+    Studenten v&auml;ljer mellan 30 hp-praktik, utbytesstudier eller en delad termin med fördjupnings- och/eller metodkurs.
+  </div>
+
+  <div class="side-by-side">
+    <div class="track-col">
+      <div class="track-col-header">Praktik (30 hp)</div>
+      <div class="course-row" id="kurs-SK2420">
+        <div class="course-top">
+          <span class="course-code">SK2420</span>
+          <span class="course-name">Internship</span>
+          <span class="course-hp">30 hp</span>
+        </div>
+        <div class="doc-links-row">
+          <a class="dl-kp" href="https://www.gu.se/syllabus/c1d62ea1-b630-11f0-9f99-58c54f714151">Kursplan</a>
+          <span class="dl-kg unavail">Kursguide saknas</span>
+          <span class="dl-ll unavail">Ingen litteraturlista</span>
+          <span class="dl-kr unavail">Kursrapport saknas</span>
+        </div>
+      </div>
+    </div>
+    <div class="track-col">
+      <div class="track-col-header">Utbytesstudier (30 hp)</div>
+      <div style="padding: 1rem; font-size: 0.9375rem; color: var(--muted); line-height: 1.6;">
+        En termin vid partneruniversitet utomlands.
+      </div>
+    </div>
+  </div>
+
+  <div class="side-by-side">
+    <div class="track-col">
+      <div class="track-col-header">Modul 1, delad termin (15 hp)</div>
+      <div class="course-row" id="kurs-SK2211">
+        <div class="course-top">
+          <span class="course-code">SK2211</span>
+          <span class="course-name">The Performance of Democracies</span>
+          <span class="course-hp">15 hp</span>
+        </div>
+        <div class="doc-links-row">
+          <a class="dl-kp" href="https://www.gu.se/syllabus/46b00214-fc6d-11f0-95d1-a55d9bf44f52">Kursplan</a>
+          <a class="dl-kg" href="underlag/2_kursguider/kursguide_SK2211_H25.pdf">Guide H25</a>
+          <a class="dl-ll" href="https://www.gu.se/en/study-gothenburg/the-performance-of-democracies-sk2211/reading-list/0261073f-298f-11ef-a2a0-4c1db4504bb5">Litteratur</a>
+          <a class="dl-kr" href="underlag/9_kursrapporter/kursrapport_SK2211_Course_Report_2025.docx">Rapport H25</a>
+          <a class="dl-canvas" href="https://canvas.gu.se/courses/89446" target="_blank" rel="noopener">Canvas</a>
+        </div>
+      </div>
+      <div class="course-row" id="kurs-EU2210">
+        <div class="course-top">
+          <span class="course-code">EU2210</span>
+          <span class="course-name">European Environment and Energy</span>
+          <span class="course-hp">15 hp</span>
+        </div>
+        <div class="doc-links-row">
+          <a class="dl-kp" href="https://www.gu.se/syllabus/b7784bf3-cade-11f0-a255-650837bd40cf">Kursplan</a>
+          <a class="dl-kg" href="underlag/2_kursguider/kursguide_EU2210_H25.pdf">Guide H25</a>
+          <a class="dl-ll" href="underlag/2_kursguider/kursguide_EU2210_H25.pdf" title="Litteraturen specificeras i kursguiden">Litteratur i guide</a>
+          <a class="dl-kr" href="underlag/9_kursrapporter/kursrapport_EU2210_Course_Report_H24.pdf">Rapport H24</a>
+          <a class="dl-canvas" href="https://canvas.gu.se/courses/89457" target="_blank" rel="noopener">Canvas</a>
+        </div>
+      </div>
+      <div class="course-row" id="kurs-SK2412">
+        <div class="course-top">
+          <span class="course-code">SK2412</span>
+          <span class="course-name">Internship</span>
+          <span class="course-hp">15 hp</span>
+        </div>
+        <div class="doc-links-row">
+          <a class="dl-kp" href="https://www.gu.se/syllabus/df16bacb-b5a7-11f0-aa27-85c3b3d64a85">Kursplan</a>
+          <span class="dl-kg unavail">Kursguide saknas</span>
+          <span class="dl-ll unavail">Ingen litteraturlista</span>
+          <span class="dl-kr unavail">Kursrapport saknas</span>
+        </div>
+      </div>
+    </div>
+    <div class="track-col">
+      <div class="track-col-header">Modul 2, delad termin (15 hp)</div>
+      <div class="course-row" id="kurs-SK2303">
+        <div class="course-top">
+          <span class="course-code">SK2303</span>
+          <span class="course-name">Methodological Specialization</span>
+          <span class="course-hp">15 hp</span>
+        </div>
+        <div class="course-note">Nystartad &ndash; ges f&ouml;rsta g&aring;ngen HT27 enligt kursplanen</div>
+        <div class="doc-links-row">
+          <a class="dl-kp" href="underlag/1_kursplaner/kursplaner_individuella/kursplan_SK2303.pdf">Kursplan</a>
+        </div>
+      </div>
+      <div class="course-row">
+        <div class="course-top">
+          <span class="course-code">SK2412</span>
+          <span class="course-name">Internship &ndash; &auml;ven som modul 2</span>
+          <span class="course-hp">15 hp</span>
+        </div>
+        <div class="doc-links-row">
+          <a class="dl-kp" href="https://www.gu.se/syllabus/df16bacb-b5a7-11f0-aa27-85c3b3d64a85">Kursplan</a>
+          <span class="dl-kg unavail">Kursguide saknas</span>
+          <span class="dl-ll unavail">Ingen litteraturlista</span>
+          <span class="dl-kr unavail">Kursrapport saknas</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TERMIN 4 -->
+  <div class="term-heading" id="termin-4">Termin 4: Masteruppsats (30 hp)</div>
+
+  <div class="course-row" id="kurs-SK2532">
+    <div class="course-top">
+      <span class="course-code">SK2532</span>
+      <span class="course-name">Master's Thesis in Political Science</span>
+      <span class="course-hp">30 hp</span>
+    </div>
+    <div class="doc-links-row">
+      <a class="dl-kp" href="https://www.gu.se/syllabus/400a4f7f-c3c0-11f0-ad17-5d9f656e4e41">Kursplan</a>
+      <a class="dl-kg" href="underlag/2_kursguider/kursguide_SK2532_V26.pdf">Guide V26</a>
+      <span class="dl-ll unavail">Ingen litteraturlista</span>
+      <a class="dl-kr" href="underlag/9_kursrapporter/kursrapport_SK2532_Course_Report_2025.pdf">Rapport V25</a>
+      <a class="dl-canvas" href="https://canvas.gu.se/courses/95865" target="_blank" rel="noopener">Canvas</a>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  Statsvetenskapliga institutionen, G&ouml;teborgs universitet &middot;
+  Utbildningsutv&auml;rdering med extern bed&ouml;mning, Dnr GU 2021/494
+</footer>
+
+</body>
+</html>

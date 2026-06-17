@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Examinationsmatris – Statsvetarprogrammet</title>
+<link rel="stylesheet" href="https://use.typekit.net/zkx2sji.css">
+<style>
+  :root {
+    --dark: #24273a;
+    --accent: #e2005e;
+    --link: #0077cc;
+    --bg: #fefefe;
+    --border: #e4e4e4;
+    --text: #24273a;
+    --muted: #737272;
+    --match: #2d7a45;
+    --match-bg: #e8f5ec;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: acumin-pro, Helvetica, sans-serif; font-weight: 300; font-size: 1rem; color: var(--text); background: var(--bg); line-height: 1.55; }
+  .topbar { background: var(--dark); padding: 0.6rem 2.5rem; font-size: 0.875rem; }
+  .topbar a { display: inline-block; color: #fff; background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.32); padding: 0.28rem 0.95rem; border-radius: 999px; text-decoration: none; font-weight: 400; transition: background 0.15s, border-color 0.15s; }
+  .topbar a:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .topbar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .prog-switch { display: flex; align-items: center; gap: 0.45rem; font-size: 0.75rem; color: rgba(254,254,254,0.45); white-space: nowrap; }
+  .prog-switch a { color: rgba(254,254,254,0.75); text-decoration: none; padding: 0.18rem 0.65rem; border: 1px solid rgba(255,255,255,0.18); border-radius: 999px; font-size: 0.75rem; font-weight: 400; transition: background 0.15s, color 0.15s, border-color 0.15s; }
+  .prog-switch a:hover { color: #fff; border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.08); }
+
+  .container { max-width: 1240px; margin: 0 auto; padding: 2.5rem 2rem 4rem; }
+  h1 { font-weight: 300; font-size: 2rem; margin-bottom: 0.5rem; }
+  .subtitle { font-size: 1rem; color: var(--muted); margin-bottom: 1.5rem; }
+
+  .intro { font-size: 0.9375rem; color: var(--muted); margin-bottom: 1.75rem; line-height: 1.65; max-width: 780px; }
+  .intro p { margin-bottom: 0.6rem; }
+  .intro strong { color: var(--text); font-weight: 500; }
+
+  .legend { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; font-size: 0.8125rem; color: var(--muted); }
+  .legend-item { display: flex; align-items: center; gap: 0.4rem; }
+  .legend-swatch { width: 14px; height: 14px; border-radius: 2px; flex-shrink: 0; background: var(--match-bg); border: 1px solid var(--match); }
+  .legend-none { background: #f4f4f4; border: 1px solid var(--border); }
+  .legend-example { background: #fff8e1; border: 1px solid #e2a300; }
+
+  h2 { font-size: 0.8125rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin: 2rem 0 0.5rem; }
+
+  .cat-group-row {
+    display: flex; gap: 0; margin-bottom: 0.75rem; font-size: 0.7rem;
+    color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;
+  }
+
+  .matrix-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 4px; margin-bottom: 1.5rem; }
+  table.matrix { border-collapse: collapse; font-size: 0.8125rem; min-width: 100%; table-layout: fixed; }
+  table.matrix th, table.matrix td { border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); padding: 0.4rem 0.4rem; text-align: center; vertical-align: middle; }
+  table.matrix th:last-child, table.matrix td:last-child { border-right: none; }
+  table.matrix tr:last-child th, table.matrix tr:last-child td { border-bottom: none; }
+  /* Fixed column widths: course column wide, data columns narrow & equal */
+  table.matrix col.col-course { width: 340px; }
+  table.matrix col.col-type { width: 44px; }
+
+  /* Category group headers */
+  tr.cat-group-header th {
+    background: #f4f4f4;
+    color: var(--muted);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    padding: 0.4rem 0.5rem;
+    border-bottom: 2px solid var(--border);
+    text-align: center;
+  }
+  tr.cat-group-header th.group-skriftlig { background: #dfe8f5; color: #1e4faa; border-bottom: 1px solid #b8c6dd; }
+  tr.cat-group-header th.group-sal { background: #e8efef; color: #1a6a4a; border-bottom: 1px solid #c4d0c9; }
+  tr.cat-group-header th.group-hemma { background: #eef4fb; color: #3a6fd8; border-bottom: 1px solid #c4d4ea; }
+  tr.cat-group-header th.group-muntlig { background: #faf0ef; color: var(--accent); }
+  tr.cat-group-header th.group-ovrigt { background: #f2efe4; color: #8a6000; }
+
+  /* Column headers — rotated */
+  table.matrix thead th.type-col {
+    background: #f9f9f9;
+    font-size: 0.72rem; font-weight: 500; color: var(--text);
+    white-space: nowrap;
+    height: 160px;
+    vertical-align: bottom;
+    padding: 0.3rem 0.2rem;
+  }
+  table.matrix thead th.type-col span {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    display: inline-block;
+    padding-bottom: 0.5rem;
+  }
+
+  /* Row headers — course code + name */
+  table.matrix tbody th.course {
+    text-align: left; font-weight: 400; font-size: 0.875rem;
+    background: #fafafa; padding: 0.55rem 0.85rem; line-height: 1.35;
+    min-width: 320px; max-width: 380px;
+    border-right: 2px solid var(--border);
+  }
+  table.matrix tbody th.course a { color: var(--text); text-decoration: none; display: block; }
+  table.matrix tbody th.course a:hover { color: var(--accent); }
+  table.matrix tbody th.course .code {
+    font-family: "SF Mono", Menlo, monospace;
+    font-weight: 600; font-size: 0.75rem; color: var(--accent);
+    background: #fff; padding: 0.05rem 0.3rem; border-radius: 2px;
+    border: 1px solid var(--border); margin-right: 0.5rem;
+  }
+
+  /* Term divider row */
+  tr.term-row th {
+    background: var(--dark); color: #fff; text-align: left;
+    font-weight: 500; font-size: 0.75rem; text-transform: uppercase;
+    letter-spacing: 0.6px; padding: 0.4rem 0.85rem;
+  }
+
+  /* Match cells */
+  td.match { background: var(--match-bg); color: var(--match); font-weight: 600; cursor: pointer; transition: background 0.12s; position: relative; }
+  td.match:hover { background: #d3edda; }
+  td.match::before { content: '●'; font-size: 0.875rem; }
+  td.nomatch { color: transparent; }
+
+  /* Cells with example materials: gold tint + ring around the dot + corner paperclip */
+  td.match.has-example { background: #fff8e1; box-shadow: inset 0 0 0 2px #e2a300; }
+  td.match.has-example:hover { background: #fcefb6; }
+  td.match.has-example::before { color: #b87500; }
+  td.match.has-example::after {
+    content: '\1F4CE';
+    position: absolute;
+    top: 1px; right: 2px;
+    font-size: 9px;
+    line-height: 1;
+  }
+
+  /* Modal */
+  .ex-modal { position: fixed; inset: 0; z-index: 1000; display: none; }
+  .ex-modal.open { display: block; }
+  .ex-backdrop { position: absolute; inset: 0; background: rgba(36,39,58,0.55); }
+  .ex-dialog {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
+    background: #fff; border-radius: 6px; width: min(600px, 92vw);
+    max-height: 82vh; overflow-y: auto; box-shadow: 0 12px 48px rgba(0,0,0,0.25);
+  }
+  .ex-header { padding: 1rem 1.25rem 0.85rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; }
+  .ex-header-text .ex-course { font-family: "SF Mono", Menlo, monospace; font-size: 0.8125rem; color: var(--accent); font-weight: 600; margin-bottom: 0.2rem; }
+  .ex-header-text .ex-type { font-size: 1rem; font-weight: 500; color: var(--text); line-height: 1.35; }
+  .ex-close { background: none; border: none; font-size: 1.5rem; line-height: 1; color: var(--muted); cursor: pointer; padding: 0 0.25rem; flex-shrink: 0; }
+  .ex-close:hover { color: var(--accent); }
+  .ex-body { padding: 1rem 1.25rem 1.25rem; font-size: 0.9375rem; line-height: 1.6; color: var(--text); }
+  .ex-body p { margin-bottom: 0.75rem; }
+  .ex-body blockquote { background: var(--match-bg); border-left: 3px solid var(--match); padding: 0.55rem 0.8rem; font-size: 0.875rem; color: var(--text); border-radius: 0 3px 3px 0; margin-bottom: 0.55rem; line-height: 1.55; }
+  .ex-body blockquote::before { content: '\201C'; color: var(--match); }
+  .ex-body blockquote::after { content: '\201D'; color: var(--match); }
+  .ex-body blockquote:last-child { margin-bottom: 0; }
+  .ex-examples { margin-top: 1rem; padding: 0.85rem 1rem; background: #fff8e1; border: 1px solid #e2a300; border-radius: 4px; }
+  .ex-examples-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #8a5a00; margin-bottom: 0.5rem; }
+  .ex-examples ul { list-style: none; margin: 0; padding: 0; }
+  .ex-examples li { font-size: 0.875rem; margin-bottom: 0.35rem; }
+  .ex-examples li:last-child { margin-bottom: 0; }
+  .ex-examples a { color: #b87500; text-decoration: none; font-weight: 500; }
+  .ex-examples a:hover { color: #8a5a00; text-decoration: underline; }
+  .ex-examples a::before { content: '\1F4CE'; margin-right: 0.4rem; font-size: 0.875rem; }
+  .ex-fulllink {
+    display: inline-block; margin-top: 0.75rem;
+    padding: 0.5rem 1rem; background: var(--accent); color: #fff;
+    border-radius: 4px; text-decoration: none; font-size: 0.875rem; font-weight: 500;
+  }
+  .ex-fulllink:hover { background: #c00054; }
+
+  footer { background: var(--dark); color: rgba(254,254,254,0.6); text-align: center; padding: 1.5rem 2.5rem; font-size: 0.875rem; font-weight: 300; }
+
+  /* ---------- Flipped matrix (courses in columns) ---------- */
+  table.matrix col.col-type-label { width: 280px; }
+  table.matrix col.col-course-flip { width: 44px; }
+
+  table.matrix thead th.type-label-header {
+    background: #fafafa; text-align: left; font-weight: 500;
+    font-size: 0.75rem; color: var(--muted); padding: 0.5rem 0.75rem;
+    border-right: 2px solid var(--border); vertical-align: bottom;
+  }
+
+  table.matrix thead th.course-col {
+    background: #f9f9f9;
+    font-family: "SF Mono", Menlo, monospace;
+    font-size: 0.75rem; font-weight: 500;
+    color: var(--text);
+    white-space: nowrap;
+    height: 130px;
+    vertical-align: bottom;
+    padding: 0.25rem 0.2rem 0.4rem;
+    position: relative;
+  }
+  table.matrix thead th.course-col span {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    display: inline-block;
+    padding-bottom: 0.4rem;
+  }
+  table.matrix thead th.course-col a { color: var(--accent); text-decoration: none; font-weight: 600; }
+  table.matrix thead th.course-col a:hover { text-decoration: underline; }
+  table.matrix thead th.course-col.course-col-missing span { color: var(--muted); }
+
+  table.matrix tbody th.type-row {
+    text-align: left;
+    font-weight: 400;
+    font-size: 0.875rem;
+    background: #fafafa;
+    padding: 0.5rem 0.85rem;
+    line-height: 1.35;
+    border-right: 2px solid var(--border);
+    color: var(--text);
+  }
+
+  tr.cat-row th {
+    text-align: left;
+    font-weight: 700;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    padding: 0.45rem 0.85rem;
+  }
+  tr.cat-row.group-skriftlig th { background: #dfe8f5; color: #1e4faa; border-bottom: 1px solid #b8c6dd; }
+  tr.cat-row.group-muntlig th { background: #faf0ef; color: var(--accent); border-bottom: 1px solid #eed4d2; }
+  tr.cat-row.group-ovrigt th { background: #f2efe4; color: #8a6000; border-bottom: 1px solid #d9d0b6; }
+
+  tr.sub-cat-row th {
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    padding: 0.35rem 1.5rem;
+    color: var(--muted);
+  }
+  tr.sub-cat-row.group-sal th { background: #e8efef; color: #1a6a4a; }
+  tr.sub-cat-row.group-hemma th { background: #eef4fb; color: #3a6fd8; }
+
+</style>
+</head>
+<body>
+  <div class="topbar"><a href="s1stv.html">&larr; Statsvetarprogrammet</a><span class="prog-switch"><span>Byt program:</span><a href="s2psc-examination-matris.html">MaPS</a><a href="s2iag-examination-matris.html">IAGG</a></span></div>
+  <div class="container">
+    <h1>Examinationsmatris</h1>
+    <p class="subtitle">Statsvetarprogrammet (S1STV) &middot; &Ouml;versikt &ouml;ver examinationsformer per kurs</p>
+
+    <div class="intro">
+      <p>
+        Matrisen visar vilka typer av examinationsuppgifter som ing&aring;r i respektive kurs, med 16 olika
+        kategorier grupperade i <strong>skriftliga</strong>, <strong>muntliga</strong> och <strong>&ouml;vriga</strong>
+        former. <strong>Klicka p&aring; kurskoden</strong> (h&aring;ll musen &ouml;ver f&ouml;r fullst&auml;ndigt namn) f&ouml;r att g&aring; till kursens fullst&auml;ndiga
+        examinationsbeskrivning (ordagranna citat ur kursguiden). <strong>Klicka p&aring; en prick</strong>
+        f&ouml;r att se en kort beskrivning av just den examinationsformens uppl&auml;gg p&aring; kursen.
+      </p>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item"><span class="legend-swatch"></span> Ing&aring;r som examinationsform (klickbar)</div>
+      <div class="legend-item"><span class="legend-swatch legend-none"></span> Ing&aring;r ej</div>
+      <div class="legend-item"><span class="legend-swatch legend-example"></span> Exempelmaterial bifogat (klicka f&ouml;r att se)</div>
+    </div>
+
+    <div class="matrix-wrap">
+      <table class="matrix">
+        <colgroup>
+          <col class="col-type-label">
+          <col class="col-course-flip">
+          <col class="col-course-flip">
+          <col class="col-course-flip">
+          <col class="col-course-flip">
+          <col class="col-course-flip">
+          <col class="col-course-flip">
+          <col class="col-course-flip">
+          <col class="col-course-flip">
+          <col class="col-course-flip">
+          <col class="col-course-flip">
+          <col class="col-course-flip">
+          <col class="col-course-flip">
+          <col class="col-course-flip">
+          <col class="col-course-flip">
+          <col class="col-course-flip">
+        </colgroup>
+        <thead>
+          <tr>
+            <th class="type-label-header">Examinationsform</th>
+            <th class="course-col" data-tip="Institutioner och aktörer i demokratin"><span><a href="s1stv-examination-SK1113.html">SK1113</a></span></th>
+            <th class="course-col" data-tip="Politisk teori"><span><a href="s1stv-examination-SK1124.html">SK1124</a></span></th>
+            <th class="course-col" data-tip="Internationell politik"><span><a href="s1stv-examination-SK1125.html">SK1125</a></span></th>
+            <th class="course-col" data-tip="Demokrati och demokratisering"><span><a href="s1stv-examination-SK1214.html">SK1214</a></span></th>
+            <th class="course-col" data-tip="Tematisk fördjupning"><span><a href="s1stv-examination-SK1223.html">SK1223</a></span></th>
+            <th class="course-col" data-tip="Miljöpolitikens villkor"><span><a href="s1stv-examination-SK1224.html">SK1224</a></span></th>
+            <th class="course-col" data-tip="Världspolitiken: ordning, styrning, samarbete och diplomati"><span><a href="s1stv-examination-SK1217.html">SK1217</a></span></th>
+            <th class="course-col" data-tip="Conflict and Conflict Management"><span><a href="s1stv-examination-SK1127.html">SK1127</a></span></th>
+            <th class="course-col" data-tip="Foreign Policy Analysis"><span><a href="s1stv-examination-SK1136.html">SK1136</a></span></th>
+            <th class="course-col" data-tip="Institutionell utveckling och demokratisering i ett internationellt perspektiv"><span><a href="s1stv-examination-SK1227.html">SK1227</a></span></th>
+            <th class="course-col" data-tip="Statsvetaren i yrkeslivet"><span><a href="s1stv-examination-SK1421.html">SK1421</a></span></th>
+            <th class="course-col" data-tip="Praktik (30 hp)"><span><a href="s1stv-examination-SK1411.html">SK1411</a></span></th>
+            <th class="course-col" data-tip="Praktik (15 hp)"><span><a href="s1stv-examination-SK1412.html">SK1412</a></span></th>
+            <th class="course-col" data-tip="Metod inkl. uppsatssamordning"><span><a href="s1stv-examination-SK1313.html">SK1313</a></span></th>
+            <th class="course-col" data-tip="Examensarbete"><span><a href="s1stv-examination-SK1523.html">SK1523</a></span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="cat-row group-skriftlig"><th colspan="16">Skriftliga former</th></tr>
+          <tr class="sub-cat-row group-sal"><th colspan="16">I sal</th></tr>
+          <tr data-type="salstenta">
+            <th class="type-row">Salstentamen</th>
+            <td class="match" data-code="SK1113" data-type="salstenta"></td>
+            <td class="match has-example" data-code="SK1124" data-type="salstenta"></td>
+            <td class="match" data-code="SK1125" data-type="salstenta"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+          </tr>
+          <tr data-type="flervalsprov">
+            <th class="type-row">Flervalsprov</th>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="match" data-code="SK1214" data-type="flervalsprov"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+          </tr>
+          <tr class="sub-cat-row group-hemma"><th colspan="16">På egen tid</th></tr>
+          <tr data-type="pm_plan">
+            <th class="type-row">PM / forskningsplan</th>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="match" data-code="SK1223" data-type="pm_plan"></td>
+            <td class="match" data-code="SK1224" data-type="pm_plan"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="match" data-code="SK1421" data-type="pm_plan"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="match" data-code="SK1313" data-type="pm_plan"></td>
+            <td class="nomatch"></td>
+          </tr>
+          <tr data-type="uppsats">
+            <th class="type-row">Uppsats / research paper</th>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="match" data-code="SK1217" data-type="uppsats"></td>
+            <td class="match" data-code="SK1127" data-type="uppsats"></td>
+            <td class="match" data-code="SK1136" data-type="uppsats"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="match" data-code="SK1523" data-type="uppsats"></td>
+          </tr>
+          <tr data-type="litt_oversikt">
+            <th class="type-row">Litteratur- / forskningsöversikt</th>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="match" data-code="SK1214" data-type="litt_oversikt"></td>
+            <td class="match" data-code="SK1223" data-type="litt_oversikt"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+          </tr>
+          <tr data-type="policybrief">
+            <th class="type-row">Policy brief / policyanalys</th>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="match" data-code="SK1227" data-type="policybrief"></td>
+            <td class="match" data-code="SK1421" data-type="policybrief"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+          </tr>
+          <tr data-type="reflektion">
+            <th class="type-row">Reflektionstext</th>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="match" data-code="SK1127" data-type="reflektion"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="match" data-code="SK1411" data-type="reflektion"></td>
+            <td class="match" data-code="SK1412" data-type="reflektion"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+          </tr>
+          <tr data-type="seminarieinl">
+            <th class="type-row">Seminarieinlämning / memo</th>
+            <td class="match" data-code="SK1113" data-type="seminarieinl"></td>
+            <td class="match" data-code="SK1124" data-type="seminarieinl"></td>
+            <td class="nomatch"></td>
+            <td class="match" data-code="SK1214" data-type="seminarieinl"></td>
+            <td class="nomatch"></td>
+            <td class="match" data-code="SK1224" data-type="seminarieinl"></td>
+            <td class="match" data-code="SK1217" data-type="seminarieinl"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="match" data-code="SK1411" data-type="seminarieinl"></td>
+            <td class="match" data-code="SK1412" data-type="seminarieinl"></td>
+            <td class="match has-example" data-code="SK1313" data-type="seminarieinl"></td>
+            <td class="nomatch"></td>
+          </tr>
+          <tr data-type="rollspeldok">
+            <th class="type-row">Rollspelsdokument</th>
+            <td class="match" data-code="SK1113" data-type="rollspeldok"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+          </tr>
+          <tr class="cat-row group-muntlig"><th colspan="16">Muntliga former</th></tr>
+          <tr data-type="muntlig_pres">
+            <th class="type-row">Muntlig presentation</th>
+            <td class="match" data-code="SK1113" data-type="muntlig_pres"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="match" data-code="SK1214" data-type="muntlig_pres"></td>
+            <td class="match" data-code="SK1223" data-type="muntlig_pres"></td>
+            <td class="match" data-code="SK1224" data-type="muntlig_pres"></td>
+            <td class="match" data-code="SK1217" data-type="muntlig_pres"></td>
+            <td class="nomatch"></td>
+            <td class="match" data-code="SK1136" data-type="muntlig_pres"></td>
+            <td class="match" data-code="SK1227" data-type="muntlig_pres"></td>
+            <td class="match" data-code="SK1421" data-type="muntlig_pres"></td>
+            <td class="match" data-code="SK1411" data-type="muntlig_pres"></td>
+            <td class="match" data-code="SK1412" data-type="muntlig_pres"></td>
+            <td class="match" data-code="SK1313" data-type="muntlig_pres"></td>
+            <td class="match" data-code="SK1523" data-type="muntlig_pres"></td>
+          </tr>
+          <tr data-type="muntlig_tenta">
+            <th class="type-row">Muntlig tentamen</th>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="match" data-code="SK1127" data-type="muntlig_tenta"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="match" data-code="SK1313" data-type="muntlig_tenta"></td>
+            <td class="match" data-code="SK1523" data-type="muntlig_tenta"></td>
+          </tr>
+          <tr data-type="seminarium">
+            <th class="type-row">Seminariedeltagande</th>
+            <td class="match" data-code="SK1113" data-type="seminarium"></td>
+            <td class="match" data-code="SK1124" data-type="seminarium"></td>
+            <td class="match" data-code="SK1125" data-type="seminarium"></td>
+            <td class="match" data-code="SK1214" data-type="seminarium"></td>
+            <td class="match" data-code="SK1223" data-type="seminarium"></td>
+            <td class="match" data-code="SK1224" data-type="seminarium"></td>
+            <td class="match" data-code="SK1217" data-type="seminarium"></td>
+            <td class="match" data-code="SK1127" data-type="seminarium"></td>
+            <td class="match" data-code="SK1136" data-type="seminarium"></td>
+            <td class="match" data-code="SK1227" data-type="seminarium"></td>
+            <td class="match" data-code="SK1421" data-type="seminarium"></td>
+            <td class="match" data-code="SK1411" data-type="seminarium"></td>
+            <td class="match" data-code="SK1412" data-type="seminarium"></td>
+            <td class="match" data-code="SK1313" data-type="seminarium"></td>
+            <td class="match" data-code="SK1523" data-type="seminarium"></td>
+          </tr>
+          <tr data-type="opposition">
+            <th class="type-row">Opposition / peer review</th>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="match" data-code="SK1223" data-type="opposition"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="match" data-code="SK1523" data-type="opposition"></td>
+          </tr>
+          <tr class="cat-row group-ovrigt"><th colspan="16">Övrigt</th></tr>
+          <tr data-type="simulation">
+            <th class="type-row">Rollspel / simulation</th>
+            <td class="match" data-code="SK1113" data-type="simulation"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="match has-example" data-code="SK1127" data-type="simulation"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+          </tr>
+          <tr data-type="praktik">
+            <th class="type-row">Praktiktjänstgöring</th>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="match" data-code="SK1411" data-type="praktik"></td>
+            <td class="match" data-code="SK1412" data-type="praktik"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+          </tr>
+          <tr data-type="handledare">
+            <th class="type-row">Handledarutvärdering</th>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="match" data-code="SK1411" data-type="handledare"></td>
+            <td class="match" data-code="SK1412" data-type="handledare"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Om kategorierna</h2>
+    <div style="font-size: 0.875rem; color: var(--muted); line-height: 1.6; max-width: 840px;">
+      <p><strong style="color: var(--text);">Skriftligt i sal</strong> (&ouml;vervakat, tidsbegr&auml;nsat): <em>Salstentamen</em> = tentamen med essä- eller textfr&aring;gor p&aring; plats under tidsgr&auml;ns. <em>Flervalsprov</em> = uppgift med f&ouml;rdefinierade svarsalternativ.</p>
+      <p><strong style="color: var(--text);">Skriftligt p&aring; egen tid</strong> (inl&auml;mning): <em>PM / forskningsplan</em> = plan-/projektbeskrivning utan empirisk studie. <em>Uppsats / research paper</em> = analytisk text med egen unders&ouml;kning. <em>Litteratur-/forsknings&ouml;versikt</em> = sammanst&auml;llning av kunskapsl&auml;ge. <em>Policy brief / policyanalys</em> = till&auml;mpad text riktad till policybeslutare. <em>Reflektionstext</em> = self-reflektiv text &ouml;ver egen inl&auml;rning eller praktik. <em>Seminarieinl&auml;mning</em> = kortare text i f&ouml;rv&auml;g inf&ouml;r seminarium. <em>Rollspelsdokument</em> = dokument producerat i samband med rollspel/simulation (strategidokument, kommitt&eacute;bet&auml;nkande).</p>
+      <p><strong style="color: var(--text);">Muntliga former:</strong> <em>Muntlig presentation</em> = f&ouml;redrag/presentation. <em>Muntlig tentamen</em> = examinerande fr&aring;gestund. <em>Seminariedeltagande</em> = aktivt deltagande i diskussion. <em>Opposition / peer review</em> = strukturerad kritisk granskning av annan students arbete.</p>
+      <p><strong style="color: var(--text);">&Ouml;vrigt:</strong> <em>Rollspel / simulation</em> = examinationsmoment i rollspels- eller simulationsform. <em>Praktiktj&auml;nstg&ouml;ring</em> = den faktiska arbetsinsatsen vid praktikorganisation. <em>Handledarutv&auml;rdering</em> = extern bed&ouml;mning fr&aring;n praktikhandledare.</p>
+    </div>
+
+  </div>
+
+  <footer>Statsvetenskapliga institutionen, G&ouml;teborgs universitet</footer>
+
+  <!-- Popup modal -->
+  <div class="ex-modal" id="exModal" role="dialog" aria-modal="true">
+    <div class="ex-backdrop" data-close></div>
+    <div class="ex-dialog">
+      <div class="ex-header">
+        <div class="ex-header-text">
+          <div class="ex-course" id="exCourse"></div>
+          <div class="ex-type" id="exType"></div>
+        </div>
+        <button class="ex-close" data-close aria-label="Stäng">&times;</button>
+      </div>
+      <div class="ex-body">
+        <div id="exDescription"></div>
+        <div id="exExamples" class="ex-examples" hidden>
+          <div class="ex-examples-label">Exempelmaterial</div>
+          <ul id="exExamplesList"></ul>
+        </div>
+        <a class="ex-fulllink" id="exFullLink" href="#">&Ouml;ppna kurssidan med k&auml;llbilder &rarr;</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  (function() {
+    const TYPE_LABELS = {
+      'salstenta': 'Salstentamen',
+      'flervalsprov': 'Flervalsprov',
+      'pm_plan': 'PM / forskningsplan',
+      'uppsats': 'Uppsats / research paper',
+      'litt_oversikt': 'Litteratur- / forskningsöversikt',
+      'policybrief': 'Policy brief / policyanalys',
+      'reflektion': 'Reflektionstext',
+      'seminarieinl': 'Seminarieinlämning (kortare text)',
+      'rollspeldok': 'Rollspelsdokument',
+      'muntlig_pres': 'Muntlig presentation',
+      'muntlig_tenta': 'Muntlig tentamen',
+      'seminarium': 'Seminariedeltagande',
+      'opposition': 'Opposition / peer review',
+      'simulation': 'Rollspel / simulation',
+      'praktik': 'Praktiktjänstgöring',
+      'handledare': 'Handledarutvärdering'
+    };
+
+    const DESC = {
+      'SK1113': {
+        'salstenta': '<blockquote>Delmoment A examineras genom en salstentamen … Delmoment B examineras dels genom en obligatorisk muntlig gruppuppgift, dels genom en salstentamen.</blockquote>',
+        'seminarieinl': '<blockquote>Introduktionsveckan examineras genom en skriftlig och muntlig individuell seminarieuppgift, som betygsätts med U eller G.</blockquote>',
+        'rollspeldok': '<blockquote>Arbetena redovisas skriftligt i form av ett &rdquo;hemligt&rdquo; strategidokument (gruppövning 1) … Kommittéernas arbete redovisas i form av ett kommittébetänkande (gruppövning 2).</blockquote>',
+        'muntlig_pres': '<blockquote>I kommittébetänkandet beskrivs kommitténs förslag i form av en muntlig presentation inför de andra grupperna i ett avslutande seminarium.</blockquote>',
+        'seminarium': '<blockquote>… ett avslutande seminarium. Den muntliga redovisningen sammanfattas i en power-pointpresentation som också ska lämnas in. Kommittéprotokollet, power-pointpresentationen och den avslutande redovisningen betygsätts kollektivt …</blockquote>',
+        'simulation': '<blockquote>Grundlagskonventet genomförs i två steg i form av ett kombinerat rollspel/förhandlingsspel.</blockquote>'
+      },
+      'SK1124': {
+        'salstenta': '<blockquote>Kursen examineras genom en digital salstentamen och två litteraturseminarier. Tentamen består av kortare textfrågor. … Tentamen bedöms med betygen U, G och VG.</blockquote>',
+        'seminarieinl': '<blockquote>Varje student ska på förhand skriftlig besvara en av frågorna. … Det skriftliga svaret ska vara på cirka en sida.</blockquote>',
+        'seminarium': '<blockquote>Närvaro och aktivt deltagande vid seminarierna är obligatorisk och vid frånvaro skall du lämna in skriftliga svar på två av frågorna.</blockquote>'
+      },
+      'SK1125': {
+        'salstenta': '<blockquote>Tentamen är en digital salstentamen som består av 2 essäer och ett antal korta svar och definitioner av begrepp. Ni har 4 timmar att genomföra tentamen. … Tentamen bedöms med betygen U, G och VG.</blockquote>',
+        'seminarium': '<blockquote>Modulen "konstruktivism" examineras genom ett obligatoriskt och examinerande seminarium i små grupper. … Seminariet genomförs genom muntliga svar och genom att delta i diskussionen av frågorna som läraren ställer. … Studenternas prestation under seminariet bedöms med betyget U eller G.</blockquote>'
+      },
+      'SK1127': {
+        'uppsats': '<blockquote>Research paper with oral exam. Throughout the course, you will be working on a written research paper assignment, in which you analyze the root causes of a war of your choice. … In the second and final submission, you will submit the entire paper. This is the version that will be graded.</blockquote>',
+        'reflektion': '<blockquote>Submit a reflection essay (750 words) after each seminar, as instructed in greater detail in the seminar instructions.</blockquote>',
+        'muntlig_tenta': '<blockquote>The written assignment is combined with a short oral exam, focused on your paper. The oral exam will take about 15 minutes and will be conducted individually and focus on your paper. During the exam, you will answer two randomized questions … and a few short follow-up questions about your analysis.</blockquote>',
+        'seminarium': '<blockquote>Active seminar participation. During the course, we will meet twice for seminar exercises, which take the form of simulations. Seminars are graded pass/fail. To receive a passing grade, you will need to … (ii) Participate actively during the seminar.</blockquote>',
+        'simulation': '<blockquote>Seminar 1: Bargaining theory of war. … you will engage in a simulation based on the bargaining model of war. … Seminar 2: Conflict resolution. … you will engage in a mediation simulation aimed at resolving a conflict between two fictional states.</blockquote>'
+      },
+      'SK1136': {
+        'uppsats': '<blockquote>Written essay (3,000 words): Towards the end of the course, you will be able to choose to write on a specific research topic that will allow you to deepen your knowledge of a particular research problem in Foreign Policy Analysis and demonstrate your ability to apply FPA theories to empirical cases.</blockquote>',
+        'muntlig_pres': '<blockquote>Oral seminar presentation: You will be required to make one oral seminar presentation on this course. In preparation for the seminar, you will be working with 3-4 students and prepare a collective group presentation lasting about 30 minutes. … Based on an evaluation of your performance in the presentation, you will receive a Pass or Fail.</blockquote>',
+        'seminarium': '<blockquote>Active seminar presentation [participation]: There are three seminars on this course and participation is mandatory. You are required to actively prepare for and participate in all three seminars. … Each seminar is evaluated with the grade Pass or Fail.</blockquote>'
+      },
+      'SK1214': {
+        'flervalsprov': '<blockquote>Delmoment 3 sammanfattas i övning 2, en muntlig övning (gruppresentation) och en skriftlig övning (individuellt flervalsprov) (2 hp).</blockquote>',
+        'litt_oversikt': '<blockquote>Syftet med delmoment 5 är att ge studenterna möjlighet att med utgångspunkt i för kursen relevant litteratur fördjupa sig i ett ämne de finner intressant. Delmomentet sammanfattas i en individuell skriftlig litteraturöversikt.</blockquote>',
+        'seminarieinl': '<blockquote>Kursen examineras genom två individuella skriftliga och muntliga övningsuppgifter, en muntlig gruppresentation och ett individuellt flervalsprov samt en skriftlig litteraturöversikt.</blockquote>',
+        'muntlig_pres': '<blockquote>Delmoment 3 sammanfattas i övning 2, en muntlig övning (gruppresentation) … Delmoment 1 och 2 sammanfattas i en skriftlig och muntlig övning.</blockquote>',
+        'seminarium': '<blockquote>Delmoment 4 avslutas med en skriftlig essä och ett seminarium där studenterna närstuderar ett land … Delmoment 5 avslutas med ett seminarium där studenterna dels får redovisa sitt eget arbete, men också förväntas vara aktiva i granskningen av andra studenters arbeten.</blockquote>'
+      },
+      'SK1217': {
+        'uppsats': '<blockquote>Kursen examineras genom … en längre individuell skrivuppgift (7 hp). … Denna individuella skrivuppgift genomförs som en fallstudie.</blockquote>',
+        'seminarieinl': '<blockquote>Kursen examineras genom muntlig och skriftlig avrapportering av åtta obligatoriska arbetsuppgifter (8 hp).</blockquote>',
+        'muntlig_pres': '<blockquote>Kursen examineras genom muntlig och skriftlig avrapportering av åtta obligatoriska arbetsuppgifter (8 hp). … Den fjärde modulen, som har fokus på diplomati, har fler föreläsningar kombinerat med seminarier inriktade på att planera och genomföra en paneldebatt.</blockquote>',
+        'seminarium': '<blockquote>De tre första modulerna … ägnas åt att i tur och ordning behandla begreppen ordning, styrning och samarbete, genom föreläsningar, och olika typer av seminarier. Den fjärde modulen … har fler föreläsningar kombinerat med seminarier.</blockquote>'
+      },
+      'SK1223': {
+        'pm_plan': '<blockquote>Forskningsplan: Under det andra blocket ska studenterna utforma en forskningsplan som syftar till att besvara en specifik forskningsfråga. I forskningsplanen formulerar studenterna en egen empiriskt prövbar kausal modell inom ett givet och avgränsat utsnitt av världen.</blockquote>',
+        'litt_oversikt': '<blockquote>Forskningsöversikt: Under det första blocket ska studenterna … läsa in sig på ett forskningsområde som de själva tycker är intressant. … sammanställa en forskningsöversikt på 30 000 tecken som sammanfattar de huvudsakliga insikterna inom forskningen på området.</blockquote>',
+        'muntlig_pres': '<blockquote>Diskutera forskningsöversikten på ett examinerande seminarium … Diskutera forskningsplanen på ett examinerande seminarium.</blockquote>',
+        'seminarium': '<blockquote>Examinationen av forskningsöversikten och av forskningsplanen är det obligatorisk närvaro som gäller. … seminariedeltagare under samtliga seminarier hittills under terminen.</blockquote>',
+        'opposition': '<blockquote>Kommentera andra studenters forskningsöversikter på samma examinerande seminarium … Du kommer dock att få i uppgift att agera opponent på en specifik forskningsöversikt tillsammans med din grupp. … Kommentera andra studenters forskningsplaner.</blockquote>'
+      },
+      'SK1224': {
+        'pm_plan': '<blockquote>Block 2. Forskningsplan: Under det andra blocket ska studenterna utforma en forskningsplan som syftar till att besvara en specifik forskningsfråga.</blockquote>',
+        'seminarieinl': '<blockquote>Block 1. Seminarieuppgifter: Under det första blocket ska studenterna arbeta med de teman som behandlas på kursen genom skriftliga och muntliga seminarieuppgifter. … godkänt betyg på samtliga skriftliga seminarieuppgifter.</blockquote>',
+        'muntlig_pres': '<blockquote>Block 1. Seminarieuppgifter: Under det första blocket ska studenterna arbeta med de teman som behandlas på kursen genom skriftliga och muntliga seminarieuppgifter.</blockquote>',
+        'seminarium': '<blockquote>Blocken examineras genom obligatoriska seminarier samt skriftliga inlämningsuppgifter. … godkänt betyg på samtliga skriftliga seminarieuppgifter samt aktiv närvaro under seminarierna. Utöver detta krävs minst godkänt betyg på forskningsplanen samt aktiv närvaro under det examinerande seminariet.</blockquote>'
+      },
+      'SK1227': {
+        'policybrief': '<blockquote>The course works in three cycles … At the start of week 3, you submit your written assignment for this cycle. … [Each cycle has its own] Policy Brief Question(s). … Word limit: 850 words.</blockquote>',
+        'muntlig_pres': '<blockquote>The presentation you deliver gives you 1 credit.</blockquote><blockquote>Each student does one presentation … under one of the cycles.</blockquote>',
+        'seminarium': '<blockquote>Each Cycle (1 2 3), which includes showing up for discussion, presentations, and turning in the assignment, gives you 3 credits. … Discussion sessions should be attended. Attending one presentation in each presentation cycle is compulsory.</blockquote>'
+      },
+      'SK1313': {
+        'pm_plan': '<blockquote>PM2 är kursens slutuppgift och examineras. Momentet är värt 8hp och bedöms med U, G eller VG, baserat på både den skriftliga och den muntliga examinationen. I PM2 skisserar du ett helt forskningsprojekt, och du kan med fördel se det som upptakten till uppsatsen.</blockquote>',
+        'seminarieinl': '<blockquote>Till varje seminarium skriver gruppen en gemensam rapport som lämnas in på Canvas efter seminarietillfället. … Var och en av de sex obligatoriska gruppövningarna kan få betygen U eller G. Dessa moment är sammanlagt värda 7hp.</blockquote>',
+        'muntlig_pres': '<blockquote>Under seminariet redovisas övningen också muntligt. … Att presentera sitt arbete och kunna kommunicera sitt budskap framför en grupp är en viktig del av kursen.</blockquote>',
+        'muntlig_tenta': '<blockquote>PM2 … bedöms med U, G eller VG, baserat på både den skriftliga och den muntliga examinationen. … Om du missar det första tillfället för muntlig examination finns ytterligare ett tillfälle inbokat cirka en vecka efter. … Notera att det är endast studenter som lämnar in PM2 vid ordinarie inlämningstillfälle som kan genomföra den muntliga examinationen.</blockquote>',
+        'seminarium': '<blockquote>Kravet för att bli godkänd vid gruppövningarna är att man deltar aktivt. … Samtliga studenter förväntas vara tillräckligt förberedda för att på seminariet kunna delta i en diskussion och svara på frågor kring arbetet.</blockquote>'
+      },
+      'SK1411': {
+        'reflektion': '<blockquote>En praktikrapport - skriftlig analys av praktikplatsen … Att utvärdera praktikens relevans för din akademiska och professionella utveckling. Att visa förmåga att genomföra en analys och diskussion av praktiken, processer/organisatoriska aspekter som identifierats under praktikerfarenheten och den egna praktikinsatsen.</blockquote>',
+        'seminarieinl': '<blockquote>Ett arbetsprov på något som du har arbetat med under praktiken, t.ex. en rapport, presentation, eller någon annan form av analytiskt arbete. Arbetsprovet ska motsvara minst 40 arbetstimmar och omfatta cirka 2000 ord/cirka 6 sidor.</blockquote>',
+        'muntlig_pres': '<blockquote>En muntlig presentation vid en avslutande praktikmässa alternativt inlämning av videopresentation. Deltagandet vid praktikmässan är obligatoriskt och motsvarar ett av de högskolepoäng som kursen totalt ger.</blockquote>',
+        'seminarium': '<blockquote>Praktikkursen avslutas med en praktikmässa (eller seminarium eller webinarium) där praktikanter och framtida praktikanter/studenter kan dela och diskutera erfarenheter från olika praktikplatser. … Deltagandet vid praktikmässan är obligatoriskt.</blockquote>',
+        'praktik': '<blockquote>Praktikkursen genomförs vid en praktikorganisation där studenten utför självständigt och avancerat utrednings- och/eller utvecklingsarbete. … tillämpa kunskap som inhämtats under utbildningen genom att utföra självständigt och avancerat utrednings- och/eller utvecklingsarbete.</blockquote>',
+        'handledare': '<blockquote>Handledarens utvärdering (skickas per mail till handledaren i början av praktiken). Helst ska denna enkät fyllas i av din handledare efter, eller under ett konstruktivt samtal, mellan er om hur praktiken har fungerat. Skickas in av handledaren till praktiksamordnaren.</blockquote>'
+      },
+      'SK1412': {
+        'reflektion': '<blockquote>En praktikrapport - skriftlig analys av praktikplatsen … Att utvärdera praktikens relevans för din akademiska och professionella utveckling. Att visa förmåga att genomföra en analys och diskussion av praktiken, processer/organisatoriska aspekter som identifierats under praktikerfarenheten och den egna praktikinsatsen.</blockquote>',
+        'seminarieinl': '<blockquote>Ett arbetsprov på något som du har arbetat med under praktiken, t.ex. en rapport, presentation, eller någon annan form av analytiskt arbete. Arbetsprovet ska motsvara minst 40 arbetstimmar och omfatta cirka 2000 ord/cirka 6 sidor.</blockquote>',
+        'muntlig_pres': '<blockquote>En muntlig presentation vid en avslutande praktikmässa alternativt inlämning av videopresentation. Deltagandet vid praktikmässan är obligatoriskt och motsvarar ett av de högskolepoäng som kursen totalt ger.</blockquote>',
+        'seminarium': '<blockquote>Praktikkursen avslutas med en praktikmässa (eller seminarium eller webinarium) där praktikanter och framtida praktikanter/studenter kan dela och diskutera erfarenheter från olika praktikplatser. … Deltagandet vid praktikmässan är obligatoriskt.</blockquote>',
+        'praktik': '<blockquote>Praktikkursen genomförs vid en praktikorganisation där studenten utför självständigt och avancerat utrednings- och/eller utvecklingsarbete. … tillämpa kunskap som inhämtats under utbildningen genom att utföra självständigt och avancerat utrednings- och/eller utvecklingsarbete.</blockquote>',
+        'handledare': '<blockquote>Handledarens utvärdering (skickas per mail till handledaren i början av praktiken). Helst ska denna enkät fyllas i av din handledare efter, eller under ett konstruktivt samtal, mellan er om hur praktiken har fungerat. Skickas in av handledaren till praktiksamordnaren.</blockquote>'
+      },
+      'SK1421': {
+        'pm_plan': '<blockquote>Det mest omfattande temat på kursen är att färdigställa en detaljerad projektplan. OBS, ni ska skriva en plan för ett projekt, inte genomföra projektet. Projektet ska uppgå till cirka 6 månader. Även i detta fall arbetar ni i grupp om cirka tre, men ni sätter själva ihop grupperna.</blockquote>',
+        'policybrief': '<blockquote>Projektplanearbetet är tudelat i en del som är en policyanalys (hålls av Helena Stensöta) och som mynnar ut i ett konkret policyproblem ni vill adressera och en del där ni lär er använda projektverktyg för att konkretisera hur ni vill adressera policyproblemet (hålls av Christian Jensen).</blockquote>',
+        'muntlig_pres': '<blockquote>Föreläsning heldag Presentationsteknik - Cristel Coop … Idag ses det ofta som en självklarhet att man ska kunna framföra ett ämne på ett pedagogiskt och underhållande sätt. Men hur planerar man framförandet och bygger upp en god struktur? … På det obligatoriska seminariet om etik, som sker i helklass, redovisar grupperna sina respektive arbeten om etik.</blockquote>',
+        'seminarium': '<blockquote>Grupparbetet avslutas i ett obligatoriskt seminarium i helklass där grupperna redovisar sina arbeten muntligt inför hela klassen. … Praktikerbesöken är obligatoriska. … Workshop AI (obligatorisk).</blockquote>'
+      },
+      'SK1523': {
+        'uppsats': '<blockquote>Uppsatskursens huvudsyfte är att studenten ska lära sig att självständigt författa och försvara ett eget vetenskapligt arbete. Hen kommer därför att få att lära sig hur en planerar, genomför och redovisar en vetenskaplig undersökning.</blockquote>',
+        'muntlig_pres': '<blockquote>Studenten ska också kunna presentera och försvara sin undersökning och sina slutsatser vid ett seminarium. … självständigt planera, genomföra, rapportera och presentera en vetenskaplig undersökning.</blockquote>',
+        'muntlig_tenta': '<blockquote>… försvara en ståndpunkt i en vetenskaplig diskussion … studenten får kritiska och granskande frågor från både opponent (en annan student) samt från examinator.</blockquote>',
+        'seminarium': '<blockquote>I alla dessa moment ska studenten visa förmåga att använda ett vetenskapligt förhållningssätt. … Varje uppsatsskrivande student förväntas presentera och försvara sin uppsats samt agera opponent vid någon annans uppsatsseminarium.</blockquote>',
+        'opposition': '<blockquote>… framföra vetenskapligt grundad kritik på ett systematiskt och pedagogiskt sätt. … Varje uppsatsskrivande student förväntas … agera opponent vid någon annans uppsatsseminarium.</blockquote>'
+      }
+    };
+
+    // Example materials provided by Birgitta (PDF), shown when cell has has-example class
+    const EXAMPLES = {
+      'SK1124': {
+        'salstenta': [
+          { label: 'Tentamen HT25', href: 'underlag/19_exempelexaminationer/SK1124_Tenta_HT25.pdf' },
+          { label: 'Rättningsmall HT25', href: 'underlag/19_exempelexaminationer/SK1124_Tenta_Rättningsmall_HT25.pdf' }
+        ]
+      },
+      'SK1127': {
+        'simulation': [
+          { label: 'Rollspel — instruktioner', href: 'underlag/19_exempelexaminationer/SK1127_Rollspel.pdf' }
+        ]
+      },
+      'SK1313': {
+        'seminarieinl': [
+          { label: 'Övningsinstruktioner', href: 'underlag/19_exempelexaminationer/SK1313_Övningsinstruktioner.pdf' }
+        ]
+      }
+    };
+
+    const modal = document.getElementById('exModal');
+    const elCourse = document.getElementById('exCourse');
+    const elType = document.getElementById('exType');
+    const elDesc = document.getElementById('exDescription');
+    const elFull = document.getElementById('exFullLink');
+    const elExamples = document.getElementById('exExamples');
+    const elExamplesList = document.getElementById('exExamplesList');
+
+    document.querySelectorAll('td.match').forEach(td => {
+      const code = td.dataset.code;
+      const type = td.dataset.type;
+      if (!code || !type) return;
+      const hasExample = td.classList.contains('has-example');
+      td.setAttribute('title', hasExample ? 'Klicka för beskrivning + exempelmaterial' : 'Klicka för beskrivning');
+      td.addEventListener('click', () => showModal(code, type));
+    });
+
+    function showModal(code, type) {
+      elCourse.textContent = code;
+      elType.textContent = TYPE_LABELS[type] || type;
+      const desc = (DESC[code] && DESC[code][type]) || 'Ingen kort beskrivning registrerad.';
+      elDesc.innerHTML = desc;
+      elFull.href = `s1stv-examination-${code}.html`;
+
+      const examples = (EXAMPLES[code] && EXAMPLES[code][type]) || null;
+      if (examples && examples.length) {
+        elExamplesList.innerHTML = examples.map(ex =>
+          `<li><a href="${ex.href}" target="_blank">${ex.label}</a></li>`
+        ).join('');
+        elExamples.hidden = false;
+      } else {
+        elExamples.hidden = true;
+        elExamplesList.innerHTML = '';
+      }
+
+      modal.classList.add('open');
+    }
+
+    function closeModal() { modal.classList.remove('open'); }
+    modal.querySelectorAll('[data-close]').forEach(el =>
+      el.addEventListener('click', closeModal)
+    );
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
+    });
+  })();
+  </script>
+
+<script>
+(function() {
+  var tip = document.createElement('div');
+  tip.style.cssText = [
+    'position:fixed', 'z-index:9999', 'pointer-events:none',
+    'background:#24273a', 'color:#fff',
+    'font-family:acumin-pro,Helvetica,sans-serif', 'font-weight:400',
+    'font-size:0.8125rem', 'padding:6px 11px', 'border-radius:4px',
+    'white-space:nowrap', 'opacity:0', 'transition:opacity 0.12s',
+    'box-shadow:0 4px 14px rgba(0,0,0,0.18)'
+  ].join(';');
+  document.body.appendChild(tip);
+
+  function show(e) {
+    var el = e.currentTarget;
+    var text = el.getAttribute('data-tip');
+    if (!text) return;
+    tip.textContent = text;
+    var r = el.getBoundingClientRect();
+    tip.style.opacity = '0';
+    tip.style.left = '0px';
+    tip.style.top = '0px';
+    var tr = tip.getBoundingClientRect();
+    var x = r.left + r.width / 2 - tr.width / 2;
+    var y = r.top - tr.height - 6;
+    if (y < 4) y = r.bottom + 6;
+    if (x < 4) x = 4;
+    if (x + tr.width > window.innerWidth - 4) x = window.innerWidth - tr.width - 4;
+    tip.style.left = x + 'px';
+    tip.style.top = y + 'px';
+    tip.style.opacity = '1';
+  }
+  function hide() { tip.style.opacity = '0'; }
+
+  function attach() {
+    document.querySelectorAll('th.course-col[data-tip]').forEach(function(el) {
+      if (el.__tipBound) return;
+      el.__tipBound = true;
+      el.addEventListener('mouseenter', show);
+      el.addEventListener('mouseleave', hide);
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', attach);
+  } else {
+    attach();
+  }
+})();
+</script>
+</body>
+</html>

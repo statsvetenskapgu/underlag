@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Personal &ndash; Statsvetenskapliga institutionen</title>
+<link rel="stylesheet" href="https://use.typekit.net/zkx2sji.css">
+<style>
+  :root {
+    --dark: #24273a; --accent: #e2005e; --link: #0077cc;
+    --bg: #fefefe; --border: #e4e4e4; --text: #24273a; --muted: #737272;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: acumin-pro, Helvetica, sans-serif; font-weight: 300; font-size: 1rem; color: var(--text); background: var(--bg); line-height: 1.55; }
+  .topbar { background: var(--dark); padding: 0.6rem 2.5rem; font-size: 0.875rem; }
+  .topbar a { display: inline-block; color: #fff; background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.32); padding: 0.28rem 0.95rem; border-radius: 999px; text-decoration: none; font-weight: 400; transition: background 0.15s, border-color 0.15s; }
+  .topbar a:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .container { max-width: 1080px; margin: 0 auto; padding: 2.5rem 2.5rem 4rem; }
+  h1 { font-weight: 300; font-size: 2rem; margin-bottom: 0.5rem; }
+  .subtitle { font-size: 1rem; color: var(--muted); margin-bottom: 2rem; }
+  .intro { font-size: 0.9375rem; color: var(--muted); margin-bottom: 1.75rem; line-height: 1.65; max-width: 780px; }
+  .intro a { color: var(--link); }
+
+  .toc-pills { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 2rem; }
+  .toc-pills a { display: inline-block; padding: 0.35rem 0.85rem; border: 1px solid var(--border); border-radius: 999px; font-size: 0.8125rem; color: var(--text); text-decoration: none; }
+  .toc-pills a:hover { border-color: var(--accent); color: var(--accent); }
+  @media (min-width: 1540px) { .toc-pills { display: none; } }
+
+  h2 { font-size: 1.0625rem; font-weight: 600; margin: 2.25rem 0 0.75rem; padding-bottom: 0.4rem; border-bottom: 2px solid var(--dark); }
+  h2 .count { font-weight: 300; font-size: 0.875rem; color: var(--muted); margin-left: 0.4rem; }
+
+  .table-wrap { overflow-x: auto; margin-bottom: 1rem; }
+  table.staff-table { width: 100%; border-collapse: collapse; font-size: 0.9375rem; table-layout: fixed; }
+  table.staff-table th:nth-child(1), table.staff-table td:nth-child(1) { width: 25%; }
+  table.staff-table th:nth-child(2), table.staff-table td:nth-child(2) { width: 22%; }
+  table.staff-table th:nth-child(3), table.staff-table td:nth-child(3) { width: 33%; }
+  table.staff-table th:nth-child(4), table.staff-table td:nth-child(4) { width: 20%; }
+  table.staff-table th {
+    text-align: left; padding: 0.5rem 0.75rem; font-weight: 500; font-size: 0.75rem;
+    color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px;
+    border-bottom: 2px solid var(--dark); white-space: nowrap; background: #fafafa;
+  }
+  table.staff-table td { padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  table.staff-table tr:hover td { background: #fafafa; }
+  table.staff-table .cell-name a { color: var(--text); text-decoration: none; font-weight: 500; }
+  table.staff-table .cell-name a:hover { color: var(--accent); text-decoration: underline; }
+  table.staff-table .cell-progs { line-height: 1.7; }
+  table.staff-table .cell-name a { overflow-wrap: anywhere; }
+
+  .badge { display: inline-block; font-size: 0.6875rem; font-weight: 600; padding: 0.18rem 0.5rem; border-radius: 3px; letter-spacing: 0.3px; margin-right: 0.25rem; white-space: nowrap; text-decoration: none; }
+  a.badge:hover { text-decoration: underline; }
+  .badge.b-prof { background: #f4ecf7; color: #6a3a8a; }
+  .badge.b-fildr { background: #f4f4f4; color: #555; }
+  .badge.b-pris { background: #fff5e0; color: #8a6000; }
+  .badge.b-docent { background: #eef4fb; color: #1e4faa; }
+  .badge.b-excellent { background: #faf0ef; color: var(--accent); }
+
+  a.prog { text-decoration: none; }
+  a.prog:hover { text-decoration: underline; }
+  .prog { display: inline-block; font-family: "SF Mono", Menlo, monospace; font-size: 0.6875rem; font-weight: 600; padding: 0.18rem 0.5rem; border-radius: 3px; margin-right: 0.2rem; }
+  .prog.p-SVEP { background: #e8f5ec; color: #2d7a45; }
+  .prog.p-MAPS { background: #eef4fb; color: #1e4faa; }
+  .prog.p-IAGG { background: #f2efe4; color: #8a6000; }
+
+  
+  .ped-tag { display: inline-block; font-family: "SF Mono", Menlo, monospace; font-size: 0.6875rem; font-weight: 600; padding: 0.18rem 0.5rem; border-radius: 3px; margin-right: 0.2rem; text-decoration: none; }
+  .ped-tag:hover { text-decoration: underline; }
+  .ped-tag.ped-101 { background: #e8f5ec; color: #2d7a45; }
+  .ped-tag.ped-102 { background: #e6eef9; color: #1e4faa; }
+  .ped-tag.ped-103 { background: #f5edf7; color: #6a3a8a; }
+  .ped-tag.ped-201 { background: #fdf3e0; color: #8a6000; }
+
+  .muted { color: var(--muted); font-style: italic; font-size: 0.8125rem; }
+
+  footer { background: var(--dark); color: rgba(254,254,254,0.6); text-align: center; padding: 1.5rem 2.5rem; font-size: 0.875rem; font-weight: 300; }
+
+  /* Innehållsmeny i vänsterkanten */
+  .toc { position: fixed; top: 86px; left: 1.25rem; width: 200px; display: none; font-size: 0.8125rem; z-index: 10;
+         background: rgba(255,255,255,0.97); border: 1px solid var(--border); border-radius: 6px;
+         padding: 0.85rem 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.05); max-height: calc(100vh - 120px); overflow-y: auto; }
+  @media (min-width: 1540px) { .toc { display: block; } }
+  .toc .toc-label { font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin-bottom: 0.5rem; }
+  .toc a { display: block; padding: 0.28rem 0 0.28rem 0.7rem; color: var(--muted); text-decoration: none; line-height: 1.35; border-left: 2px solid var(--border); transition: color 0.12s, border-color 0.12s; }
+  .toc a:hover { color: var(--accent); border-left-color: var(--accent); }
+</style>
+</head>
+<body>
+  <div class="topbar"><a href="index.html">&larr; Tillbaka till portalen</a></div>
+    <nav class="toc" aria-label="Innehåll">
+    <div class="toc-label">Innehåll</div>
+    <a href="#professor">Professor (28)</a>
+    <a href="#lektor">Lektor (22)</a>
+    <a href="#biträdande-lektor">Biträdande lektor (6)</a>
+    <a href="#forskare">Forskare (4)</a>
+    <a href="#post-doc">Post-doc (12)</a>
+    <a href="#doktorand">Doktorand (22)</a>
+    <a href="#seniorprofessor-seniorforskare">Seniorprofessor / Seniorforskare (3)</a>
+    <a href="#emerita-emeritus">Emerita / Emeritus (5)</a>
+    <a href="#verksamhetsstod">Verksamhetsstöd inom utbildning (9)</a>
+  </nav>
+
+  <div class="container">
+    <h1>Personal vid Statsvetenskapliga institutionen</h1>
+    <p class="subtitle">Anställda grupperade efter tjänstebenämning</p>
+
+    <div class="intro">
+      <p>
+        K&auml;llor: <a href="https://www.gu.se/statsvetenskap/professorer" target="_blank" rel="noopener">Professorer</a>,
+        <a href="https://www.gu.se/statsvetenskap/lektorer-och-bitradande-lektorer" target="_blank" rel="noopener">Lektorer/bitr&auml;dande</a>,
+        <a href="https://www.gu.se/statsvetenskap/forskare-och-postdoktorer" target="_blank" rel="noopener">Forskare/postdoktorer</a>,
+        <a href="https://www.gu.se/statsvetenskap/doktorander" target="_blank" rel="noopener">Doktorander</a> och
+        <a href="https://www.gu.se/om-universitetet/hitta-person?affiliation_types=Administrativ%20personal&amp;hits=35&amp;organisation=Statsvetenskapliga%20institutionen" target="_blank" rel="noopener">Administrativ personal</a> p&aring; gu.se.
+        Klick p&aring; namn &ouml;ppnar personens hitta-person-sida hos GU.
+        Kolumnen <em>Pedagogiska meriter</em> avser kurser som ges p&aring; GU. L&auml;rare kan &auml;ven ha pedagogiska meriter fr&aring;n andra l&auml;ros&auml;ten utan att det listas h&auml;r.
+        Kolumnen <em>Program</em> visar de program (SVEP/MAPS/IAGG) d&auml;r personen &auml;r kursansvarig eller listad som l&auml;rare i n&aring;gon kursguide. M&aring;nga l&auml;rare handleder &auml;ven examensarbeten p&aring; programmen, eller undervisar p&aring; andra utbildningar, utan att det framg&aring;r h&auml;r.
+      </p>
+    </div>
+
+    <div class="toc-pills">
+      <a href="#professor">Professor (28)</a>
+      <a href="#lektor">Lektor (22)</a>
+      <a href="#biträdande-lektor">Biträdande lektor (6)</a>
+      <a href="#forskare">Forskare (4)</a>
+      <a href="#post-doc">Post-doc (12)</a>
+      <a href="#doktorand">Doktorand (22)</a>
+      <a href="#seniorprofessor-seniorforskare">Seniorprofessor / Seniorforskare (3)</a>
+      <a href="#emerita-emeritus">Emerita / Emeritus (5)</a>
+      <a href="#verksamhetsstod">Verksamhetsstöd inom utbildning (9)</a>
+    </div>
+
+    <h2 id="professor">Professor <span class="count">(28)</span></h2>
+    <div class="table-wrap">
+    <table class="staff-table">
+      <thead>
+        <tr><th>Namn</th><th>Grad</th><th>Pedagogiska meriter</th><th>Program</th></tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/amyalexander" target="_blank" rel="noopener">Amy Alexander</a></td>
+        <td><span class="badge b-prof">Professor</span></td>
+        <td><a class="ped-tag ped-101" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE101.pdf" target="_blank" rel="noopener">HPE101</a> <a class="ped-tag ped-102" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE102.pdf" target="_blank" rel="noopener">HPE102</a> <a class="ped-tag ped-103" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE103.pdf" target="_blank" rel="noopener">HPE103</a> <a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">HPE201</a></td>
+        <td class="cell-progs"><a class="prog p-SVEP" href="s1stv-larare.html">SVEP</a> <a class="prog p-MAPS" href="s2psc-larare.html">MAPS</a> <a class="prog p-IAGG" href="s2iag-larare.html">IAGG</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/monikabauhr" target="_blank" rel="noopener">Monika Bauhr</a></td>
+        <td><span class="badge b-prof">Professor</span></td>
+        <td><a class="ped-tag ped-101" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE101.pdf" target="_blank" rel="noopener">HPE101</a> <a class="ped-tag ped-103" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE103.pdf" target="_blank" rel="noopener">HPE103</a> <a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">HPE201</a></td>
+        <td class="cell-progs"><a class="prog p-SVEP" href="s1stv-larare.html">SVEP</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/ulfbjereld" target="_blank" rel="noopener">Ulf Bjereld</a></td>
+        <td><span class="badge b-prof">Professor</span></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td class="cell-progs"><a class="prog p-SVEP" href="s1stv-larare.html">SVEP</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/fridaborang" target="_blank" rel="noopener">Frida Boräng</a></td>
+        <td><span class="badge b-prof">Professor</span></td>
+        <td><a class="ped-tag ped-102" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE102.pdf" target="_blank" rel="noopener">HPE102</a> <a class="ped-tag ped-103" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE103.pdf" target="_blank" rel="noopener">HPE103</a> <a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">HPE201</a></td>
+        <td class="cell-progs"><a class="prog p-MAPS" href="s2psc-larare.html">MAPS</a> <a class="prog p-IAGG" href="s2iag-larare.html">IAGG</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/nicholascharron" target="_blank" rel="noopener">Nicholas Charron</a></td>
+        <td><span class="badge b-prof">Professor</span></td>
+        <td><a class="ped-tag ped-102" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE102.pdf" target="_blank" rel="noopener">HPE102</a> <a class="ped-tag ped-103" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE103.pdf" target="_blank" rel="noopener">HPE103</a> <a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">HPE201</a></td>
+        <td class="cell-progs"><a class="prog p-MAPS" href="s2psc-larare.html">MAPS</a> <a class="prog p-IAGG" href="s2iag-larare.html">IAGG</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/carldahlstrom" target="_blank" rel="noopener">Carl Dahlström</a></td>
+        <td><span class="badge b-prof">Professor</span></td>
+        <td><a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">HPE201</a></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/mariedemker" target="_blank" rel="noopener">Marie Demker</a></td>
+        <td><span class="badge b-prof">Professor</span></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td class="cell-progs"><a class="prog p-SVEP" href="s1stv-larare.html">SVEP</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/goranduus-otterstrom" target="_blank" rel="noopener">Göran Duus-Otterström</a></td>
+        <td><span class="badge b-prof">Professor</span></td>
+        <td><a class="ped-tag ped-101" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE101.pdf" target="_blank" rel="noopener">HPE101</a> <a class="ped-tag ped-103" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE103.pdf" target="_blank" rel="noopener">HPE103</a> <a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">HPE201</a></td>
+        <td class="cell-progs"><a class="prog p-SVEP" href="s1stv-larare.html">SVEP</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/ann-marieekengren" target="_blank" rel="noopener">Ann-Marie Ekengren</a></td>
+        <td><span class="badge b-prof">Professor</span></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td class="cell-progs"><a class="prog p-SVEP" href="s1stv-larare.html">SVEP</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/linaeriksson" target="_blank" rel="noopener">Lina Eriksson</a></td>
+        <td><span class="badge b-prof">Professor</span></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td class="cell-progs"><a class="prog p-SVEP" href="s1stv-larare.html">SVEP</a> <a class="prog p-MAPS" href="s2psc-larare.html">MAPS</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/mikaelgilljam" target="_blank" rel="noopener">Mikael Gilljam</a></td>
+        <td><span class="badge b-prof">Professor</span></td>
+        <td><span class="badge b-pris">Pedagogiskt pris</span></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/victorlapuentegine" target="_blank" rel="noopener">Victor Lapuente Gine</a></td>
+        <td><span class="badge b-prof">Professor</span></td>
+        <td><a class="ped-tag ped-101" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE101.pdf" target="_blank" rel="noopener">HPE101</a> <a class="ped-tag ped-102" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE102.pdf" target="_blank" rel="noopener">HPE102</a> <a class="ped-tag ped-103" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE103.pdf" target="_blank" rel="noopener">HPE103</a> <a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">HPE201</a></td>
+        <td class="cell-progs"><a class="prog p-MAPS" href="s2psc-larare.html">MAPS</a> <a class="prog p-IAGG" href="s2iag-larare.html">IAGG</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/marciagrimes" target="_blank" rel="noopener">Marcia Grimes</a></td>
+        <td><span class="badge b-prof">Professor</span></td>
+        <td><a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">HPE201</a></td>
+        <td class="cell-progs"><a class="prog p-SVEP" href="s1stv-larare.html">SVEP</a> <a class="prog p-MAPS" href="s2psc-larare.html">MAPS</a> <a class="prog p-IAGG" href="s2iag-larare.html">IAGG</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/niklasharring" target="_blank" rel="noopener">Niklas Harring</a></td>
+        <td><span class="badge b-prof">Professor</span></td>
+        <td><a class="ped-tag ped-101" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE101.pdf" target="_blank" rel="noopener">HPE101</a> <a class="ped-tag ped-102" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE102.pdf" target="_blank" rel="noopener">HPE102</a> <a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">HPE201</a> <a class="ped-tag ped-103" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-3-sjalvstandigt-arbete-pil103" target="_blank" rel="noopener">PIL103</a></td>
+        <td class="cell-progs"><a class="prog p-SVEP" href="s1stv-larare.html">SVEP</a> <a class="prog p-MAPS" href="s2psc-larare.html">MAPS</a> <a class="prog p-IAGG" href="s2iag-larare.html">IAGG</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/sverkerjagers" target="_blank" rel="noopener">Sverker C. Jagers</a></td>
+        <td><span class="badge b-prof">Professor</span></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/andrejkokkonen" target="_blank" rel="noopener">Andrej Kokkonen</a></td>
+        <td><span class="badge b-prof">Professor</span></td>
+        <td><a class="ped-tag ped-101" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE101.pdf" target="_blank" rel="noopener">HPE101</a> <a class="ped-tag ped-102" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE102.pdf" target="_blank" rel="noopener">HPE102</a> <a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">HPE201</a> <a class="ped-tag ped-103" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-3-sjalvstandigt-arbete-pil103" target="_blank" rel="noopener">PIL103</a></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/ann-kristinkolln" target="_blank" rel="noopener">Ann-Kristin Kölln</a></td>
+        <td><span class="badge b-prof">Professor</span></td>
+        <td><a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">HPE201</a> <a class="ped-tag ped-101" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-1-baskurs-pil101" target="_blank" rel="noopener">PIL101</a> <a class="ped-tag ped-103" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-3-sjalvstandigt-arbete-pil103" target="_blank" rel="noopener">PIL103</a></td>
+        <td class="cell-progs"><a class="prog p-SVEP" href="s1stv-larare.html">SVEP</a> <a class="prog p-MAPS" href="s2psc-larare.html">MAPS</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/staffanilindberg" target="_blank" rel="noopener">Staffan I. Lindberg</a></td>
+        <td><span class="badge b-prof">Professor</span></td>
+        <td><a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">HPE201</a></td>
+        <td class="cell-progs"><a class="prog p-SVEP" href="s1stv-larare.html">SVEP</a> <a class="prog p-MAPS" href="s2psc-larare.html">MAPS</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/johanneslindvall" target="_blank" rel="noopener">Johannes Lindvall</a></td>
+        <td><span class="badge b-prof">Professor</span></td>
+        <td><a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">HPE201</a></td>
+        <td class="cell-progs"><a class="prog p-SVEP" href="s1stv-larare.html">SVEP</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/ellenlust" target="_blank" rel="noopener">Ellen Lust</a></td>
+        <td><span class="badge b-prof">Professor</span></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/elinnaurin" target="_blank" rel="noopener">Elin Naurin</a></td>
+        <td><span class="badge b-prof">Professor</span></td>
+        <td><a class="ped-tag ped-101" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE101.pdf" target="_blank" rel="noopener">HPE101</a> <a class="ped-tag ped-102" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE102.pdf" target="_blank" rel="noopener">HPE102</a> <a class="ped-tag ped-103" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE103.pdf" target="_blank" rel="noopener">HPE103</a> <a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">HPE201</a></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/marinanistotskaya" target="_blank" rel="noopener">Marina Nistotskaya</a></td>
+        <td><span class="badge b-prof">Professor</span></td>
+        <td><a class="ped-tag ped-101" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE101.pdf" target="_blank" rel="noopener">HPE101</a> <a class="ped-tag ped-102" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE102.pdf" target="_blank" rel="noopener">HPE102</a> <a class="ped-tag ped-103" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE103.pdf" target="_blank" rel="noopener">HPE103</a> <a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">HPE201</a></td>
+        <td class="cell-progs"><a class="prog p-SVEP" href="s1stv-larare.html">SVEP</a> <a class="prog p-MAPS" href="s2psc-larare.html">MAPS</a> <a class="prog p-IAGG" href="s2iag-larare.html">IAGG</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/henrikoscarsson" target="_blank" rel="noopener">Henrik Ekengren Oscarsson</a></td>
+        <td><span class="badge b-prof">Professor</span></td>
+        <td><span class="badge b-pris">Pedagogiskt pris</span></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/mikaelpersson3" target="_blank" rel="noopener">Mikael Persson</a></td>
+        <td><span class="badge b-prof">Professor</span></td>
+        <td><a class="ped-tag ped-102" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE102.pdf" target="_blank" rel="noopener">HPE102</a> <a class="ped-tag ped-103" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE103.pdf" target="_blank" rel="noopener">HPE103</a> <a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">HPE201</a></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/helenastensota" target="_blank" rel="noopener">Helena Olofsdotter Stensöta</a></td>
+        <td><span class="badge b-prof">Professor</span></td>
+        <td><a class="ped-tag ped-102" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE102.pdf" target="_blank" rel="noopener">HPE102</a> <a class="ped-tag ped-103" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE103.pdf" target="_blank" rel="noopener">HPE103</a> <a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">HPE201</a></td>
+        <td class="cell-progs"><a class="prog p-SVEP" href="s1stv-larare.html">SVEP</a> <a class="prog p-IAGG" href="s2iag-larare.html">IAGG</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/akselsundstrom" target="_blank" rel="noopener">Aksel Sundström</a></td>
+        <td><span class="badge b-prof">Professor</span></td>
+        <td><a class="ped-tag ped-101" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE101.pdf" target="_blank" rel="noopener">HPE101</a> <a class="ped-tag ped-102" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE102.pdf" target="_blank" rel="noopener">HPE102</a> <a class="ped-tag ped-103" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE103.pdf" target="_blank" rel="noopener">HPE103</a> <a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">HPE201</a></td>
+        <td class="cell-progs"><a class="prog p-MAPS" href="s2psc-larare.html">MAPS</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/anntowns" target="_blank" rel="noopener">Ann Towns</a></td>
+        <td><span class="badge b-prof">Professor</span></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td class="cell-progs"><a class="prog p-SVEP" href="s1stv-larare.html">SVEP</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/lenawangnerud" target="_blank" rel="noopener">Lena Wängnerud</a></td>
+        <td><span class="badge b-prof">Professor</span></td>
+        <td><span class="badge b-pris">Pedagogiskt pris</span></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h2 id="lektor">Lektor <span class="count">(22)</span></h2>
+    <div class="table-wrap">
+    <table class="staff-table">
+      <thead>
+        <tr><th>Namn</th><th>Grad</th><th>Pedagogiska meriter</th><th>Program</th></tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/mattiasagerberg" target="_blank" rel="noopener">Mattias Agerberg</a></td>
+        <td><span class="badge b-docent">Docent</span></td>
+        <td><a class="ped-tag ped-101" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE101.pdf" target="_blank" rel="noopener">HPE101</a> <a class="ped-tag ped-102" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE102.pdf" target="_blank" rel="noopener">HPE102</a> <a class="ped-tag ped-103" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE103.pdf" target="_blank" rel="noopener">HPE103</a> <a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">HPE201</a></td>
+        <td class="cell-progs"><a class="prog p-SVEP" href="s1stv-larare.html">SVEP</a> <a class="prog p-MAPS" href="s2psc-larare.html">MAPS</a> <a class="prog p-IAGG" href="s2iag-larare.html">IAGG</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/lisbethaggestam" target="_blank" rel="noopener">Lisbeth Aggestam</a></td>
+        <td><span class="badge b-docent">Docent</span></td>
+        <td><a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">HPE201</a></td>
+        <td class="cell-progs"><a class="prog p-SVEP" href="s1stv-larare.html">SVEP</a> <a class="prog p-IAGG" href="s2iag-larare.html">IAGG</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/annabendz" target="_blank" rel="noopener">Anna Bendz</a></td>
+        <td><span class="badge b-docent">Docent</span></td>
+        <td><a class="ped-tag ped-101" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE101.pdf" target="_blank" rel="noopener">HPE101</a> <a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">HPE201</a> <a class="ped-tag ped-103" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-3-sjalvstandigt-arbete-pil103" target="_blank" rel="noopener">PIL103</a></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/lindaberg2" target="_blank" rel="noopener">Linda Berg</a></td>
+        <td><span class="badge b-fildr">Fil Dr</span></td>
+        <td><a class="badge b-pris" href="https://www.gu.se/nyheter/cergu-medarbetare-har-fatt-pedagogiskt-pris" target="_blank" rel="noopener">Pedagogiskt pris</a> <a class="ped-tag ped-101" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE101.pdf" target="_blank" rel="noopener">HPE101</a> <a class="ped-tag ped-102" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE102.pdf" target="_blank" rel="noopener">HPE102</a> <a class="ped-tag ped-103" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE103.pdf" target="_blank" rel="noopener">HPE103</a></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/andreasbagenholm" target="_blank" rel="noopener">Andreas Bågenholm</a></td>
+        <td><span class="badge b-fildr">Fil Dr</span></td>
+        <td><a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">HPE201</a> <a class="ped-tag ped-101" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-1-baskurs-pil101" target="_blank" rel="noopener">PIL101</a> <a class="ped-tag ped-102" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-2-omradesspecifik-pedagogik-pil102" target="_blank" rel="noopener">PIL102</a> <a class="ped-tag ped-103" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-3-sjalvstandigt-arbete-pil103" target="_blank" rel="noopener">PIL103</a></td>
+        <td class="cell-progs"><a class="prog p-SVEP" href="s1stv-larare.html">SVEP</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/agnescornell" target="_blank" rel="noopener">Agnes Cornell</a></td>
+        <td><span class="badge b-docent">Docent</span></td>
+        <td><a class="ped-tag ped-101" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE101.pdf" target="_blank" rel="noopener">HPE101</a> <a class="ped-tag ped-103" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE103.pdf" target="_blank" rel="noopener">HPE103</a></td>
+        <td class="cell-progs"><a class="prog p-MAPS" href="s2psc-larare.html">MAPS</a> <a class="prog p-IAGG" href="s2iag-larare.html">IAGG</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/henrikfriberg-fernros" target="_blank" rel="noopener">Henrik Friberg-Fernros</a></td>
+        <td><span class="badge b-docent">Docent</span></td>
+        <td><a class="ped-tag ped-101" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE101.pdf" target="_blank" rel="noopener">HPE101</a> <a class="ped-tag ped-102" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE102.pdf" target="_blank" rel="noopener">HPE102</a> <a class="ped-tag ped-103" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE103.pdf" target="_blank" rel="noopener">HPE103</a> <a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">HPE201</a></td>
+        <td class="cell-progs"><a class="prog p-SVEP" href="s1stv-larare.html">SVEP</a> <a class="prog p-IAGG" href="s2iag-larare.html">IAGG</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/ann-kristinjonasson" target="_blank" rel="noopener">Ann-Kristin Jonasson</a></td>
+        <td><span class="badge b-fildr">Fil Dr</span></td>
+        <td><a class="ped-tag ped-101" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE101.pdf" target="_blank" rel="noopener">HPE101</a> <a class="ped-tag ped-102" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE102.pdf" target="_blank" rel="noopener">HPE102</a> <a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">HPE201</a> <a class="ped-tag ped-103" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-3-sjalvstandigt-arbete-pil103" target="_blank" rel="noopener">PIL103</a></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/kristenkao" target="_blank" rel="noopener">Kristen Kao</a></td>
+        <td><span class="badge b-docent">Docent</span></td>
+        <td><a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">HPE201</a> <a class="ped-tag ped-103" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-3-sjalvstandigt-arbete-pil103" target="_blank" rel="noopener">PIL103</a></td>
+        <td class="cell-progs"><a class="prog p-IAGG" href="s2iag-larare.html">IAGG</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/magnuslundgren" target="_blank" rel="noopener">Magnus Lundgren</a></td>
+        <td><span class="badge b-docent">Docent</span></td>
+        <td><a class="badge b-pris" href="https://www.gu.se/forskning/priset-har-bidragit-till-min-vidare-kultivering-som-larare" target="_blank" rel="noopener">Pedagogiskt pris</a> <a class="ped-tag ped-101" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-1-baskurs-pil101" target="_blank" rel="noopener">PIL101</a> <a class="ped-tag ped-102" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-2-omradesspecifik-pedagogik-pil102" target="_blank" rel="noopener">PIL102</a> <a class="ped-tag ped-103" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-3-sjalvstandigt-arbete-pil103" target="_blank" rel="noopener">PIL103</a> <a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">PIL201</a></td>
+        <td class="cell-progs"><a class="prog p-SVEP" href="s1stv-larare.html">SVEP</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/nikolaymarinov" target="_blank" rel="noopener">Nikolay Marinov</a></td>
+        <td><span class="badge b-fildr">Fil Dr</span></td>
+        <td><a class="ped-tag ped-101" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-1-baskurs-pil101" target="_blank" rel="noopener">PIL101</a> <a class="ped-tag ped-102" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-2-omradesspecifik-pedagogik-pil102" target="_blank" rel="noopener">PIL102</a> <a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">PIL201</a></td>
+        <td class="cell-progs"><a class="prog p-SVEP" href="s1stv-larare.html">SVEP</a> <a class="prog p-MAPS" href="s2psc-larare.html">MAPS</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/ulrikamoller" target="_blank" rel="noopener">Ulrika Möller</a></td>
+        <td><span class="badge b-docent">Docent</span></td>
+        <td><a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">HPE201</a></td>
+        <td class="cell-progs"><a class="prog p-SVEP" href="s1stv-larare.html">SVEP</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/birgittaniklasson" target="_blank" rel="noopener">Birgitta Niklasson</a></td>
+        <td><span class="badge b-docent">Docent</span></td>
+        <td><a class="ped-tag ped-101" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE101.pdf" target="_blank" rel="noopener">HPE101</a> <a class="ped-tag ped-102" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE102.pdf" target="_blank" rel="noopener">HPE102</a> <a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">HPE201</a> <a class="ped-tag ped-103" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-3-sjalvstandigt-arbete-pil103" target="_blank" rel="noopener">PIL103</a></td>
+        <td class="cell-progs"><a class="prog p-SVEP" href="s1stv-larare.html">SVEP</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/annapersson2" target="_blank" rel="noopener">Anna Persson</a></td>
+        <td><span class="badge b-docent">Docent</span></td>
+        <td><a class="ped-tag ped-102" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE102.pdf" target="_blank" rel="noopener">HPE102</a> <a class="ped-tag ped-103" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE103.pdf" target="_blank" rel="noopener">HPE103</a> <a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">HPE201</a></td>
+        <td class="cell-progs"><a class="prog p-SVEP" href="s1stv-larare.html">SVEP</a> <a class="prog p-IAGG" href="s2iag-larare.html">IAGG</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/florenceso" target="_blank" rel="noopener">Florence So</a></td>
+        <td><span class="badge b-docent">Docent</span></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td class="cell-progs"><a class="prog p-MAPS" href="s2psc-larare.html">MAPS</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/jacobsohlberg" target="_blank" rel="noopener">Jacob Sohlberg</a></td>
+        <td><span class="badge b-docent">Docent</span></td>
+        <td><a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">HPE201</a> <a class="ped-tag ped-103" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-3-sjalvstandigt-arbete-pil103" target="_blank" rel="noopener">PIL103</a></td>
+        <td class="cell-progs"><a class="prog p-SVEP" href="s1stv-larare.html">SVEP</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/mariasolevid" target="_blank" rel="noopener">Maria Solevid</a></td>
+        <td><span class="badge b-docent">Docent</span></td>
+        <td><a class="ped-tag ped-101" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE101.pdf" target="_blank" rel="noopener">HPE101</a> <a class="ped-tag ped-102" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE102.pdf" target="_blank" rel="noopener">HPE102</a> <a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">HPE201</a></td>
+        <td class="cell-progs"><a class="prog p-MAPS" href="s2psc-larare.html">MAPS</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/andreaspehar" target="_blank" rel="noopener">Andrea Spehar</a></td>
+        <td><span class="badge b-docent">Docent</span></td>
+        <td><a class="badge b-pris" href="https://www.gu.se/nyheter/cergu-medarbetare-har-fatt-pedagogiskt-pris" target="_blank" rel="noopener">Pedagogiskt pris</a> <a class="ped-tag ped-101" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE101.pdf" target="_blank" rel="noopener">HPE101</a> <a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">HPE201</a></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/anderssundell" target="_blank" rel="noopener">Anders Sundell</a></td>
+        <td><span class="badge b-docent">Docent</span></td>
+        <td><a class="badge b-pris" href="https://www.gu.se/samhallsvetenskap/om-oss/kvalitetsarbete/fakultetens-pedagogiska-pris#accordion=7acb3d7d-e65c-4110-9aa1-684adda731df" target="_blank" rel="noopener">Pedagogiskt pris</a> <a class="badge b-excellent" href="https://www.gu.se/studera/hitta-utbildning/fem-fragor-till-anders-sundell-nyutnamnd-excellent-larare" target="_blank" rel="noopener">Excellent lärare</a> <a class="ped-tag ped-101" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE101.pdf" target="_blank" rel="noopener">HPE101</a> <a class="ped-tag ped-102" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE102.pdf" target="_blank" rel="noopener">HPE102</a> <a class="ped-tag ped-103" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE103.pdf" target="_blank" rel="noopener">HPE103</a> <a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">HPE201</a></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/janturvall" target="_blank" rel="noopener">Jan Turvall</a></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/fredrikalagergren" target="_blank" rel="noopener">Fredrika Lagergren Wahlin</a></td>
+        <td><span class="badge b-fildr">Fil Dr</span></td>
+        <td><a class="ped-tag ped-101" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE101.pdf" target="_blank" rel="noopener">HPE101</a> <a class="ped-tag ped-102" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE102.pdf" target="_blank" rel="noopener">HPE102</a></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/georgiosxezonakis" target="_blank" rel="noopener">Georgios Xezonakis</a></td>
+        <td><span class="badge b-docent">Docent</span></td>
+        <td><a class="ped-tag ped-101" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE101.pdf" target="_blank" rel="noopener">HPE101</a> <a class="ped-tag ped-102" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE102.pdf" target="_blank" rel="noopener">HPE102</a> <a class="ped-tag ped-103" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE103.pdf" target="_blank" rel="noopener">HPE103</a> <a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">HPE201</a></td>
+        <td class="cell-progs"><a class="prog p-MAPS" href="s2psc-larare.html">MAPS</a> <a class="prog p-IAGG" href="s2iag-larare.html">IAGG</a></td>
+      </tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h2 id="biträdande-lektor">Biträdande lektor <span class="count">(6)</span></h2>
+    <div class="table-wrap">
+    <table class="staff-table">
+      <thead>
+        <tr><th>Namn</th><th>Grad</th><th>Pedagogiska meriter</th><th>Program</th></tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/rasmusbroms" target="_blank" rel="noopener">Rasmus Broms</a></td>
+        <td><span class="badge b-docent">Docent</span></td>
+        <td><a class="ped-tag ped-101" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE101.pdf" target="_blank" rel="noopener">HPE101</a> <a class="ped-tag ped-102" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE102.pdf" target="_blank" rel="noopener">HPE102</a> <a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">HPE201</a></td>
+        <td class="cell-progs"><a class="prog p-SVEP" href="s1stv-larare.html">SVEP</a> <a class="prog p-MAPS" href="s2psc-larare.html">MAPS</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/lovechristensen" target="_blank" rel="noopener">Love Christensen</a></td>
+        <td><span class="badge b-fildr">Fil Dr</span></td>
+        <td><a class="ped-tag ped-101" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE101.pdf" target="_blank" rel="noopener">HPE101</a> <a class="ped-tag ped-102" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-2-omradesspecifik-pedagogik-pil102" target="_blank" rel="noopener">PIL102</a> <a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">PIL201</a></td>
+        <td class="cell-progs"><a class="prog p-SVEP" href="s1stv-larare.html">SVEP</a> <a class="prog p-MAPS" href="s2psc-larare.html">MAPS</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/moafrodingruneau" target="_blank" rel="noopener">Moa Frödin Gruneau</a></td>
+        <td><span class="badge b-fildr">Fil Dr</span></td>
+        <td><a class="ped-tag ped-101" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE101.pdf" target="_blank" rel="noopener">HPE101</a> <a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">HPE201</a> <a class="ped-tag ped-102" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-2-omradesspecifik-pedagogik-pil102" target="_blank" rel="noopener">PIL102</a></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/jacobgunderson" target="_blank" rel="noopener">Jacob Gunderson</a></td>
+        <td><span class="badge b-fildr">Fil Dr</span></td>
+        <td><a class="ped-tag ped-102" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-2-omradesspecifik-pedagogik-pil102" target="_blank" rel="noopener">PIL102</a> <a class="ped-tag ped-103" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-3-sjalvstandigt-arbete-pil103" target="_blank" rel="noopener">PIL103</a> <a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">PIL201</a></td>
+        <td class="cell-progs"><a class="prog p-MAPS" href="s2psc-larare.html">MAPS</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/valeriyamechkova" target="_blank" rel="noopener">Valeriya Mechkova</a></td>
+        <td><span class="badge b-fildr">Fil Dr</span></td>
+        <td><a class="ped-tag ped-101" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE101.pdf" target="_blank" rel="noopener">HPE101</a> <a class="ped-tag ped-102" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-2-omradesspecifik-pedagogik-pil102" target="_blank" rel="noopener">PIL102</a> <a class="ped-tag ped-103" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-3-sjalvstandigt-arbete-pil103" target="_blank" rel="noopener">PIL103</a> <a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">PIL201</a></td>
+        <td class="cell-progs"><a class="prog p-SVEP" href="s1stv-larare.html">SVEP</a> <a class="prog p-MAPS" href="s2psc-larare.html">MAPS</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/wouterschakel" target="_blank" rel="noopener">Wouter Schakel</a></td>
+        <td><span class="badge b-fildr">Fil Dr</span></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h2 id="forskare">Forskare <span class="count">(4)</span></h2>
+    <div class="table-wrap">
+    <table class="staff-table">
+      <thead>
+        <tr><th>Namn</th><th>Grad</th><th>Pedagogiska meriter</th><th>Program</th></tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/markusjohansson" target="_blank" rel="noopener">Markus Johansson</a></td>
+        <td><span class="badge b-fildr">Fil Dr</span></td>
+        <td><a class="ped-tag ped-101" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE101.pdf" target="_blank" rel="noopener">HPE101</a> <a class="ped-tag ped-102" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE102.pdf" target="_blank" rel="noopener">HPE102</a> <a class="ped-tag ped-103" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE103.pdf" target="_blank" rel="noopener">HPE103</a> <a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">PIL201</a></td>
+        <td class="cell-progs"><a class="prog p-MAPS" href="s2psc-larare.html">MAPS</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/olofglarsson" target="_blank" rel="noopener">Olof Larsson</a></td>
+        <td><span class="badge b-fildr">Fil Dr</span></td>
+        <td><a class="ped-tag ped-101" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE101.pdf" target="_blank" rel="noopener">HPE101</a> <a class="ped-tag ped-102" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-2-omradesspecifik-pedagogik-pil102" target="_blank" rel="noopener">PIL102</a> <a class="ped-tag ped-103" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-3-sjalvstandigt-arbete-pil103" target="_blank" rel="noopener">PIL103</a> <a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">PIL201</a></td>
+        <td class="cell-progs"><a class="prog p-SVEP" href="s1stv-larare.html">SVEP</a> <a class="prog p-MAPS" href="s2psc-larare.html">MAPS</a> <a class="prog p-IAGG" href="s2iag-larare.html">IAGG</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/danielnaurin" target="_blank" rel="noopener">Daniel Naurin</a></td>
+        <td><span class="badge b-prof">Professor</span></td>
+        <td><a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">HPE201</a></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/marinapovitkina" target="_blank" rel="noopener">Marina Povitkina</a></td>
+        <td><span class="badge b-fildr">Fil Dr</span></td>
+        <td><a class="ped-tag ped-101" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE101.pdf" target="_blank" rel="noopener">HPE101</a></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h2 id="post-doc">Post-doc <span class="count">(12)</span></h2>
+    <div class="table-wrap">
+    <table class="staff-table">
+      <thead>
+        <tr><th>Namn</th><th>Grad</th><th>Pedagogiska meriter</th><th>Program</th></tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/fabioangiolillo" target="_blank" rel="noopener">Fabio Angiolillo</a></td>
+        <td><span class="badge b-fildr">Fil Dr</span></td>
+        <td><a class="ped-tag ped-102" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-2-omradesspecifik-pedagogik-pil102" target="_blank" rel="noopener">PIL102</a> <a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">PIL201</a></td>
+        <td class="cell-progs"><a class="prog p-MAPS" href="s2psc-larare.html">MAPS</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/emilyelia" target="_blank" rel="noopener">Emily Elia</a></td>
+        <td><span class="badge b-fildr">Fil Dr</span></td>
+        <td><a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">PIL201</a></td>
+        <td class="cell-progs"><a class="prog p-SVEP" href="s1stv-larare.html">SVEP</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/lauralungu" target="_blank" rel="noopener">Laura Lungu</a></td>
+        <td><span class="badge b-fildr">Fil Dr</span></td>
+        <td><a class="ped-tag ped-101" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE101.pdf" target="_blank" rel="noopener">HPE101</a></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/eliasmarkstedt" target="_blank" rel="noopener">Elias Markstedt</a></td>
+        <td><span class="badge b-fildr">Fil Dr</span></td>
+        <td><a class="ped-tag ped-101" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE101.pdf" target="_blank" rel="noopener">HPE101</a> <a class="ped-tag ped-102" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-2-omradesspecifik-pedagogik-pil102" target="_blank" rel="noopener">PIL102</a> <a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">PIL201</a></td>
+        <td class="cell-progs"><a class="prog p-SVEP" href="s1stv-larare.html">SVEP</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/patrikmichaelsen" target="_blank" rel="noopener">Patrik Michaelsen</a></td>
+        <td><span class="badge b-fildr">Fil Dr</span></td>
+        <td><a class="ped-tag ped-101" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE101.pdf" target="_blank" rel="noopener">HPE101</a> <a class="ped-tag ped-102" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-2-omradesspecifik-pedagogik-pil102" target="_blank" rel="noopener">PIL102</a> <a class="ped-tag ped-103" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-3-sjalvstandigt-arbete-pil103" target="_blank" rel="noopener">PIL103</a></td>
+        <td class="cell-progs"><a class="prog p-SVEP" href="s1stv-larare.html">SVEP</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/davenamusanya" target="_blank" rel="noopener">Dave Namusanya</a></td>
+        <td><span class="badge b-fildr">Fil Dr</span></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/marinanord" target="_blank" rel="noopener">Marina Nord</a></td>
+        <td><span class="badge b-fildr">Fil Dr</span></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/janaschwenk" target="_blank" rel="noopener">Jana Schwenk</a></td>
+        <td><span class="badge b-fildr">Fil Dr</span></td>
+        <td><a class="ped-tag ped-101" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE101.pdf" target="_blank" rel="noopener">HPE101</a> <a class="ped-tag ped-102" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-2-omradesspecifik-pedagogik-pil102" target="_blank" rel="noopener">PIL102</a> <a class="ped-tag ped-201" href="https://www.pil.gu.se/kurser/handledning-i-forskarutbildning-pil201" target="_blank" rel="noopener">PIL201</a></td>
+        <td class="cell-progs"><a class="prog p-MAPS" href="s2psc-larare.html">MAPS</a> <a class="prog p-IAGG" href="s2iag-larare.html">IAGG</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/monikadesilva" target="_blank" rel="noopener">Monika de Silva</a></td>
+        <td><span class="badge b-fildr">Fil Dr</span></td>
+        <td><a class="ped-tag ped-101" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-1-baskurs-pil101" target="_blank" rel="noopener">PIL101</a></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/mariatyrberg" target="_blank" rel="noopener">Maria Tyrberg</a></td>
+        <td><span class="badge b-fildr">Fil Dr</span></td>
+        <td><a class="ped-tag ped-101" href="https://kursplaner.gu.se/pdf/kurs/sv/HPE101.pdf" target="_blank" rel="noopener">HPE101</a></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/sindregadeviksand" target="_blank" rel="noopener">Sindre Gade Viksand</a></td>
+        <td><span class="badge b-fildr">Fil Dr</span></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td class="cell-progs"><a class="prog p-IAGG" href="s2iag-larare.html">IAGG</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/anderswieland" target="_blank" rel="noopener">Anders Wieland</a></td>
+        <td><span class="badge b-fildr">Fil Dr</span></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h2 id="doktorand">Doktorand <span class="count">(22)</span></h2>
+    <div class="table-wrap">
+    <table class="staff-table">
+      <thead>
+        <tr><th>Namn</th><th>Grad</th><th>Pedagogiska meriter</th><th>Program</th></tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/taiwoahmed" target="_blank" rel="noopener">Taiwo Ayodeji Ahmed</a></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td><a class="ped-tag ped-101" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-1-baskurs-pil101" target="_blank" rel="noopener">PIL101</a></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/elinalfredsson2" target="_blank" rel="noopener">Elin Alfredsson</a></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td><a class="ped-tag ped-101" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-1-baskurs-pil101" target="_blank" rel="noopener">PIL101</a></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/hugobengtsson" target="_blank" rel="noopener">Hugo Bengtsson</a></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/dianadilettacharlottebernardini2" target="_blank" rel="noopener">Diana Bernardini</a></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/gardolavdietrichson2" target="_blank" rel="noopener">Gard Olav Dietrichson</a></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td><a class="ped-tag ped-101" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-1-baskurs-pil101" target="_blank" rel="noopener">PIL101</a></td>
+        <td class="cell-progs"><a class="prog p-SVEP" href="s1stv-larare.html">SVEP</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/simongren" target="_blank" rel="noopener">Simon Gren</a></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td><a class="ped-tag ped-101" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-1-baskurs-pil101" target="_blank" rel="noopener">PIL101</a></td>
+        <td class="cell-progs"><a class="prog p-SVEP" href="s1stv-larare.html">SVEP</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/mathildagustafsson" target="_blank" rel="noopener">Mathilda Gustafsson</a></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td><a class="ped-tag ped-101" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-1-baskurs-pil101" target="_blank" rel="noopener">PIL101</a></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/sofiahenriks" target="_blank" rel="noopener">Sofia Henriks</a></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/artemkyzym" target="_blank" rel="noopener">Artem Kyzym</a></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td><a class="ped-tag ped-101" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-1-baskurs-pil101" target="_blank" rel="noopener">PIL101</a></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/simonkallman" target="_blank" rel="noopener">Simon Källman</a></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td><a class="ped-tag ped-101" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-1-baskurs-pil101" target="_blank" rel="noopener">PIL101</a></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/felixlehmann" target="_blank" rel="noopener">Felix Lehmann</a></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td><a class="ped-tag ped-101" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-1-baskurs-pil101" target="_blank" rel="noopener">PIL101</a></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/stinalindgren" target="_blank" rel="noopener">Stina Lindgren</a></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td><a class="ped-tag ped-101" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-1-baskurs-pil101" target="_blank" rel="noopener">PIL101</a></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/hilmalindskog" target="_blank" rel="noopener">Hilma Lindskog</a></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td><a class="ped-tag ped-101" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-1-baskurs-pil101" target="_blank" rel="noopener">PIL101</a></td>
+        <td class="cell-progs"><a class="prog p-MAPS" href="s2psc-larare.html">MAPS</a> <a class="prog p-IAGG" href="s2iag-larare.html">IAGG</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/martinlundstedt" target="_blank" rel="noopener">Martin Lundstedt</a></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td><a class="ped-tag ped-101" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-1-baskurs-pil101" target="_blank" rel="noopener">PIL101</a></td>
+        <td class="cell-progs"><a class="prog p-SVEP" href="s1stv-larare.html">SVEP</a> <a class="prog p-MAPS" href="s2psc-larare.html">MAPS</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/josefinemagnusson" target="_blank" rel="noopener">Josefine Magnusson</a></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td><a class="ped-tag ped-101" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-1-baskurs-pil101" target="_blank" rel="noopener">PIL101</a></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/millamarzelius" target="_blank" rel="noopener">Milla Marzelius</a></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td><a class="ped-tag ped-101" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-1-baskurs-pil101" target="_blank" rel="noopener">PIL101</a></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/frederikpfeiffer2" target="_blank" rel="noopener">Frederik Pfeiffer</a></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td><a class="ped-tag ped-101" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-1-baskurs-pil101" target="_blank" rel="noopener">PIL101</a></td>
+        <td class="cell-progs"><a class="prog p-MAPS" href="s2psc-larare.html">MAPS</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/leoniereicheneder" target="_blank" rel="noopener">Leonie Reicheneder</a></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td><a class="ped-tag ped-101" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-1-baskurs-pil101" target="_blank" rel="noopener">PIL101</a></td>
+        <td class="cell-progs"><a class="prog p-SVEP" href="s1stv-larare.html">SVEP</a> <a class="prog p-MAPS" href="s2psc-larare.html">MAPS</a> <a class="prog p-IAGG" href="s2iag-larare.html">IAGG</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/janrustemeyer" target="_blank" rel="noopener">Jan Rustemeyer</a></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td><a class="ped-tag ped-101" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-1-baskurs-pil101" target="_blank" rel="noopener">PIL101</a></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/niklaswaldner2" target="_blank" rel="noopener">Niklas Waldner</a></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/julianwalterskirchen" target="_blank" rel="noopener">Julian Walterskirchen</a></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td><a class="ped-tag ped-101" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-1-baskurs-pil101" target="_blank" rel="noopener">PIL101</a></td>
+        <td class="cell-progs"><a class="prog p-SVEP" href="s1stv-larare.html">SVEP</a> <a class="prog p-IAGG" href="s2iag-larare.html">IAGG</a></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/albertwendsjo" target="_blank" rel="noopener">Albert Wendsjö</a></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td><a class="ped-tag ped-101" href="https://www.pil.gu.se/kurser/behorighetsgivande-hogskolepedagogik-1-baskurs-pil101" target="_blank" rel="noopener">PIL101</a></td>
+        <td class="cell-progs"><a class="prog p-SVEP" href="s1stv-larare.html">SVEP</a></td>
+      </tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h2 id="seniorprofessor-seniorforskare">Seniorprofessor / Seniorforskare <span class="count">(3)</span></h2>
+    <div class="table-wrap">
+    <table class="staff-table">
+      <thead>
+        <tr><th>Namn</th><th>Grad</th><th>Pedagogiska meriter</th><th>Program</th></tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/peteresaiasson" target="_blank" rel="noopener">Peter Esaiasson</a></td>
+        <td><span class="badge b-prof">Professor</span></td>
+        <td><span class="badge b-pris">Pedagogiskt pris</span></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/sorenholmberg" target="_blank" rel="noopener">Sören Holmberg</a></td>
+        <td><span class="badge b-prof">Professor</span></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/borothstein" target="_blank" rel="noopener">Bo Rothstein</a></td>
+        <td><span class="badge b-prof">Professor</span></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h2 id="emerita-emeritus">Emerita / Emeritus <span class="count">(5)</span></h2>
+    <div class="table-wrap">
+    <table class="staff-table">
+      <thead>
+        <tr><th>Namn</th><th>Grad</th><th>Pedagogiska meriter</th><th>Program</th></tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/jonashinnfors" target="_blank" rel="noopener">Jonas Hinnfors</a></td>
+        <td><span class="badge b-prof">Professor</span></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/adrianhyde-price" target="_blank" rel="noopener">Adrian Hyde-Price</a></td>
+        <td><span class="badge b-prof">Professor</span></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/rutgerlindahl" target="_blank" rel="noopener">Rutger Lindahl</a></td>
+        <td><span class="badge b-prof">Professor</span></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/mariaoskarson" target="_blank" rel="noopener">Maria Oskarson</a></td>
+        <td><span class="badge b-prof">Professor</span></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/jonpierre" target="_blank" rel="noopener">Jon Pierre</a></td>
+        <td><span class="badge b-prof">Professor</span></td>
+        <td><span class="muted">&mdash;</span></td>
+        <td class="cell-progs"><span class="muted">&mdash;</span></td>
+      </tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h2 id="verksamhetsstod">Verksamhetsstöd inom utbildning <span class="count">(9)</span></h2>
+    <div class="table-wrap">
+    <table class="staff-table">
+      <thead>
+        <tr><th style="width:50%;">Namn</th><th style="width:50%;">Titel</th></tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/asaatterlof" target="_blank" rel="noopener">&Aring;sa Atterl&ouml;f S&ouml;derbom</a></td>
+        <td>Administrativ chef</td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/karinekberg" target="_blank" rel="noopener">Karin Ekberg</a></td>
+        <td>Utbildningshandläggare</td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/kajsaevertsson" target="_blank" rel="noopener">Kajsa Evertsson</a></td>
+        <td>Utbildningsadministratör</td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/carolinefallgren" target="_blank" rel="noopener">Caroline F&auml;llgren</a></td>
+        <td>Utbildningsadministratör</td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/johannakviberg" target="_blank" rel="noopener">Johanna Kviberg</a></td>
+        <td>Utbildningsadministratör</td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/marialilleste" target="_blank" rel="noopener">Maria Lilleste</a></td>
+        <td>Utbildningsadministratör</td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/vendelalundskog" target="_blank" rel="noopener">Vendela Lundskog</a></td>
+        <td>Utbildningsadministratör</td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/evanilsson3" target="_blank" rel="noopener">Eva Nilsson</a></td>
+        <td>Studievägledare</td>
+      </tr>
+      <tr>
+        <td class="cell-name"><a href="https://www.gu.se/om-universitetet/hitta-person/angelicathell" target="_blank" rel="noopener">Angelica Thell</a></td>
+        <td>Studievägledare</td>
+      </tr>
+      </tbody>
+    </table>
+    </div>
+
+  </div>
+  <footer>Statsvetenskapliga institutionen, G&ouml;teborgs universitet</footer>
+</body>
+</html>

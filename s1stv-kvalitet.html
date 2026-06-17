@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kvalitetsarbete och studentinflytande – Statsvetarprogrammet</title>
+  <link rel="stylesheet" href="https://use.typekit.net/zkx2sji.css">
+  <style>
+    :root {
+      --dark: #24273a;
+      --accent: #e2005e;
+      --link: #0077cc;
+      --bg: #fefefe;
+      --border: #e4e4e4;
+      --text: #24273a;
+      --muted: #737272;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: "acumin-pro", sans-serif; font-weight: 300; font-size: 1.0625rem; color: var(--text); background: var(--bg); line-height: 1.6; }
+    .topbar { background: var(--dark); padding: 0.6rem 2.5rem; font-size: 0.875rem; }
+    .topbar a { display: inline-block; color: #fff; background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.32); padding: 0.28rem 0.95rem; border-radius: 999px; text-decoration: none; font-weight: 400; transition: background 0.15s, border-color 0.15s; }
+    .topbar a:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .topbar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .prog-switch { display: flex; align-items: center; gap: 0.45rem; font-size: 0.75rem; color: rgba(254,254,254,0.45); white-space: nowrap; }
+  .prog-switch a { color: rgba(254,254,254,0.75); text-decoration: none; padding: 0.18rem 0.65rem; border: 1px solid rgba(255,255,255,0.18); border-radius: 999px; font-size: 0.75rem; font-weight: 400; transition: background 0.15s, color 0.15s, border-color 0.15s; }
+  .prog-switch a:hover { color: #fff; border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.08); }
+
+    .container { max-width: 860px; margin: 0 auto; padding: 2.5rem 2.5rem 4rem; }
+    h1 { font-weight: 300; font-size: 2rem; margin-bottom: 0.5rem; }
+    .subtitle { font-size: 1rem; color: var(--muted); margin-bottom: 2rem; }
+
+    .intro { font-size: 1rem; color: var(--text); margin-bottom: 2.5rem; line-height: 1.65; }
+    .intro p { margin-bottom: 0.75rem; }
+
+    h2 {
+      font-size: 0.8125rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.8px; color: var(--muted);
+      margin: 2.5rem 0 1rem; padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    h3 { font-size: 1.0625rem; font-weight: 500; margin: 1.5rem 0 0.4rem; color: var(--text); }
+    p { margin-bottom: 0.75rem; }
+    ul { padding-left: 1.25rem; margin-bottom: 0.75rem; }
+    li { margin-bottom: 0.35rem; }
+
+    blockquote {
+      background: #f6f8fa;
+      border-left: 3px solid var(--dark);
+      padding: 0.75rem 1rem;
+      margin: 0.5rem 0 0.75rem;
+      font-size: 0.9375rem;
+      color: var(--text);
+      line-height: 1.55;
+    }
+    blockquote cite {
+      display: block;
+      margin-top: 0.35rem;
+      font-size: 0.8125rem;
+      color: var(--muted);
+      font-style: normal;
+    }
+    blockquote cite a { color: var(--link); text-decoration: none; }
+    blockquote cite a:hover { text-decoration: underline; }
+
+    .org-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    @media (max-width: 700px) { .org-grid { grid-template-columns: 1fr; } }
+    .org-card {
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.9rem 1rem;
+    }
+    .org-card h4 {
+      font-size: 0.9375rem;
+      font-weight: 500;
+      margin-bottom: 0.35rem;
+    }
+    .org-card .meta {
+      font-size: 0.8125rem;
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+    }
+    .org-card p {
+      font-size: 0.875rem;
+      color: var(--text);
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .doc-list {
+      list-style: none;
+      padding: 0;
+      margin: 0.5rem 0;
+    }
+    .doc-list li {
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9375rem;
+    }
+    .doc-list li:last-child { border: none; }
+    .doc-list a { color: var(--link); text-decoration: none; }
+    .doc-list a:hover { text-decoration: underline; }
+    .doc-list .dnr {
+      font-family: "SF Mono", Menlo, monospace;
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-right: 0.5rem;
+    }
+
+    footer { margin-top: 4rem; padding: 1.5rem 2rem; border-top: 1px solid var(--border); text-align: center; font-size: 0.85rem; color: var(--muted); }
+  
+  /* Innehållsmeny i vänsterkanten */
+  .toc { position: fixed; top: 86px; left: 1.25rem; width: 200px; display: none; font-size: 0.8125rem; z-index: 10;
+         background: rgba(255,255,255,0.97); border: 1px solid var(--border); border-radius: 6px;
+         padding: 0.85rem 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.05); max-height: calc(100vh - 120px); overflow-y: auto; }
+  @media (min-width: 1360px) { .toc { display: block; } }
+  .toc .toc-label { font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin-bottom: 0.5rem; }
+  .toc a { display: block; padding: 0.28rem 0 0.28rem 0.7rem; color: var(--muted); text-decoration: none; line-height: 1.35; border-left: 2px solid var(--border); transition: color 0.12s, border-color 0.12s; }
+  .toc a:hover { color: var(--accent); border-left-color: var(--accent); }
+  .toc a.sub { padding-left: 1.4rem; font-size: 0.75rem; }
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <a href="s1stv.html">&larr; Statsvetarprogrammet</a>
+    <span class="prog-switch"><span>Byt program:</span><a href="s2psc-kvalitet.html">MaPS</a><a href="s2iag-kvalitet.html">IAGG</a></span>
+  </div>
+    <nav class="toc" aria-label="Innehåll">
+    <div class="toc-label">Innehåll</div>
+    <a href="#fakultetens-processer-for-kvalitets-och">Fakultetens processer för kvalitets- och utvecklingsarbete</a>
+    <a href="#kvalitets-och-utvecklingsarbete">Kvalitets- och utvecklingsarbete</a>
+    <a href="#kursvarderingar" class="sub">Kursv&auml;rderingar</a>
+    <a href="#kursrapporter" class="sub">Kursrapporter</a>
+    <a href="#kurskonferenser" class="sub">Kurskonferenser</a>
+    <a href="#mitterminsavstamningar" class="sub">Mitterminsavst&auml;mningar</a>
+    <a href="#utbildningsdagar" class="sub">Utbildningsdagar</a>
+    <a href="#pedagogiska-seminarier" class="sub">Pedagogiska seminarier</a>
+    <a href="#studentinflytande">Studentinflytande</a>
+  </nav>
+
+  <div class="container">
+    <h1>Kvalitetsarbete och studentinflytande</h1>
+    <p class="subtitle">Statsvetarprogrammet (S1STV) &middot; Statsvetenskapliga institutionen, G&ouml;teborgs universitet</p>
+
+    <div class="intro">
+      <p>
+        Kvalitetsarbete och studentinflytande vid Statsvetenskapliga institutionen regleras p&aring; tre niv&aring;er.
+        Den f&ouml;rsta niv&aring;n &auml;r <strong>H&ouml;gskolelagen</strong>, som stipulerar att kvalitetsarbetet
+        &auml;r en gemensam angel&auml;genhet f&ouml;r personal och studenter och att studenterna har r&auml;tt att
+        ut&ouml;va inflytande &ouml;ver utbildningen (1 kap 4 §). Den andra niv&aring;n &auml;r
+        <strong>universitetets arbetsordning</strong>, som s&auml;ger att studentinflytandet ska s&auml;kras i alla
+        beredande och beslutande organ. Den tredje niv&aring;n &auml;r
+        <strong>Samh&auml;llsvetenskapliga fakultetens egna processer</strong> f&ouml;r kvalitets- och utvecklingsarbete.
+      </p>
+    </div>
+
+    <h2 id="fakultetens-processer-for-kvalitets-och">Fakultetens processer för kvalitets- och utvecklingsarbete</h2>
+
+    <p>
+      Samh&auml;llsvetenskapliga fakulteten f&ouml;ljer Göteborgs universitets &ouml;vergripande policy för
+      kvalitetss&auml;kring (GU 2022/2839) och bedriver utvecklingsarbetet i tre parallella sp&aring;r.
+    </p>
+
+    <p>
+      <strong>Lokal kontinuerlig uppf&ouml;ljning och utveckling.</strong> Det l&ouml;pande kvalitetsarbetet bedrivs
+      p&aring; kurs-, program- och institutionsniv&aring;. Fakultetsstyrelsen f&ouml;ljer upp institutionernas
+      kvalitetsarbete och &aring;tg&auml;rdsplaner.
+    </p>
+
+    <p>
+      <strong>Utbildningsutv&auml;rdering med extern bed&ouml;mning.</strong> Var sj&auml;tte &aring;r initierar
+      fakultetsstyrelsen en extern utv&auml;rdering av varje utbildning, enligt fakultetens handl&auml;ggningsordning
+      (GU 2024/3116). En bed&ouml;margrupp p&aring; minst tv&aring; sakkunniga fr&aring;n annat l&auml;ros&auml;te
+      och minst en studentrepresentant granskar utbildningen mot &aring;tta kvalitetskriterier och sammanfattar
+      styrkor och utvecklingsomr&aring;den i ett bed&ouml;marutl&aring;tande. Fakultetsstyrelsen beslutar om en
+      &aring;tg&auml;rdsplan och f&ouml;ljer upp att &aring;tg&auml;rderna genomf&ouml;rs. Det &auml;r denna
+      process som nu p&aring;g&aring;r.
+    </p>
+
+    <p>
+      <strong>Universitetsgemensam uppf&ouml;ljning.</strong> Rektor f&ouml;ljer &aring;rligen upp utbildningskvaliteten
+      i verksamhetsdialoger med fakulteterna, och utbildningsn&auml;mnden sammanst&auml;ller en &aring;rlig rapport
+      &ouml;ver kvaliteten i universitetets utbildningar.
+    </p>
+
+    <p>
+      P&aring; institutionsniv&aring; konkretiseras kvalitetsarbetet i tv&aring; sp&aring;r: studenters l&ouml;pande
+      inflytande i institutionens organ, och systematisk uppf&ouml;ljning och utveckling av kurserna.
+    </p>
+
+    <h2 id="kvalitets-och-utvecklingsarbete">Kvalitets- och utvecklingsarbete</h2>
+
+    <p>
+      P&aring; institutionen sker det l&ouml;pande utvecklingsarbetet kring kurser och program genom flera
+      kompletterande rutiner. Det &ouml;vergripande ansvaret vilar p&aring; utbildningsansvarig proprefekt; det
+      praktiska arbetet leds av studierektor med st&ouml;d av utbildningsadministrat&ouml;r.
+    </p>
+
+    <h3 id="kursvarderingar">Kursv&auml;rderingar</h3>
+    <p>
+      Efter varje avslutad kurs genomf&ouml;rs en anonym kursv&auml;rdering som studenterna fyller i via GU:s
+      l&auml;rplattform Canvas. V&auml;rderingen utformas enligt institutionens mall. Om det genomsnittliga
+      betyget p&aring; helhetsfr&aring;gan understiger 3,5 (p&aring; en femgradig skala) f&ouml;ljs kursen
+      s&auml;rskilt upp genom samtal mellan studierektor och kursansvarig l&auml;rare.
+    </p>
+
+    <h3 id="kursrapporter">Kursrapporter</h3>
+    <p>
+      Kursansvarig sammanst&auml;ller utifr&aring;n kursv&auml;rderingen en kursrapport d&auml;r kursen
+      utv&auml;rderas. Rapporten g&ouml;rs tillg&auml;nglig f&ouml;r b&aring;de de studenter som g&aring;tt
+      kursen och f&ouml;r kommande studenter.
+    </p>
+
+    <h3 id="kurskonferenser">Kurskonferenser</h3>
+    <p>
+      Kurserna granskas ocks&aring; i detalj vid de &aring;terkommande kurskonferenserna, som genomf&ouml;rs
+      enligt ett rullande schema (ungef&auml;r vart tredje till fj&auml;rde &aring;r per kurs). Inf&ouml;r
+      varje kurskonferens utses tv&aring; <em>kursgranskare</em> &mdash; l&auml;rare fr&aring;n institutionen
+      &mdash; som g&aring;r igenom kursens inneh&aring;ll och undervisningsformer. Sj&auml;lva konferensen
+      samlar granskarna, kursansvarig, eventuellt &ouml;vriga l&auml;rare fr&aring;n kursen samt
+      studentrepresentanter, och diskuterar kursens styrkor och svagheter. Konferensen sammanfattas i ett
+      protokoll som undertecknas av samtliga deltagare.
+    </p>
+
+    <h3 id="mitterminsavstamningar">Mitterminsavst&auml;mningar</h3>
+    <p>
+      Varje termin genomf&ouml;r studiev&auml;gledaren mitterminsavst&auml;mningar med studenterna p&aring;
+      samtliga utbildningsprogram. Avst&auml;mningarna genomf&ouml;rs i dialogform och syftar till att
+      f&aring;nga helhetsupplevelsen av programmet &mdash; s&aring;dant som annars s&auml;llan framkommer
+      i de formella kursv&auml;rderingarna. Studiev&auml;gledaren sammanst&auml;ller studenternas synpunkter
+      i en rapport till ansvarig studierektor, som &aring;terkopplar till studentgrupperna.
+    </p>
+
+    <h3 id="utbildningsdagar">Utbildningsdagar</h3>
+    <p>
+      En g&aring;ng om &aring;ret anordnas en utbildningsdag per program, d&auml;r l&auml;rare,
+      studeranderepresentanter och ber&ouml;rd administrativ personal diskuterar programmets &ouml;vergripande
+      genomf&ouml;rande och kvalitet &mdash; till exempel examensm&aring;l, programf&ouml;r&auml;ndringar,
+      kommande utv&auml;rderingar och utveckling av nya kurser. Studierektor ansvarar f&ouml;r dagen och
+      utbildningsadministrat&ouml;r f&ouml;r minnesanteckningar. Statsvetarprogrammet h&aring;ller en egen
+      utbildningsdag varje &aring;r.
+    </p>
+
+    <ul class="doc-list">
+      <li>
+        <a href="underlag/kvalitetsarbete/Utbildningsdag_Svep_2026_dagordning.docx">Dagordning utbildningsdag SVEP &mdash; 22 april 2026</a>
+      </li>
+      <li>
+        <a href="underlag/kvalitetsarbete/Utbildningsdag_Svep_2025_Dagordning.docx">Dagordning utbildningsdag SVEP &mdash; 29 april 2025</a>
+      </li>
+      <li>
+        <a href="underlag/kvalitetsarbete/Utbildningsdag_Svep_dagordning_VT24_uppdaterad.docx">Dagordning utbildningsdag SVEP &mdash; 19 april 2024</a>
+      </li>
+    </ul>
+
+    <h3 id="pedagogiska-seminarier">Pedagogiska seminarier</h3>
+    <p>
+      Institutionen anordnar l&ouml;pande pedagogiska seminarier f&ouml;r hela personalen, med olika teman
+      som r&ouml;r undervisning och pedagogisk utveckling.
+    </p>
+
+    <ul class="doc-list">
+      <li><span class="dnr">2026-05</span> Digital kompetens</li>
+      <li><span class="dnr">2025-12-12</span> Muntliga examinationer</li>
+      <li><span class="dnr">2025-06-09</span> Excellent l&auml;rare</li>
+      <li><span class="dnr">2025-05-21</span> Generativ AI och framtidens utbildning</li>
+      <li><span class="dnr">2024-12-12</span> Aktuella resultat inom forskning om h&ouml;gskolepedagogik</li>
+      <li><span class="dnr">2024-04-23</span> Kursansvar</li>
+      <li><span class="dnr">2023-10-19</span> AI och undervisning</li>
+      <li><span class="dnr">2023-03-22</span> Akademiskt skrivande och plagiat</li>
+      <li><span class="dnr">2022-12-06</span> Canvas som pedagogiskt verktyg</li>
+      <li><span class="dnr">2022-04-05</span> Effektiv feedback</li>
+    </ul>
+
+    <h2 id="studentinflytande">Studentinflytande</h2>
+
+    <div class="org-grid">
+
+      <div class="org-card">
+        <h4>Institutionsrådet</h4>
+        <div class="meta">R&aring;dgivande, med studentrepresentant</div>
+        <p>
+          Prefekt &auml;r ordf&ouml;rande. R&aring;det bereder och ger inspel inf&ouml;r prefektbeslut om m&aring;l
+          och strategier f&ouml;r utbildning och forskning, verksamhetsplan och budget, kursplaner, viktigare
+          yttranden och arbetsmilj&ouml;fr&aring;gor.
+        </p>
+      </div>
+
+      <div class="org-card">
+        <h4>Beslutsm&ouml;ten</h4>
+        <div class="meta">Studentrepresentation vid prefektbeslut</div>
+        <p>
+          Studenter &auml;r representerade vid beslutsm&ouml;ten d&auml;r utbildningsansvarig proprefekt
+          beslutar om utbildnings- och kursplaner.
+        </p>
+      </div>
+
+      <div class="org-card">
+        <h4>Programr&aring;d</h4>
+        <div class="meta">Forum f&ouml;r inspel fr&aring;n studenter per program</div>
+        <p>
+          Institutionens m&aring;ls&auml;ttning anger att studenter ges m&ouml;jlighet att l&auml;mna inspel
+          p&aring; programr&aring;d vid sidan av kursv&auml;rderingarna och kurskonferenserna.
+        </p>
+      </div>
+
+      <div class="org-card">
+        <h4>Kurskonferenser</h4>
+        <div class="meta">&Aring;terkommande granskning av kurser</div>
+        <p>
+          Studenter ges m&ouml;jlighet till inspel i samband med de regelbundet &aring;terkommande
+          kurskonferenserna, d&auml;r kursens inneh&aring;ll och undervisningsformer granskas (se nedan).
+        </p>
+      </div>
+
+      <div class="org-card">
+        <h4>Bed&ouml;margrupp vid utbildningsutv&auml;rdering</h4>
+        <div class="meta">Studentrepresentant i gruppen + medverkan av nuvarande studenter</div>
+        <p>
+          Vid extern utbildningsutv&auml;rdering (denna utv&auml;rdering) ing&aring;r minst en
+          studentrepresentant i bed&ouml;margruppen, utsedd av Studentk&aring;ren f&ouml;retr&auml;desvis
+          fr&aring;n annat l&auml;ros&auml;te. Nuvarande studenter ges enligt fakultetens
+          handl&auml;ggningsordning (GU 2024/3116) m&ouml;jlighet att medverka i planeringen, ta del av
+          underlaget, l&auml;mna skriftlig kommentar, delta vid platsbes&ouml;k, ta del av
+          bed&ouml;marutl&aring;tandet och medverka vid &aring;terkopplingsm&ouml;tet.
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+  <footer>Statsvetenskapliga institutionen, Göteborgs universitet</footer>
+</body>
+</html>

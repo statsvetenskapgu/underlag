@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Examinationsmatris – IAGG</title>
+<link rel="stylesheet" href="https://use.typekit.net/zkx2sji.css">
+<style>
+  :root {
+    --dark: #24273a;
+    --accent: #e2005e;
+    --link: #0077cc;
+    --bg: #fefefe;
+    --border: #e4e4e4;
+    --text: #24273a;
+    --muted: #737272;
+    --match: #2d7a45;
+    --match-bg: #e8f5ec;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: acumin-pro, Helvetica, sans-serif; font-weight: 300; font-size: 1rem; color: var(--text); background: var(--bg); line-height: 1.55; }
+  .topbar { background: var(--dark); padding: 0.6rem 2.5rem; font-size: 0.875rem; }
+  .topbar a { display: inline-block; color: #fff; background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.32); padding: 0.28rem 0.95rem; border-radius: 999px; text-decoration: none; font-weight: 400; transition: background 0.15s, border-color 0.15s; }
+  .topbar a:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .topbar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .prog-switch { display: flex; align-items: center; gap: 0.45rem; font-size: 0.75rem; color: rgba(254,254,254,0.45); white-space: nowrap; }
+  .prog-switch a { color: rgba(254,254,254,0.75); text-decoration: none; padding: 0.18rem 0.65rem; border: 1px solid rgba(255,255,255,0.18); border-radius: 999px; font-size: 0.75rem; font-weight: 400; transition: background 0.15s, color 0.15s, border-color 0.15s; }
+  .prog-switch a:hover { color: #fff; border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.08); }
+
+  .container { max-width: 1240px; margin: 0 auto; padding: 2.5rem 2rem 4rem; }
+  h1 { font-weight: 300; font-size: 2rem; margin-bottom: 0.5rem; }
+  .subtitle { font-size: 1rem; color: var(--muted); margin-bottom: 1.5rem; }
+
+  .intro { font-size: 0.9375rem; color: var(--muted); margin-bottom: 1.75rem; line-height: 1.65; max-width: 780px; }
+  .intro p { margin-bottom: 0.6rem; }
+  .intro strong { color: var(--text); font-weight: 500; }
+
+  .legend { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; font-size: 0.8125rem; color: var(--muted); }
+  .legend-item { display: flex; align-items: center; gap: 0.4rem; }
+  .legend-swatch { width: 14px; height: 14px; border-radius: 2px; flex-shrink: 0; background: var(--match-bg); border: 1px solid var(--match); }
+  .legend-none { background: #f4f4f4; border: 1px solid var(--border); }
+  .legend-miss { background: repeating-linear-gradient(-45deg, #e8e8e8, #e8e8e8 3px, #f2f2f2 3px, #f2f2f2 6px); border: 1px solid #ccc; }
+
+  h2 { font-size: 0.8125rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin: 2rem 0 0.5rem; }
+
+  .matrix-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 4px; margin-bottom: 1.5rem; }
+  table.matrix { border-collapse: collapse; font-size: 0.8125rem; min-width: 100%; table-layout: fixed; }
+  table.matrix th, table.matrix td { border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); padding: 0.4rem 0.4rem; text-align: center; vertical-align: middle; }
+  table.matrix th:last-child, table.matrix td:last-child { border-right: none; }
+  table.matrix tr:last-child th, table.matrix tr:last-child td { border-bottom: none; }
+  table.matrix col.col-course { width: 340px; }
+  table.matrix col.col-type { width: 44px; }
+
+  tr.cat-group-header th {
+    background: #f4f4f4; color: var(--muted); font-size: 0.6875rem;
+    font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px;
+    padding: 0.4rem 0.5rem; border-bottom: 2px solid var(--border); text-align: center;
+  }
+  tr.cat-group-header th.group-skriftlig { background: #dfe8f5; color: #1e4faa; border-bottom: 1px solid #b8c6dd; }
+  tr.cat-group-header th.group-sal { background: #e8efef; color: #1a6a4a; border-bottom: 1px solid #c4d0c9; }
+  tr.cat-group-header th.group-hemma { background: #eef4fb; color: #3a6fd8; border-bottom: 1px solid #c4d4ea; }
+  tr.cat-group-header th.group-muntlig { background: #faf0ef; color: var(--accent); }
+  tr.cat-group-header th.group-ovrigt { background: #f2efe4; color: #8a6000; }
+
+  table.matrix thead th.type-col {
+    background: #f9f9f9; font-size: 0.72rem; font-weight: 500; color: var(--text);
+    white-space: nowrap; height: 160px; vertical-align: bottom; padding: 0.3rem 0.2rem;
+  }
+  table.matrix thead th.type-col span {
+    writing-mode: vertical-rl; transform: rotate(180deg);
+    display: inline-block; padding-bottom: 0.5rem;
+  }
+
+  table.matrix tbody th.course {
+    text-align: left; font-weight: 400; font-size: 0.875rem;
+    background: #fafafa; padding: 0.55rem 0.85rem; line-height: 1.35;
+    border-right: 2px solid var(--border);
+  }
+  table.matrix tbody th.course a { color: var(--text); text-decoration: none; display: block; }
+  table.matrix tbody th.course a:hover { color: var(--accent); }
+  table.matrix tbody th.course .code {
+    font-family: "SF Mono", Menlo, monospace;
+    font-weight: 600; font-size: 0.75rem; color: var(--accent);
+    background: #fff; padding: 0.05rem 0.3rem; border-radius: 2px;
+    border: 1px solid var(--border); margin-right: 0.5rem;
+  }
+  table.matrix tbody th.course.no-link { color: var(--muted); }
+
+  tr.term-row th {
+    background: var(--dark); color: #fff; text-align: left;
+    font-weight: 500; font-size: 0.75rem; text-transform: uppercase;
+    letter-spacing: 0.6px; padding: 0.4rem 0.85rem;
+  }
+
+  td.match { background: var(--match-bg); color: var(--match); font-weight: 600; cursor: pointer; transition: background 0.12s; }
+  td.match:hover { background: #d3edda; }
+  td.match::before { content: '●'; font-size: 0.875rem; }
+  td.nomatch { color: transparent; }
+  td.missing { background: repeating-linear-gradient(-45deg, #e8e8e8, #e8e8e8 3px, #f2f2f2 3px, #f2f2f2 6px); color: transparent; }
+
+  .ex-modal { position: fixed; inset: 0; z-index: 1000; display: none; }
+  .ex-modal.open { display: block; }
+  .ex-backdrop { position: absolute; inset: 0; background: rgba(36,39,58,0.55); }
+  .ex-dialog { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); background: #fff; border-radius: 6px; width: min(600px, 92vw); max-height: 82vh; overflow-y: auto; box-shadow: 0 12px 48px rgba(0,0,0,0.25); }
+  .ex-header { padding: 1rem 1.25rem 0.85rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; }
+  .ex-header-text .ex-course { font-family: "SF Mono", Menlo, monospace; font-size: 0.8125rem; color: var(--accent); font-weight: 600; margin-bottom: 0.2rem; }
+  .ex-header-text .ex-type { font-size: 1rem; font-weight: 500; color: var(--text); line-height: 1.35; }
+  .ex-close { background: none; border: none; font-size: 1.5rem; line-height: 1; color: var(--muted); cursor: pointer; padding: 0 0.25rem; flex-shrink: 0; }
+  .ex-close:hover { color: var(--accent); }
+  .ex-body { padding: 1rem 1.25rem 1.25rem; font-size: 0.9375rem; line-height: 1.6; color: var(--text); }
+  .ex-body p { margin-bottom: 0.75rem; }
+  .ex-body blockquote { background: var(--match-bg); border-left: 3px solid var(--match); padding: 0.55rem 0.8rem; font-size: 0.875rem; color: var(--text); border-radius: 0 3px 3px 0; margin-bottom: 0.55rem; line-height: 1.55; }
+  .ex-body blockquote::before { content: '\201C'; color: var(--match); }
+  .ex-body blockquote::after { content: '\201D'; color: var(--match); }
+  .ex-body blockquote:last-child { margin-bottom: 0; }
+  .ex-fulllink { display: inline-block; margin-top: 0.75rem; padding: 0.5rem 1rem; background: var(--accent); color: #fff; border-radius: 4px; text-decoration: none; font-size: 0.875rem; font-weight: 500; }
+  .ex-fulllink:hover { background: #c00054; }
+
+  footer { background: var(--dark); color: rgba(254,254,254,0.6); text-align: center; padding: 1.5rem 2.5rem; font-size: 0.875rem; font-weight: 300; }
+
+  /* ---------- Flipped matrix (courses in columns) ---------- */
+  table.matrix col.col-type-label { width: 280px; }
+  table.matrix col.col-course-flip { width: 44px; }
+
+  table.matrix thead th.type-label-header {
+    background: #fafafa; text-align: left; font-weight: 500;
+    font-size: 0.75rem; color: var(--muted); padding: 0.5rem 0.75rem;
+    border-right: 2px solid var(--border); vertical-align: bottom;
+  }
+
+  table.matrix thead th.course-col {
+    background: #f9f9f9;
+    font-family: "SF Mono", Menlo, monospace;
+    font-size: 0.75rem; font-weight: 500;
+    color: var(--text);
+    white-space: nowrap;
+    height: 130px;
+    vertical-align: bottom;
+    padding: 0.25rem 0.2rem 0.4rem;
+    position: relative;
+  }
+  table.matrix thead th.course-col span {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    display: inline-block;
+    padding-bottom: 0.4rem;
+  }
+  table.matrix thead th.course-col a { color: var(--accent); text-decoration: none; font-weight: 600; }
+  table.matrix thead th.course-col a:hover { text-decoration: underline; }
+  table.matrix thead th.course-col.course-col-missing span { color: var(--muted); }
+
+  table.matrix tbody th.type-row {
+    text-align: left;
+    font-weight: 400;
+    font-size: 0.875rem;
+    background: #fafafa;
+    padding: 0.5rem 0.85rem;
+    line-height: 1.35;
+    border-right: 2px solid var(--border);
+    color: var(--text);
+  }
+
+  tr.cat-row th {
+    text-align: left;
+    font-weight: 700;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    padding: 0.45rem 0.85rem;
+  }
+  tr.cat-row.group-skriftlig th { background: #dfe8f5; color: #1e4faa; border-bottom: 1px solid #b8c6dd; }
+  tr.cat-row.group-muntlig th { background: #faf0ef; color: var(--accent); border-bottom: 1px solid #eed4d2; }
+  tr.cat-row.group-ovrigt th { background: #f2efe4; color: #8a6000; border-bottom: 1px solid #d9d0b6; }
+
+  tr.sub-cat-row th {
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    padding: 0.35rem 1.5rem;
+    color: var(--muted);
+  }
+  tr.sub-cat-row.group-sal th { background: #e8efef; color: #1a6a4a; }
+  tr.sub-cat-row.group-hemma th { background: #eef4fb; color: #3a6fd8; }
+
+</style>
+</head>
+<body>
+  <div class="topbar"><a href="s2iag.html">&larr; IAGG-programmet</a><span class="prog-switch"><span>Byt program:</span><a href="s1stv-examination-matris.html">SVEP</a><a href="s2psc-examination-matris.html">MaPS</a></span></div>
+  <div class="container">
+    <h1>Examinationsmatris</h1>
+    <p class="subtitle">IAGG (S2IAG) &middot; &Ouml;versikt &ouml;ver examinationsformer per kurs</p>
+
+    <div class="intro">
+      <p>
+        Matrisen visar vilka typer av examinationsuppgifter som ing&aring;r i respektive kurs p&aring; IAGG.
+        <strong>Klicka p&aring; kurskoden</strong> (h&aring;ll musen &ouml;ver f&ouml;r fullst&auml;ndigt namn) f&ouml;r att g&aring; till kursens fullst&auml;ndiga
+        examinationsbeskrivning. <strong>Klicka p&aring; en prick</strong> f&ouml;r en kort beskrivning.
+      </p>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item"><span class="legend-swatch"></span> Ing&aring;r som examinationsform</div>
+      <div class="legend-item"><span class="legend-swatch legend-none"></span> Ing&aring;r ej</div>
+      <div class="legend-item"><span class="legend-swatch legend-miss"></span> Kursguide saknas i underlaget</div>
+    </div>
+
+    <div class="matrix-wrap">
+      <table class="matrix">
+        <colgroup>
+          <col class="col-type-label">
+          <col class="col-course-flip">
+          <col class="col-course-flip">
+          <col class="col-course-flip">
+          <col class="col-course-flip">
+          <col class="col-course-flip">
+          <col class="col-course-flip">
+          <col class="col-course-flip">
+          <col class="col-course-flip">
+          <col class="col-course-flip">
+          <col class="col-course-flip">
+          <col class="col-course-flip">
+        </colgroup>
+        <thead>
+          <tr>
+            <th class="type-label-header">Examinationsform</th>
+            <th class="course-col" data-tip="Theoretical and Historical Perspectives on Global Governance"><span><a href="s2iag-examination-AG2110.html">AG2110</a></span></th>
+            <th class="course-col" data-tip="International Administration and Policy"><span><a href="s2iag-examination-AG2120.html">AG2120</a></span></th>
+            <th class="course-col" data-tip="The Quality of Government in a Comparative Perspective"><span><a href="s2iag-examination-SK2212.html">SK2212</a></span></th>
+            <th class="course-col" data-tip="Internship (15 hp)"><span><a href="s2iag-examination-AG2440.html">AG2440</a></span></th>
+            <th class="course-col" data-tip="Internship (30 hp)"><span><a href="s2iag-examination-AG2450.html">AG2450</a></span></th>
+            <th class="course-col" data-tip="The Performance of Democracies"><span><a href="s2iag-examination-SK2211.html">SK2211</a></span></th>
+            <th class="course-col" data-tip="European Environment and Energy"><span><a href="s2iag-examination-EU2210.html">EU2210</a></span></th>
+            <th class="course-col" data-tip="Europe in the World"><span><a href="s2iag-examination-EU2215.html">EU2215</a></span></th>
+            <th class="course-col" data-tip="Applied Qualitative Research Methods, Problems and Design"><span><a href="s2iag-examination-SF2323.html">SF2323</a></span></th>
+            <th class="course-col" data-tip="Applied Research Design and Quantitative Research Methods"><span><a href="s2iag-examination-SF2324.html">SF2324</a></span></th>
+            <th class="course-col" data-tip="Master's Thesis for IAGG"><span><a href="s2iag-examination-AG2500.html">AG2500</a></span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="cat-row group-skriftlig"><th colspan="12">Skriftliga former</th></tr>
+          <tr class="sub-cat-row group-sal"><th colspan="12">I sal</th></tr>
+          <tr data-type="salstenta">
+            <th class="type-row">Salstentamen</th>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="match" data-code="EU2210" data-type="salstenta"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+          </tr>
+          <tr data-type="flervalsprov">
+            <th class="type-row">Flervalsprov</th>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+          </tr>
+          <tr class="sub-cat-row group-hemma"><th colspan="12">På egen tid</th></tr>
+          <tr data-type="pm_plan">
+            <th class="type-row">PM / forskningsplan</th>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="match" data-code="SK2211" data-type="pm_plan"></td>
+            <td class="match" data-code="EU2210" data-type="pm_plan"></td>
+            <td class="nomatch"></td>
+            <td class="match" data-code="SF2323" data-type="pm_plan"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+          </tr>
+          <tr data-type="uppsats">
+            <th class="type-row">Uppsats / research paper</th>
+            <td class="match" data-code="AG2110" data-type="uppsats"></td>
+            <td class="match" data-code="AG2120" data-type="uppsats"></td>
+            <td class="match" data-code="SK2212" data-type="uppsats"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="match" data-code="EU2210" data-type="uppsats"></td>
+            <td class="match" data-code="EU2215" data-type="uppsats"></td>
+            <td class="nomatch"></td>
+            <td class="match" data-code="SF2324" data-type="uppsats"></td>
+            <td class="match" data-code="AG2500" data-type="uppsats"></td>
+          </tr>
+          <tr data-type="litt_oversikt">
+            <th class="type-row">Litteratur- / forskningsöversikt</th>
+            <td class="nomatch"></td>
+            <td class="match" data-code="AG2120" data-type="litt_oversikt"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="match" data-code="EU2210" data-type="litt_oversikt"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+          </tr>
+          <tr data-type="policybrief">
+            <th class="type-row">Policy brief / policyanalys</th>
+            <td class="match" data-code="AG2110" data-type="policybrief"></td>
+            <td class="match" data-code="AG2120" data-type="policybrief"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+          </tr>
+          <tr data-type="reflektion">
+            <th class="type-row">Reflektionstext</th>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="match" data-code="AG2440" data-type="reflektion"></td>
+            <td class="match" data-code="AG2450" data-type="reflektion"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+          </tr>
+          <tr data-type="seminarieinl">
+            <th class="type-row">Seminarieinlämning / memo</th>
+            <td class="match" data-code="AG2110" data-type="seminarieinl"></td>
+            <td class="nomatch"></td>
+            <td class="match" data-code="SK2212" data-type="seminarieinl"></td>
+            <td class="match" data-code="AG2440" data-type="seminarieinl"></td>
+            <td class="match" data-code="AG2450" data-type="seminarieinl"></td>
+            <td class="match" data-code="SK2211" data-type="seminarieinl"></td>
+            <td class="match" data-code="EU2210" data-type="seminarieinl"></td>
+            <td class="match" data-code="EU2215" data-type="seminarieinl"></td>
+            <td class="match" data-code="SF2323" data-type="seminarieinl"></td>
+            <td class="match" data-code="SF2324" data-type="seminarieinl"></td>
+            <td class="nomatch"></td>
+          </tr>
+          <tr data-type="rollspeldok">
+            <th class="type-row">Rollspelsdokument</th>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+          </tr>
+          <tr class="cat-row group-muntlig"><th colspan="12">Muntliga former</th></tr>
+          <tr data-type="muntlig_pres">
+            <th class="type-row">Muntlig presentation</th>
+            <td class="match" data-code="AG2110" data-type="muntlig_pres"></td>
+            <td class="match" data-code="AG2120" data-type="muntlig_pres"></td>
+            <td class="match" data-code="SK2212" data-type="muntlig_pres"></td>
+            <td class="match" data-code="AG2440" data-type="muntlig_pres"></td>
+            <td class="match" data-code="AG2450" data-type="muntlig_pres"></td>
+            <td class="match" data-code="SK2211" data-type="muntlig_pres"></td>
+            <td class="match" data-code="EU2210" data-type="muntlig_pres"></td>
+            <td class="match" data-code="EU2215" data-type="muntlig_pres"></td>
+            <td class="match" data-code="SF2323" data-type="muntlig_pres"></td>
+            <td class="match" data-code="SF2324" data-type="muntlig_pres"></td>
+            <td class="match" data-code="AG2500" data-type="muntlig_pres"></td>
+          </tr>
+          <tr data-type="muntlig_tenta">
+            <th class="type-row">Muntlig tentamen</th>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="match" data-code="AG2500" data-type="muntlig_tenta"></td>
+          </tr>
+          <tr data-type="seminarium">
+            <th class="type-row">Seminariedeltagande</th>
+            <td class="match" data-code="AG2110" data-type="seminarium"></td>
+            <td class="match" data-code="AG2120" data-type="seminarium"></td>
+            <td class="match" data-code="SK2212" data-type="seminarium"></td>
+            <td class="match" data-code="AG2440" data-type="seminarium"></td>
+            <td class="match" data-code="AG2450" data-type="seminarium"></td>
+            <td class="match" data-code="SK2211" data-type="seminarium"></td>
+            <td class="match" data-code="EU2210" data-type="seminarium"></td>
+            <td class="match" data-code="EU2215" data-type="seminarium"></td>
+            <td class="match" data-code="SF2323" data-type="seminarium"></td>
+            <td class="match" data-code="SF2324" data-type="seminarium"></td>
+            <td class="match" data-code="AG2500" data-type="seminarium"></td>
+          </tr>
+          <tr data-type="opposition">
+            <th class="type-row">Opposition / peer review</th>
+            <td class="nomatch"></td>
+            <td class="match" data-code="AG2120" data-type="opposition"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="match" data-code="EU2210" data-type="opposition"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="match" data-code="SF2324" data-type="opposition"></td>
+            <td class="match" data-code="AG2500" data-type="opposition"></td>
+          </tr>
+          <tr class="cat-row group-ovrigt"><th colspan="12">Övrigt</th></tr>
+          <tr data-type="simulation">
+            <th class="type-row">Rollspel / simulation</th>
+            <td class="match" data-code="AG2110" data-type="simulation"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+          </tr>
+          <tr data-type="praktik">
+            <th class="type-row">Praktiktjänstgöring</th>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="match" data-code="AG2440" data-type="praktik"></td>
+            <td class="match" data-code="AG2450" data-type="praktik"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+          </tr>
+          <tr data-type="handledare">
+            <th class="type-row">Handledarutvärdering</th>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="match" data-code="AG2440" data-type="handledare"></td>
+            <td class="match" data-code="AG2450" data-type="handledare"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+            <td class="nomatch"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2>Om kategorierna</h2>
+    <div style="font-size: 0.875rem; color: var(--muted); line-height: 1.6; max-width: 840px;">
+      <p><strong style="color: var(--text);">Skriftligt i sal</strong> (&ouml;vervakat, tidsbegr&auml;nsat): <em>Salstentamen</em>, <em>Flervalsprov</em>.</p>
+      <p><strong style="color: var(--text);">Skriftligt p&aring; egen tid</strong>: <em>PM / forskningsplan</em>, <em>Uppsats / research paper</em>, <em>Litteratur-/forsknings&ouml;versikt</em>, <em>Policy brief / policyanalys</em>, <em>Reflektionstext</em>, <em>Seminarieinl&auml;mning / memo</em>, <em>Rollspelsdokument</em>.</p>
+      <p><strong style="color: var(--text);">Muntliga former:</strong> <em>Muntlig presentation</em>, <em>Muntlig tentamen</em>, <em>Seminariedeltagande</em>, <em>Opposition / peer review</em>.</p>
+      <p><strong style="color: var(--text);">&Ouml;vrigt:</strong> <em>Rollspel / simulation</em>, <em>Praktiktj&auml;nstg&ouml;ring</em>, <em>Handledarutv&auml;rdering</em>.</p>
+    </div>
+
+  </div>
+
+  <footer>Statsvetenskapliga institutionen, G&ouml;teborgs universitet</footer>
+
+  <div class="ex-modal" id="exModal" role="dialog" aria-modal="true">
+    <div class="ex-backdrop" data-close></div>
+    <div class="ex-dialog">
+      <div class="ex-header">
+        <div class="ex-header-text">
+          <div class="ex-course" id="exCourse"></div>
+          <div class="ex-type" id="exType"></div>
+        </div>
+        <button class="ex-close" data-close aria-label="Stäng">&times;</button>
+      </div>
+      <div class="ex-body">
+        <div id="exDescription"></div>
+        <a class="ex-fulllink" id="exFullLink" href="#">&Ouml;ppna kurssidan med k&auml;llbilder &rarr;</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  (function() {
+    const TYPE_LABELS = {
+      'salstenta': 'Salstentamen', 'flervalsprov': 'Flervalsprov',
+      'pm_plan': 'PM / forskningsplan', 'uppsats': 'Uppsats / research paper',
+      'litt_oversikt': 'Litteratur- / forskningsöversikt',
+      'policybrief': 'Policy brief / policyanalys', 'reflektion': 'Reflektionstext',
+      'seminarieinl': 'Seminarieinlämning / memo', 'rollspeldok': 'Rollspelsdokument',
+      'muntlig_pres': 'Muntlig presentation', 'muntlig_tenta': 'Muntlig tentamen',
+      'seminarium': 'Seminariedeltagande', 'opposition': 'Opposition / peer review',
+      'simulation': 'Rollspel / simulation', 'praktik': 'Praktiktjänstgöring',
+      'handledare': 'Handledarutvärdering'
+    };
+
+    const DESC = {
+      'AG2110': {
+        'uppsats': '<blockquote>The final exam will be a take home exam in which students must answer (using Microsoft Word format) two questions out of four questions. Make-up exams are given for any students who receive a failing grade on the final exam.</blockquote>',
+        'policybrief': '<blockquote>For the UN Role Play seminars (S4, S5), you will write a country position paper and self-reflection paper. More detailed instructions for the Role Play will be presented and there will be a document provided on this on Canvas.</blockquote>',
+        'seminarieinl': '<blockquote>… each of you will write a seminar paper and participate in a group presentation and organization for one of the topic seminar sessions … Each seminar paper should be 2000-2,500 words long and address the research problems dealt with in the assigned readings and the findings/conclusions reached. You should focus on analysis rather than a description of the literature. … The seminar papers are due at 9am the day of the seminars.</blockquote>',
+        'muntlig_pres': '<blockquote>In the first topic seminar, SDG SEMINAR (S1), you will participate in a group presentation that applies global policy making to an SDG goal … Your SDG presentations should be about 15 minutes in length.</blockquote><blockquote>In addition to writing your individual papers, each of you will participate in a group presentation that combines the perspectives of your seminar papers at the same seminar session. … Please keep each presentation to about 30 minutes in length.</blockquote>',
+        'seminarium': '<blockquote>Seminar attendance and presentation (G/U) – It is mandatory that all students attend and come prepared to discuss the literature even when they do not have to present that day. Missing a seminar must be compensated with extra work for credit.</blockquote>',
+        'simulation': '<blockquote>Finally, the course gives students the opportunity to participate in a simulated exercise on global governance, a UN role-play.</blockquote><blockquote>For the UN Role Play seminars (S4, S5), you will write a country position paper and self-reflection paper.</blockquote>'
+      },
+      'AG2120': {
+        'uppsats': '<blockquote>All students write a paper for the final paper assignment on a specific country/context. … The final research paper is larger in scope and requires drawing on the course in its entirety.</blockquote><blockquote>30% Research paper … Final paper — Approx. % of Grade 30 — Credits 5</blockquote>',
+        'litt_oversikt': '<blockquote>25% Paper and presentation 2 (each student writes ONE paper for seminar 3 or 4): • Literature review on development cooperation OR • Policy brief on anti-corruption</blockquote>',
+        'policybrief': '<blockquote>25% Paper and presentation 1 (each student writes ONE paper for seminar 1 or 2): • Policy brief on responses to armed conflict OR • Advocacy brief using survey data on post-conflict reconciliation</blockquote>',
+        'muntlig_pres': '<blockquote>Students will write one paper for each block, as assigned by the course coordinator, and each student will present one of their written assignments verbally.</blockquote><blockquote>Students will then jointly present preliminary findings for their country/context in a student conference.</blockquote>',
+        'seminarium': '<blockquote>Students are expected to read the course literature, to prepare rigorously for seminars, and participate actively during seminars.</blockquote><blockquote>10% Seminar Participations · 5% Student Conference Participation · 5% Student Conference Group Presentation</blockquote>',
+        'opposition': '<blockquote>Your participation grade for each seminar is based upon your own presentation and your leading of the discussion of another student\'s presentation.</blockquote>'
+      },
+      'AG2440': {
+        'reflektion': '<blockquote>Kursen examineras genom en praktikrapport som diskuterar och värderar praktikupplevelsen …</blockquote><blockquote>förmedla grundliga reflektioner om hur utbildningen på Masterprogrammet i statsvetenskap har förberett studenten för praktikarbetet … förmedla grundliga reflektioner om hur praktikerfarenheterna har och kan komma att påverka studentens framtida karriärplaner och professionella utveckling.</blockquote>',
+        'seminarieinl': '<blockquote>… ett eller flera arbetsprover, en broschyr …</blockquote><blockquote>Under kursens gång ska studenten producera minst ett arbete av substantiellt värde för praktikplatsen.</blockquote>',
+        'muntlig_pres': '<blockquote>Därtill examineras kursen genom deltagande på en praktikmässa, seminarium eller videopresentation.</blockquote><blockquote>muntligt och skriftligt diskutera, presentera och värdera erfarenheter från praktiken.</blockquote>',
+        'seminarium': '<blockquote>Undervisningen består av en handledd praktik och en avslutande praktikmässa, seminarium eller videopresentation.</blockquote><blockquote>Därtill examineras kursen genom deltagande på en praktikmässa, seminarium eller videopresentation.</blockquote>',
+        'praktik': '<blockquote>Kursen är en handledd praktik vid en organisation i Sverige eller utomlands. Under kursens gång ska studenten producera minst ett arbete av substantiellt värde för praktikplatsen. Arbetsuppgifterna ska vara av avancerad karaktär och ha relevans för studentens utbildning och framtida yrkesverksamhet.</blockquote>',
+        'handledare': '<blockquote>… samt ett utvärderingsformulär som fylls i av handledaren på praktikorganisationen.</blockquote>'
+      },
+      'AG2450': {
+        'reflektion': '<blockquote>Kursen examineras genom en praktikrapport som diskuterar och värderar praktikupplevelsen …</blockquote><blockquote>förmedla grundliga reflektioner om hur utbildningen på Masterprogrammet i statsvetenskap har förberett studenten för praktikarbetet … förmedla grundliga reflektioner om hur praktikerfarenheterna har och kan komma att påverka studentens framtida karriärplaner och professionella utveckling.</blockquote>',
+        'seminarieinl': '<blockquote>… ett eller flera arbetsprover, en broschyr …</blockquote><blockquote>Under kursens gång ska studenten producera minst ett arbete av substantiellt värde för praktikplatsen.</blockquote>',
+        'muntlig_pres': '<blockquote>Därtill examineras kursen genom deltagande på en praktikmässa, seminarium eller videopresentation.</blockquote><blockquote>muntligt och skriftligt diskutera, presentera och värdera erfarenheter från praktiken.</blockquote>',
+        'seminarium': '<blockquote>Undervisningen består av en handledd praktik och en avslutande praktikmässa, seminarium eller videopresentation.</blockquote><blockquote>Därtill examineras kursen genom deltagande på en praktikmässa, seminarium eller videopresentation.</blockquote>',
+        'praktik': '<blockquote>Kursen är en handledd praktik vid en organisation i Sverige eller utomlands. Under kursens gång ska studenten producera minst ett arbete av substantiellt värde för praktikplatsen. Arbetsuppgifterna ska vara av avancerad karaktär och ha relevans för studentens utbildning och framtida yrkesverksamhet.</blockquote>',
+        'handledare': '<blockquote>… samt ett utvärderingsformulär som fylls i av handledaren på praktikorganisationen.</blockquote>'
+      },
+      'AG2500': {
+        'uppsats': '<blockquote>Each student will formulate a research question that addresses a gap in relevant academic research, and then plan and complete an independent research project. Writing the master\'s thesis will develop students\' ability to plan and manage large projects, and collect and analyze social science data to answer an original research question of relevance to international administration and global governance.</blockquote><blockquote>The thesis should be between 6000 and 20,000 words, including all footnotes and references in the text, the abstract, and reference list.</blockquote>',
+        'muntlig_pres': '<blockquote>Students will present and defend the thesis at a final seminar, as well as act as discussant on another student\'s thesis.</blockquote><blockquote>Each thesis will be discussed at a seminar in which a student, designated as discussant, as well as the principal examiner comment on the thesis.</blockquote>',
+        'muntlig_tenta': '<blockquote>To Pass the seminar, students need to be able to clarify choices made in all portions of the thesis. Examiners may for example ask for clarifications regarding key academic studies the thesis builds, theoretical model or operationalization of concepts, choices of data, methodological approach, and relevance of the findings for our more general understanding of the issues studied.</blockquote><blockquote>If a student is unable to answer the questions of the examiner, they will receive an additional opportunity to meet with the examiner to address the questions. If responses still do not adequately clarify the examiners\' question, examiners may require the student to revise the thesis …</blockquote>',
+        'seminarium': '<blockquote>You are expected to attend all of the thesis seminars. However, if you for some reason unable to attend all the seminars, there is a minimum requirement, which is 6 seminars including the seminar at which your own thesis is discussed and the one at which you act as discussant.</blockquote>',
+        'opposition': '<blockquote>Each student is also required to act as discussant for one other student\'s thesis, as well as attend a minimum of four additional thesis seminars.</blockquote><blockquote>Discussants should read the theses very carefully and consider the choices the author made along the way. … The discussant should prepare 7-10 questions to discuss with the author. This part of the seminar should take around 40 minutes.</blockquote><blockquote>You will be graded on how well you carry out the role of discussant, though you can only receive the grades Pass or Fail. A failing grade means you will have to submit comments on a different thesis in writing within a week after the seminar.</blockquote>'
+      },
+      'EU2210': {
+        'salstenta': '<blockquote>The course includes a written examination. It is essential that you register for the exam in advance. Please, consult the course schedule for the exact time and location, as the exam will be conducted on site.</blockquote>',
+        'pm_plan': '<blockquote>The purpose of this assignment is to help you begin formulating a research-worthy problem that is politically, socially, economically, and/or legally significant within the context of European environmental or energy policy. The goal is to explore and reflect on different theoretical perspectives and use them to develop a clear and focused research question. … Scope: max 1500 words.</blockquote>',
+        'uppsats': '<blockquote>As the title suggests, this assignment requires you to draft a tentative outline for a Master\'s Thesis that is directly connected to the themes covered in this course. … Your text should identify and critically summarize relevant scholarly literature, describe your potential contribution to the research field, and propose a structure for your study. This includes outlining an appropriate method of analysis and data collection, along with a justification for your methodological choices. … Scope: 2500 words.</blockquote>',
+        'litt_oversikt': '<blockquote>In this theme, you are expected to critically engage with existing academic research related to your chosen topic within the field of European environmental or energy policy. The aim is to identify, analyze, and synthesize key scholarly contributions in a way that will inform and strengthen the literature review section of your final paper. Select at least four peer-reviewed research articles that are directly relevant to your chosen issue. For each article, assess its main contributions, identifying both strengths and limitations.</blockquote>',
+        'seminarieinl': '<blockquote>Please read the detailed instructions under section 2. Poster Seminar and Hand-in below. Based on those guidelines, you are expected to submit a draft proposal ahead of the seminar. There are no formal requirements for this initial draft, its purpose is to allow you to pitch and develop your ideas for discussion.</blockquote><blockquote>Read the detailed instructions in section 7. Seminar and Hand-in: Tentative Outline of a Master\'s Thesis below. Based on these guidelines, you are expected to submit a draft outline (no specific formal requirements) in which you pitch your thesis idea.</blockquote>',
+        'muntlig_pres': '<blockquote>This is examined through a poster exhibition in the entrance lobby of Sprängkullsgatan 19. You produce a poster that launch a social science research problem, pitch the problem to the other students in the course by orally presenting the poster …</blockquote><blockquote>You will present your thesis outline during the final seminar using slides.</blockquote>',
+        'seminarium': '<blockquote>During the seminar, you will present and discuss your ideas with your peers and contribute constructively to their work as well. … To benefit fully from the seminar, you are expected to arrive well-prepared and actively engage in the discussions with thoughtful comments and questions.</blockquote><blockquote>You are expected to read all the papers being discussed in your seminar group. For each, you should prepare at least one comment or question, even if you are not serving as the primary commentator.</blockquote>',
+        'opposition': '<blockquote>In addition to general participation, you will be assigned the role of commentator for two of your fellow students\' papers. Together with another student, you will lead a critical and constructive discussion on each assigned paper, helping to identify strengths and suggest areas for improvement.</blockquote><blockquote>As a commentator, your role is to provide constructive and thoughtful feedback that contributes to a meaningful discussion of your assigned paper. … In your comments, highlight both the strengths of the paper and areas where it could be improved.</blockquote>'
+      },
+      'EU2215': {
+        'uppsats': '<blockquote>A written research essay of 3,000 words (8 hec)</blockquote><blockquote>Towards the end of the course, you will be able to choose to write on a specific research topic. The research essay should focus on a research problem and issue that incorporates at least two of the three themes that this course has focused on, i.e. security, trade, and migration. … Writing the research essay offers you the opportunity to explore in-depth a particular issue and research problem that you find particularly interesting.</blockquote>',
+        'seminarieinl': '<blockquote>Active participation in three seminars with written assignments (3 x 2 hec)</blockquote><blockquote>There are three seminars on this course and participation is mandatory. You are required to actively prepare for and participate in all three seminars, including written assignments. Each seminar is evaluated with the grade High Pass/Pass or Fail.</blockquote>',
+        'muntlig_pres': '<blockquote>An oral seminar presentation (1 hec)</blockquote><blockquote>You will be required to make one oral seminar presentation on this course. In preparation for the seminar, you will be working with around 4-5 students and prepare a collective group presentation based on the specific instructions for each seminar. The seminars are student-led and based on teamwork. The main responsibility for prompting an engaging seminar discussion lies with the presenters.</blockquote>',
+        'seminarium': '<blockquote>There are three seminars on this course and participation is mandatory. You are required to actively prepare for and participate in all three seminars, including written assignments.</blockquote><blockquote>If you are absent from a theme seminar but submitted a paper, you need to complete an extra assignment and write a text of 1,000 words that is a critical analysis of two additional academic articles.</blockquote>'
+      },
+      'SF2323': {
+        'pm_plan': '<blockquote>Module 3 sums up in a Research proposal, which is an individual oral as well as written assignment, graded on a Fail/Pass/High Pass scale. The research plan should be maximum 4000 words, exclusive of the reference list.</blockquote><blockquote>Assignment 4: Research Proposal — Individual written and oral assignment (research proposal), graded on a Fail/Pass/High Pass scale.</blockquote>',
+        'seminarieinl': '<blockquote>Assignment 1: Research Question and Design — Group-based written and oral assignment, graded on a Fail/Pass.</blockquote><blockquote>Assignment 2a: Interviews or Assignment 2b: Observations — Group-based written and oral assignment.</blockquote><blockquote>Assignment 3a: Typology Analysis or Assignment 3b: Discourse Analysis — Group-based written and oral assignment.</blockquote>',
+        'muntlig_pres': '<blockquote>Assignments are discussed in teacher-led small group seminars.</blockquote><blockquote>Module 3 sums up in a Research proposal, which is an individual oral as well as written assignment …</blockquote><blockquote>(Assignments 1, 2a/2b, 3a/3b are all) Group-based written and oral assignment, graded on a Fail/Pass scale.</blockquote>',
+        'seminarium': '<blockquote>Participation is mandatory at all seminars. Those students who fail to participate (e.g. those who do not participate actively as assigned, arrive late, do not stay throughout the whole seminar, or do not show up at all) will need to write another two pages discussing one of the seminar assignments presented by the other groups.</blockquote>'
+      },
+      'SF2324': {
+        'uppsats': '<blockquote>In the course paper the students will, individually, design a study and conduct preliminary analyses using the tools provided throughout the course. The research design and analysis should build on available data.</blockquote><blockquote>There is no specific word limit but we expect a paper that is no longer that 10 pages long (font size 12, 1.5 spacing) including main tables and graphs but excluding an appendix … and bibliography list. The Grade for the final paper will be Pass (G), Pass with distinction (VG), or Fail (U).</blockquote>',
+        'seminarieinl': '<blockquote>After the seminar students are expected to hand in, individually, one written assignment with a similar scope based on a different set of academic papers. Students must choose 2 from the set of papers for the written assignment … Word limit for the whole exercise is 700-800 words.</blockquote><blockquote>Students are required to hand in answers to all lab assignments (Labs 1 to 4). The Grade for the Lab Assignments will be Pass (G) or Fail (U).</blockquote><blockquote>04/12 — Submission, final paper abstract 17.00 … there will be an abstract seminar where a group discussion of each idea will take place.</blockquote>',
+        'muntlig_pres': '<blockquote>All presentations are to be done on a presentation software like powerpoint.</blockquote><blockquote>Students will need to present their own paper but also discuss papers of their colleagues (these will assigned to each student after submission). All presentations of papers are to be done on a presentation software like powerpoint.</blockquote>',
+        'seminarium': '<blockquote>Active participation in the Research Design seminar is required (participation is mandatory). … Students who miss the seminar will have to submit a make up exercise, 1500 words, providing an evaluation of three papers in order to receive a pass for that seminar.</blockquote><blockquote>The papers will be presented at a final seminar (mandatory participation).</blockquote>',
+        'opposition': '<blockquote>Students will need to present their own paper but also discuss papers of their colleagues (these will assigned to each student after submission).</blockquote><blockquote>Students who will not participate at the final paper seminar will have to provide written discussions (of about 500 words each) of three final papers that will be assigned to them.</blockquote>'
+      },
+      'SK2211': {
+        'pm_plan': '<blockquote>Final Paper (max 4000 words, 12 pt. font, Times New Roman, 1.5 line spacing …) The goal of this assignment is to provide a research proposal for an under researched issue in the performance of democracies literature. … prepare a research proposal for funding a new research project. … Provide the main research question to be asked and a theory that supports testable hypotheses.</blockquote>',
+        'seminarieinl': '<blockquote>Briefing Memo (max 2000 words …) You will be asked to write a short memo for a deliberative assembly debating the design of the country\'s amended constitution. You will provide recommendations taking into account features of the country … on a) executive vs legislature power relations … OR b) the electoral system.</blockquote><blockquote>Before seminar 5, students should upload on CANVAS a synopsis (abstract) of their final paper (200 words max), presenting an under-researched issue in the relevant literature …</blockquote>',
+        'muntlig_pres': '<blockquote>In each seminar, groups of two to three students (depending on class numbers) will provide an overview of the literature that is discussed and set the tone for the seminar discussion to follow. These presentations should focus on the story that comes out from the readings included in that seminar and present it coherently. … The presentation should include questions that remain, issues that should be discussed and suggestions for further research.</blockquote>',
+        'seminarium': '<blockquote>The attendance of the seminars 2-4 are compulsory. Those who missed a seminar have to present a summary of the literature of the seminar they missed (1,500 words). … Seminar 5 is designed to help students to develop their final papers.</blockquote><blockquote>Student performance is assessed through two written assignments, one seminar presentation, and active participation in seminars.</blockquote>'
+      },
+      'SK2212': {
+        'uppsats': '<blockquote>Student performance is assessed through three written assignments: memo (1,5 credits), home-take exam (6 credits) and the final paper, which is a research-proposal (7,5 credits). All three written assessments have to be carried out individually.</blockquote>',
+        'seminarieinl': '<blockquote>Assignment 1: Memo (1,5 credits). The goal of the assignment is to write a short critical essay "What is quality of government (QoG)? and how the concept of QoG is different from the concept of good governance".</blockquote>',
+        'muntlig_pres': '<blockquote>There are six seminars in total. Seminars 1-5 are discussion-based and focus on the readings assigned to each lecture. The last seminar is devoted to student presentations of their final papers.</blockquote>',
+        'seminarium': '<blockquote>Seminar attendance is mandatory. Students who are unable to attend a seminar are required to submit a compensatory written memo that critically reviews the literature assigned for that session. The memo must be at least of 1,500 words.</blockquote>'
+      }
+    };
+
+    const modal = document.getElementById('exModal');
+    const elCourse = document.getElementById('exCourse');
+    const elType = document.getElementById('exType');
+    const elDesc = document.getElementById('exDescription');
+    const elFull = document.getElementById('exFullLink');
+
+    document.querySelectorAll('td.match').forEach(td => {
+      const code = td.dataset.code;
+      const type = td.dataset.type;
+      if (!code || !type) return;
+      td.setAttribute('title', 'Klicka för beskrivning');
+      td.addEventListener('click', () => showModal(code, type));
+    });
+
+    function showModal(code, type) {
+      elCourse.textContent = code;
+      elType.textContent = TYPE_LABELS[type] || type;
+      const desc = (DESC[code] && DESC[code][type]) || 'Ingen kort beskrivning registrerad.';
+      elDesc.innerHTML = desc;
+      elFull.href = `s2iag-examination-${code}.html`;
+      modal.classList.add('open');
+    }
+
+    function closeModal() { modal.classList.remove('open'); }
+    modal.querySelectorAll('[data-close]').forEach(el =>
+      el.addEventListener('click', closeModal)
+    );
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
+    });
+  })();
+  </script>
+
+<script>
+(function() {
+  var tip = document.createElement('div');
+  tip.style.cssText = [
+    'position:fixed', 'z-index:9999', 'pointer-events:none',
+    'background:#24273a', 'color:#fff',
+    'font-family:acumin-pro,Helvetica,sans-serif', 'font-weight:400',
+    'font-size:0.8125rem', 'padding:6px 11px', 'border-radius:4px',
+    'white-space:nowrap', 'opacity:0', 'transition:opacity 0.12s',
+    'box-shadow:0 4px 14px rgba(0,0,0,0.18)'
+  ].join(';');
+  document.body.appendChild(tip);
+
+  function show(e) {
+    var el = e.currentTarget;
+    var text = el.getAttribute('data-tip');
+    if (!text) return;
+    tip.textContent = text;
+    var r = el.getBoundingClientRect();
+    tip.style.opacity = '0';
+    tip.style.left = '0px';
+    tip.style.top = '0px';
+    var tr = tip.getBoundingClientRect();
+    var x = r.left + r.width / 2 - tr.width / 2;
+    var y = r.top - tr.height - 6;
+    if (y < 4) y = r.bottom + 6;
+    if (x < 4) x = 4;
+    if (x + tr.width > window.innerWidth - 4) x = window.innerWidth - tr.width - 4;
+    tip.style.left = x + 'px';
+    tip.style.top = y + 'px';
+    tip.style.opacity = '1';
+  }
+  function hide() { tip.style.opacity = '0'; }
+
+  function attach() {
+    document.querySelectorAll('th.course-col[data-tip]').forEach(function(el) {
+      if (el.__tipBound) return;
+      el.__tipBound = true;
+      el.addEventListener('mouseenter', show);
+      el.addEventListener('mouseleave', hide);
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', attach);
+  } else {
+    attach();
+  }
+})();
+</script>
+</body>
+</html>

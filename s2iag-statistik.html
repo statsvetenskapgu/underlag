@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Statistik – IAGG</title>
+  <link rel="stylesheet" href="https://use.typekit.net/zkx2sji.css">
+  <script>
+  // Shared cohort line-chart renderer (Hi-DPI, interactive)
+  window.__renderCohortChart = function(canvasId, cohorts, nTerms) {
+    var canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    var W = 760, H = 420;
+    var pad = { l: 62, r: 32, t: 30, b: 60 };
+    var gW = W - pad.l - pad.r, gH = H - pad.t - pad.b;
+    var terms = [];
+    for (var i = 0; i < nTerms; i++) terms.push('T' + (i + 1));
+    var activeIdx = -1;
+
+    var avg = [];
+    for (var t = 0; t < nTerms; t++) {
+      var sum = 0, cnt = 0;
+      cohorts.forEach(function(c) { if (t < c.pct.length) { sum += c.pct[t]; cnt++; } });
+      if (cnt > 0) avg.push(Math.round(sum / cnt));
+    }
+
+    var ctx = canvas.getContext('2d');
+    var ratio = 1;
+
+    function setupHiDPI() {
+      var dpr = window.devicePixelRatio || 1;
+      var rect = canvas.getBoundingClientRect();
+      var cssW = rect.width || W;
+      ratio = (cssW * dpr) / W;
+      if (ratio < 2) ratio = 2;
+      canvas.width = Math.round(W * ratio);
+      canvas.height = Math.round(H * ratio);
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+    }
+
+    var FONT_BASE = 'acumin-pro, Helvetica, sans-serif';
+    var FONT_AXIS = '15px ' + FONT_BASE;
+    var FONT_TERM = '600 16px ' + FONT_BASE;
+    var FONT_LABEL = '700 15px ' + FONT_BASE;
+    var FONT_LEGEND = '500 14px ' + FONT_BASE;
+
+    function tx(i) { return pad.l + (i / (nTerms - 1)) * gW; }
+    function ty(v) { return pad.t + (1 - v / 100) * gH; }
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      ctx.font = FONT_AXIS;
+      for (var g = 0; g <= 5; g++) {
+        var yy = ty(g * 20);
+        ctx.strokeStyle = '#f0f0f0'; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(pad.l, yy); ctx.lineTo(W - pad.r, yy); ctx.stroke();
+        ctx.fillStyle = '#737272'; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+        ctx.fillText((g * 20) + '%', pad.l - 10, yy);
+      }
+      ctx.font = FONT_TERM;
+      ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillStyle = '#737272';
+      terms.forEach(function(t, i) { ctx.fillText(t, tx(i), H - pad.b + 12); });
+      ctx.strokeStyle = '#cfcfcf'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(pad.l, pad.t); ctx.lineTo(pad.l, H - pad.b); ctx.lineTo(W - pad.r, H - pad.b); ctx.stroke();
+
+      cohorts.forEach(function(c, ci) {
+        var isActive = (ci === activeIdx);
+        var alpha = activeIdx === -1 ? 0.32 : (isActive ? 1 : 0.08);
+        ctx.strokeStyle = isActive ? '#e2005e' : c.color;
+        ctx.lineWidth = isActive ? 3.2 : 1.6;
+        ctx.globalAlpha = alpha;
+        ctx.beginPath();
+        c.pct.forEach(function(v, i) {
+          if (i === 0) ctx.moveTo(tx(i), ty(v));
+          else ctx.lineTo(tx(i), ty(v));
+        });
+        ctx.stroke();
+        if (isActive) {
+          c.pct.forEach(function(v, i) {
+            ctx.beginPath(); ctx.arc(tx(i), ty(v), 5.5, 0, Math.PI * 2); ctx.fillStyle = '#e2005e'; ctx.fill();
+            ctx.fillStyle = '#24273a'; ctx.font = FONT_LABEL;
+            ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+            ctx.fillText(v + '%', tx(i), ty(v) - 14);
+          });
+        }
+        ctx.globalAlpha = 1;
+      });
+
+      if (activeIdx === -1) {
+        ctx.strokeStyle = '#24273a'; ctx.lineWidth = 3.2;
+        ctx.beginPath();
+        avg.forEach(function(v, i) {
+          if (i === 0) ctx.moveTo(tx(i), ty(v));
+          else ctx.lineTo(tx(i), ty(v));
+        });
+        ctx.stroke();
+        avg.forEach(function(v, i) {
+          ctx.beginPath(); ctx.arc(tx(i), ty(v), 5, 0, Math.PI * 2); ctx.fillStyle = '#24273a'; ctx.fill();
+          ctx.fillStyle = '#24273a'; ctx.font = FONT_LABEL;
+          ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+          ctx.fillText(v + '%', tx(i), ty(v) - 14);
+        });
+      }
+
+      var ly = H - 16;
+      ctx.font = FONT_LEGEND;
+      ctx.textBaseline = 'middle';
+      if (activeIdx === -1) {
+        ctx.strokeStyle = '#24273a'; ctx.lineWidth = 3.2;
+        ctx.beginPath(); ctx.moveTo(pad.l, ly); ctx.lineTo(pad.l + 30, ly); ctx.stroke();
+        ctx.fillStyle = '#24273a'; ctx.textAlign = 'left';
+        ctx.fillText('Genomsnitt', pad.l + 38, ly);
+        ctx.strokeStyle = '#949494'; ctx.lineWidth = 1.6; ctx.globalAlpha = 0.5;
+        var lx2 = pad.l + 160;
+        ctx.beginPath(); ctx.moveTo(lx2, ly); ctx.lineTo(lx2 + 30, ly); ctx.stroke();
+        ctx.globalAlpha = 1; ctx.fillStyle = '#737272';
+        ctx.fillText('Individuella kohorter', lx2 + 38, ly);
+      } else {
+        ctx.fillStyle = '#e2005e'; ctx.textAlign = 'left';
+        ctx.fillText(cohorts[activeIdx].label + ' (n=' + cohorts[activeIdx].n + ')', pad.l, ly);
+      }
+    }
+
+    function distToSegment(px, py, x1, y1, x2, y2) {
+      var dx = x2 - x1, dy = y2 - y1;
+      var len2 = dx * dx + dy * dy;
+      if (len2 === 0) return Math.sqrt((px - x1) * (px - x1) + (py - y1) * (py - y1));
+      var t = Math.max(0, Math.min(1, ((px - x1) * dx + (py - y1) * dy) / len2));
+      var nx = x1 + t * dx, ny = y1 + t * dy;
+      return Math.sqrt((px - nx) * (px - nx) + (py - ny) * (py - ny));
+    }
+    function hitTest(mx, my) {
+      var best = -1, bestDist = 22;
+      cohorts.forEach(function(c, ci) {
+        for (var i = 0; i < c.pct.length - 1; i++) {
+          var d = distToSegment(mx, my, tx(i), ty(c.pct[i]), tx(i + 1), ty(c.pct[i + 1]));
+          if (d < bestDist) { bestDist = d; best = ci; }
+        }
+        c.pct.forEach(function(v, i) {
+          var d = Math.sqrt((mx - tx(i)) * (mx - tx(i)) + (my - ty(v)) * (my - ty(v)));
+          if (d < bestDist) { bestDist = d; best = ci; }
+        });
+      });
+      return best;
+    }
+    function getPos(e) {
+      var r = canvas.getBoundingClientRect();
+      return { x: (e.clientX - r.left) * (W / r.width), y: (e.clientY - r.top) * (H / r.height) };
+    }
+    canvas.addEventListener('mousemove', function(e) {
+      var p = getPos(e);
+      var idx = hitTest(p.x, p.y);
+      if (idx !== activeIdx) { activeIdx = idx; draw(); }
+    });
+    canvas.addEventListener('mouseleave', function() {
+      activeIdx = -1; draw();
+    });
+
+    var resizeTimer = null;
+    window.addEventListener('resize', function() {
+      if (resizeTimer) clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function() { setupHiDPI(); draw(); }, 100);
+    });
+
+    setupHiDPI();
+    draw();
+  };
+
+  // Sökande/antagna line chart (Hi-DPI, interactive)
+  window.__renderSokChart = function(canvasId, labels, alla, forsta, antagna, maxY) {
+    var canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var W = 760, H = 380;
+    var pad = { l: 56, r: 32, t: 35, b: 60 };
+    var gW = W - pad.l - pad.r, gH = H - pad.t - pad.b;
+    var n = labels.length;
+    var activeI = -1;
+    var ratioPx = 1;
+    var colAlla = '#9aa0b8', colSok = '#24273a', colReg = '#e2005e';
+
+    function setupHiDPI() {
+      var dpr = window.devicePixelRatio || 1;
+      var rect = canvas.getBoundingClientRect();
+      var cssW = rect.width || W;
+      ratioPx = (cssW * dpr) / W;
+      if (ratioPx < 2) ratioPx = 2;
+      canvas.width = Math.round(W * ratioPx);
+      canvas.height = Math.round(H * ratioPx);
+      ctx.setTransform(ratioPx, 0, 0, ratioPx, 0, 0);
+    }
+
+    function tx(i) { return pad.l + (i / (n - 1)) * gW; }
+    function ty(v) { return pad.t + (1 - v / maxY) * gH; }
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      var font = 'acumin-pro, Helvetica, sans-serif';
+      ctx.font = '14px ' + font;
+      ctx.textBaseline = 'middle';
+      var step = Math.ceil(maxY / 4 / 50) * 50;
+      for (var v = 0; v <= maxY; v += step) {
+        var yy = ty(v);
+        ctx.strokeStyle = '#f0f0f0'; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(pad.l, yy); ctx.lineTo(W - pad.r, yy); ctx.stroke();
+        ctx.fillStyle = '#737272'; ctx.textAlign = 'right';
+        ctx.fillText(v, pad.l - 10, yy);
+      }
+      ctx.strokeStyle = '#cfcfcf'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(pad.l, pad.t); ctx.lineTo(pad.l, H - pad.b); ctx.lineTo(W - pad.r, H - pad.b); ctx.stroke();
+      ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      labels.forEach(function(l, i) {
+        ctx.fillStyle = (i === activeI) ? '#24273a' : '#737272';
+        ctx.font = (i === activeI) ? ('700 14px ' + font) : ('500 13px ' + font);
+        ctx.fillText(l, tx(i), H - pad.b + 12);
+      });
+      // Alla behöriga line
+      ctx.strokeStyle = colAlla; ctx.lineWidth = 2.4;
+      ctx.beginPath();
+      alla.forEach(function(v, i) { if (i === 0) ctx.moveTo(tx(i), ty(v)); else ctx.lineTo(tx(i), ty(v)); });
+      ctx.stroke();
+      alla.forEach(function(v, i) {
+        ctx.beginPath(); ctx.arc(tx(i), ty(v), (i === activeI) ? 6.5 : 3.5, 0, Math.PI * 2);
+        ctx.fillStyle = colAlla; ctx.fill();
+      });
+      // 1:a-hand sökande line
+      ctx.strokeStyle = colSok; ctx.lineWidth = 2.8;
+      ctx.beginPath();
+      forsta.forEach(function(v, i) { if (i === 0) ctx.moveTo(tx(i), ty(v)); else ctx.lineTo(tx(i), ty(v)); });
+      ctx.stroke();
+      forsta.forEach(function(v, i) {
+        ctx.beginPath(); ctx.arc(tx(i), ty(v), (i === activeI) ? 6.5 : 3.5, 0, Math.PI * 2);
+        ctx.fillStyle = colSok; ctx.fill();
+      });
+      ctx.strokeStyle = colReg; ctx.lineWidth = 2.8;
+      ctx.beginPath();
+      antagna.forEach(function(v, i) { if (i === 0) ctx.moveTo(tx(i), ty(v)); else ctx.lineTo(tx(i), ty(v)); });
+      ctx.stroke();
+      antagna.forEach(function(v, i) {
+        ctx.beginPath(); ctx.arc(tx(i), ty(v), (i === activeI) ? 6.5 : 3.5, 0, Math.PI * 2);
+        ctx.fillStyle = colReg; ctx.fill();
+      });
+      if (activeI >= 0) {
+        var xi = tx(activeI);
+        ctx.strokeStyle = '#cfcfcf'; ctx.lineWidth = 1; ctx.setLineDash([4, 3]);
+        ctx.beginPath(); ctx.moveTo(xi, pad.t); ctx.lineTo(xi, H - pad.b); ctx.stroke();
+        ctx.setLineDash([]);
+        var ratioAlla = (alla[activeI] / antagna[activeI]).toFixed(1);
+        var ratioForsta = (forsta[activeI] / antagna[activeI]).toFixed(1);
+        var yA = ty(alla[activeI]);
+        ctx.font = '700 15px ' + font; ctx.fillStyle = colAlla;
+        ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+        ctx.fillText(alla[activeI], xi, yA - 22);
+        ctx.font = '500 12px ' + font; ctx.fillStyle = '#737272';
+        ctx.fillText(ratioAlla + ' per antagen', xi, yA - 8);
+        var ys = ty(forsta[activeI]);
+        ctx.font = '700 15px ' + font; ctx.fillStyle = colSok;
+        ctx.fillText(forsta[activeI], xi, ys - 22);
+        ctx.font = '500 12px ' + font; ctx.fillStyle = '#737272';
+        ctx.fillText(ratioForsta + ' per antagen', xi, ys - 8);
+        var yr = ty(antagna[activeI]);
+        ctx.font = '700 15px ' + font; ctx.fillStyle = colReg;
+        ctx.textBaseline = 'top';
+        ctx.fillText(antagna[activeI], xi, yr + 12);
+      }
+      var ly = H - 14;
+      ctx.font = '500 13px ' + font; ctx.textBaseline = 'middle';
+      ctx.strokeStyle = colAlla; ctx.lineWidth = 2.4;
+      ctx.beginPath(); ctx.moveTo(pad.l, ly); ctx.lineTo(pad.l + 24, ly); ctx.stroke();
+      ctx.fillStyle = '#24273a'; ctx.textAlign = 'left';
+      ctx.fillText('Behöriga sökande', pad.l + 30, ly);
+      ctx.strokeStyle = colSok; ctx.lineWidth = 2.8;
+      var lx2 = pad.l + 170;
+      ctx.beginPath(); ctx.moveTo(lx2, ly); ctx.lineTo(lx2 + 24, ly); ctx.stroke();
+      ctx.fillText('Behöriga förstahandssökande', lx2 + 30, ly);
+      ctx.strokeStyle = colReg; ctx.lineWidth = 2.8;
+      var lx3 = pad.l + 380;
+      ctx.beginPath(); ctx.moveTo(lx3, ly); ctx.lineTo(lx3 + 24, ly); ctx.stroke();
+      ctx.fillText('Antagna', lx3 + 30, ly);
+    }
+
+    function getPos(e) {
+      var r = canvas.getBoundingClientRect();
+      return { x: (e.clientX - r.left) * (W / r.width), y: (e.clientY - r.top) * (H / r.height) };
+    }
+    canvas.addEventListener('mousemove', function(e) {
+      var p = getPos(e);
+      var best = -1, bestDist = 35;
+      for (var i = 0; i < n; i++) {
+        var d = Math.abs(p.x - tx(i));
+        if (d < bestDist) { bestDist = d; best = i; }
+      }
+      if (best !== activeI) { activeI = best; draw(); }
+    });
+    canvas.addEventListener('mouseleave', function() { activeI = -1; draw(); });
+
+    var resizeTimer = null;
+    window.addEventListener('resize', function() {
+      if (resizeTimer) clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function() { setupHiDPI(); draw(); }, 100);
+    });
+
+    setupHiDPI();
+    draw();
+  };
+  </script>
+  <style>
+    :root {
+      --dark: #24273a;
+      --accent: #e2005e;
+      --link: #0077cc;
+      --bg: #fefefe;
+      --border: #e4e4e4;
+      --text: #24273a;
+      --muted: #737272;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: acumin-pro, Helvetica, sans-serif; font-weight: 300; font-size: 1.125rem; color: var(--text); background: var(--bg); line-height: 1.6; }
+    .topbar { background: var(--dark); padding: 0.6rem 2.5rem; font-size: 0.875rem; }
+    .topbar a { display: inline-block; color: #fff; background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.32); padding: 0.28rem 0.95rem; border-radius: 999px; text-decoration: none; font-weight: 400; transition: background 0.15s, border-color 0.15s; }
+    .topbar a:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .topbar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .prog-switch { display: flex; align-items: center; gap: 0.45rem; font-size: 0.75rem; color: rgba(254,254,254,0.45); white-space: nowrap; }
+  .prog-switch a { color: rgba(254,254,254,0.75); text-decoration: none; padding: 0.18rem 0.65rem; border: 1px solid rgba(255,255,255,0.18); border-radius: 999px; font-size: 0.75rem; font-weight: 400; transition: background 0.15s, color 0.15s, border-color 0.15s; }
+  .prog-switch a:hover { color: #fff; border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.08); }
+    .container { max-width: 900px; margin: 0 auto; padding: 2.5rem 2.5rem 4rem; }
+    h1 { font-weight: 300; font-size: 2rem; margin-bottom: 0.5rem; }
+    .subtitle { font-size: 1rem; color: var(--muted); margin-bottom: 2.5rem; }
+    .section-label { font-size: 0.8125rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin-bottom: 0.75rem; margin-top: 2.5rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
+    .section-label:first-of-type { margin-top: 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.9375rem; margin-bottom: 1.5rem; }
+    th { text-align: left; padding: 0.5rem 0.75rem; font-weight: 500; font-size: 0.9375rem; color: var(--muted); border-bottom: 2px solid var(--dark); white-space: nowrap; }
+    td { padding: 0.45rem 0.75rem; border-bottom: 1px solid var(--border); font-size: 0.9375rem; }
+    tr:hover td { background: #f9f9f9; }
+    td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .table-note { font-size: 0.8125rem; color: var(--muted); margin-top: -1rem; margin-bottom: 1.5rem; }
+    .note-box { font-size: 0.875rem; color: var(--muted); margin-bottom: 1rem; line-height: 1.5; }
+    footer { background: var(--dark); color: rgba(254,254,254,0.6); text-align: center; padding: 1.5rem 2.5rem; font-size: 0.9375rem; font-weight: 300; }
+  
+  /* Innehållsmeny i vänsterkanten */
+  .toc { position: fixed; top: 86px; left: 1.25rem; width: 200px; display: none; font-size: 0.8125rem; z-index: 10;
+         background: rgba(255,255,255,0.97); border: 1px solid var(--border); border-radius: 6px;
+         padding: 0.85rem 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.05); max-height: calc(100vh - 120px); overflow-y: auto; }
+  @media (min-width: 1400px) { .toc { display: block; } }
+  .toc .toc-label { font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin-bottom: 0.5rem; }
+  .toc a { display: block; padding: 0.28rem 0 0.28rem 0.7rem; color: var(--muted); text-decoration: none; line-height: 1.35; border-left: 2px solid var(--border); transition: color 0.12s, border-color 0.12s; }
+  .toc a:hover { color: var(--accent); border-left-color: var(--accent); }
+  .toc a.sub { padding-left: 1.4rem; font-size: 0.75rem; }
+</style>
+</head>
+<body>
+  <div class="topbar"><a href="s2iag.html">&larr; IAGG-programmet</a><span class="prog-switch"><span>Byt program:</span><a href="s1stv-statistik.html">SVEP</a><a href="s2psc-statistik.html">MaPS</a></span></div>
+    <nav class="toc" aria-label="Innehåll">
+    <div class="toc-label">Innehåll</div>
+    <a href="#soktryck-och-antagning">S&ouml;ktryck och antagning</a>
+    <a href="#kvarvaro-per-termin">Kvarvaro per termin</a>
+    <a href="#examensgrad-per-termin">Examensgrad per termin</a>
+  </nav>
+
+  <div class="container">
+    <h1>Statistik</h1>
+    <p class="subtitle">International Administration and Global Governance (S2IAG) &middot; K&auml;lla: GU Datalager / Ladok</p>
+
+    <!-- SÖKTRYCK -->
+    <div class="section-label" id="soktryck-och-antagning">S&ouml;ktryck och antagning</div>
+    <p class="note-box">Programmet har antagning endast p&aring; h&ouml;stterminen. Uppgifterna avser summa &ouml;ver samtliga anm&auml;lningskoder per termin. H&aring;ll musen &ouml;ver en termin f&ouml;r att se exakta tal och s&ouml;kande/antagen-kvot.</p>
+
+    <div style="width:100%; max-width:760px; margin:0 auto 0.5rem; position:relative;">
+      <canvas id="sokChart" style="width:100%; height:auto; cursor:crosshair; display:block;"></canvas>
+    </div>
+
+    <details style="margin-bottom:1.5rem;">
+      <summary style="cursor:pointer; font-size:0.875rem; color:var(--link); font-weight:400; margin-bottom:0.5rem;">Visa fullst&auml;ndig tabell</summary>
+      <table>
+        <thead>
+          <tr><th>Termin</th><th>Beh. s&ouml;kande</th><th>Beh. 1:a-handss&ouml;kande</th><th>Antagna</th><th>Beh. / antagen</th><th>1:a-h. / antagen</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>HT 2015</td><td class="num">342</td><td class="num">88</td><td class="num">36</td><td class="num">9,5</td><td class="num">2,4</td></tr>
+          <tr><td>HT 2016</td><td class="num">378</td><td class="num">130</td><td class="num">41</td><td class="num">9,2</td><td class="num">3,2</td></tr>
+          <tr><td>HT 2017</td><td class="num">598</td><td class="num">242</td><td class="num">43</td><td class="num">13,9</td><td class="num">5,6</td></tr>
+          <tr><td>HT 2018</td><td class="num">602</td><td class="num">230</td><td class="num">43</td><td class="num">14,0</td><td class="num">5,3</td></tr>
+          <tr><td>HT 2019</td><td class="num">540</td><td class="num">202</td><td class="num">44</td><td class="num">12,3</td><td class="num">4,6</td></tr>
+          <tr><td>HT 2020</td><td class="num">516</td><td class="num">180</td><td class="num">45</td><td class="num">11,5</td><td class="num">4,0</td></tr>
+          <tr><td>HT 2021</td><td class="num">710</td><td class="num">263</td><td class="num">43</td><td class="num">16,5</td><td class="num">6,1</td></tr>
+          <tr><td>HT 2022</td><td class="num">579</td><td class="num">223</td><td class="num">42</td><td class="num">13,8</td><td class="num">5,3</td></tr>
+          <tr><td>HT 2023</td><td class="num">660</td><td class="num">247</td><td class="num">31</td><td class="num">21,3</td><td class="num">8,0</td></tr>
+          <tr><td>HT 2024</td><td class="num">651</td><td class="num">228</td><td class="num">34</td><td class="num">19,1</td><td class="num">6,7</td></tr>
+          <tr><td>HT 2025</td><td class="num">689</td><td class="num">248</td><td class="num">36</td><td class="num">19,1</td><td class="num">6,9</td></tr>
+        </tbody>
+      </table>
+      <p class="table-note">K&auml;lla: GU Datalager.</p>
+    </details>
+
+    <script>
+    (function() {
+      window.__renderSokChart('sokChart',
+        ['HT15', 'HT16', 'HT17', 'HT18', 'HT19', 'HT20', 'HT21', 'HT22', 'HT23', 'HT24', 'HT25'],
+        [342, 378, 598, 602, 540, 516, 710, 579, 660, 651, 689],
+        [88, 130, 242, 230, 202, 180, 263, 223, 247, 228, 248],
+        [36, 41, 43, 43, 44, 45, 43, 42, 31, 34, 36],
+        1000);
+    })();
+    </script>
+
+    <!-- KVARVARO -->
+    <div class="section-label" id="kvarvaro-per-termin">Kvarvaro per termin</div>
+    <p class="note-box">Andelen studenter som &auml;r aktiva, har klarat examenskursen, har examen eller &auml;r kompletta vid respektive programtermin (av kohortens ursprungsstorlek). Den m&ouml;rka linjen visar genomsnittet f&ouml;r samtliga kohorter sedan HT 2019. H&aring;ll musen &ouml;ver en linje f&ouml;r att se den enskilda kohorten. Senast m&auml;tta termin &auml;r HT 2025.</p>
+
+    <div style="position: relative; width: 100%; max-width: 760px; margin: 0 auto 1rem;">
+      <canvas id="kvarvaroChart" style="width:100%; height:auto; cursor:crosshair; display:block;"></canvas>
+    </div>
+    <details style="margin-bottom:1.5rem;">
+      <summary style="cursor:pointer; font-size:0.875rem; color:var(--link); font-weight:400; margin-bottom:0.5rem;">Visa fullst&auml;ndig tabell</summary>
+      <table>
+        <thead>
+          <tr><th>Kohort</th><th class="num">n</th><th class="num">T1</th><th class="num">T2</th><th class="num">T3</th><th class="num">T4</th><th class="num">T5</th><th class="num">T6</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>HT 2019</td><td class="num">48</td><td class="num">94%</td><td class="num">85%</td><td class="num">88%</td><td class="num">73%</td><td class="num">75%</td><td class="num">69%</td></tr>
+          <tr><td>HT 2020</td><td class="num">42</td><td class="num">98%</td><td class="num">81%</td><td class="num">74%</td><td class="num">71%</td><td class="num">64%</td><td class="num">74%</td></tr>
+          <tr><td>HT 2021</td><td class="num">42</td><td class="num">95%</td><td class="num">86%</td><td class="num">83%</td><td class="num">81%</td><td class="num">81%</td><td class="num">83%</td></tr>
+          <tr><td>HT 2022</td><td class="num">38</td><td class="num">100%</td><td class="num">97%</td><td class="num">84%</td><td class="num">87%</td><td class="num">71%</td><td class="num">79%</td></tr>
+          <tr><td>HT 2023</td><td class="num">32</td><td class="num">94%</td><td class="num">94%</td><td class="num">88%</td><td class="num">81%</td><td class="num">81%</td><td class="num">&ndash;</td></tr>
+          <tr><td>HT 2024</td><td class="num">38</td><td class="num">100%</td><td class="num">95%</td><td class="num">87%</td><td class="num">&ndash;</td><td class="num">&ndash;</td><td class="num">&ndash;</td></tr>
+          <tr><td>HT 2025</td><td class="num">37</td><td class="num">100%</td><td class="num">&ndash;</td><td class="num">&ndash;</td><td class="num">&ndash;</td><td class="num">&ndash;</td><td class="num">&ndash;</td></tr>
+        </tbody>
+      </table>
+      <p class="table-note">K&auml;lla: GU Datalager (Ladok). Godk&auml;nda kategorier (summerade): Aktiv + Godk&auml;nd examenskurs + Examen + Komplett. Programmet &auml;r 4 terminer; T5&ndash;T6 visar studenter som ligger kvar med restkomplettering.</p>
+    </details>
+
+    <!-- EXAMENSGRAD -->
+    <div class="section-label" id="examensgrad-per-termin">Examensgrad per termin</div>
+    <p class="note-box">Andel studenter med examen, godk&auml;nd examenskurs eller komplett (av kohortens ursprungsstorlek). Den m&ouml;rka linjen visar genomsnittet f&ouml;r samtliga kohorter sedan HT 2019. H&aring;ll musen &ouml;ver en linje f&ouml;r att se den enskilda kohorten.</p>
+
+    <div style="position: relative; width: 100%; max-width: 760px; margin: 0 auto 1rem;">
+      <canvas id="examenChart" style="width:100%; height:auto; cursor:crosshair; display:block;"></canvas>
+    </div>
+    <details style="margin-bottom:1.5rem;">
+      <summary style="cursor:pointer; font-size:0.875rem; color:var(--link); font-weight:400; margin-bottom:0.5rem;">Visa fullst&auml;ndig tabell</summary>
+      <table>
+        <thead>
+          <tr><th>Kohort</th><th class="num">n</th><th class="num">T1</th><th class="num">T2</th><th class="num">T3</th><th class="num">T4</th><th class="num">T5</th><th class="num">T6</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>HT 2019</td><td class="num">48</td><td class="num">0%</td><td class="num">6%</td><td class="num">6%</td><td class="num">35%</td><td class="num">54%</td><td class="num">58%</td></tr>
+          <tr><td>HT 2020</td><td class="num">42</td><td class="num">0%</td><td class="num">2%</td><td class="num">5%</td><td class="num">31%</td><td class="num">40%</td><td class="num">60%</td></tr>
+          <tr><td>HT 2021</td><td class="num">42</td><td class="num">0%</td><td class="num">5%</td><td class="num">5%</td><td class="num">57%</td><td class="num">64%</td><td class="num">67%</td></tr>
+          <tr><td>HT 2022</td><td class="num">38</td><td class="num">0%</td><td class="num">8%</td><td class="num">8%</td><td class="num">47%</td><td class="num">68%</td><td class="num">74%</td></tr>
+          <tr><td>HT 2023</td><td class="num">32</td><td class="num">0%</td><td class="num">0%</td><td class="num">6%</td><td class="num">47%</td><td class="num">66%</td><td class="num">&ndash;</td></tr>
+          <tr><td>HT 2024</td><td class="num">38</td><td class="num">0%</td><td class="num">5%</td><td class="num">5%</td><td class="num">&ndash;</td><td class="num">&ndash;</td><td class="num">&ndash;</td></tr>
+          <tr><td>HT 2025</td><td class="num">37</td><td class="num">0%</td><td class="num">&ndash;</td><td class="num">&ndash;</td><td class="num">&ndash;</td><td class="num">&ndash;</td><td class="num">&ndash;</td></tr>
+        </tbody>
+      </table>
+      <p class="table-note">K&auml;lla: GU Datalager (Ladok). Inkluderade kategorier: Examen + Godk&auml;nd examenskurs + Komplett.</p>
+    </details>
+
+    <script>
+    (function() {
+      var retentionCohorts = [
+        { label: 'HT 2019', n: 48, pct: [94, 85, 88, 73, 75, 69], color: '#737272' },
+        { label: 'HT 2020', n: 42, pct: [98, 81, 74, 71, 64, 74], color: '#aaa' },
+        { label: 'HT 2021', n: 42, pct: [95, 86, 83, 81, 81, 83], color: '#737272' },
+        { label: 'HT 2022', n: 38, pct: [100, 97, 84, 87, 71, 79], color: '#aaa' },
+        { label: 'HT 2023', n: 32, pct: [94, 94, 88, 81, 81], color: '#737272' },
+        { label: 'HT 2024', n: 38, pct: [100, 95, 87], color: '#aaa' },
+        { label: 'HT 2025', n: 37, pct: [100], color: '#737272' }
+      ];
+      var examenCohorts = [
+        { label: 'HT 2019', n: 48, pct: [0, 6, 6, 35, 54, 58], color: '#737272' },
+        { label: 'HT 2020', n: 42, pct: [0, 2, 5, 31, 40, 60], color: '#aaa' },
+        { label: 'HT 2021', n: 42, pct: [0, 5, 5, 57, 64, 67], color: '#737272' },
+        { label: 'HT 2022', n: 38, pct: [0, 8, 8, 47, 68, 74], color: '#aaa' },
+        { label: 'HT 2023', n: 32, pct: [0, 0, 6, 47, 66], color: '#737272' },
+        { label: 'HT 2024', n: 38, pct: [0, 5, 5], color: '#aaa' },
+        { label: 'HT 2025', n: 37, pct: [0], color: '#737272' }
+      ];
+      window.__renderCohortChart('kvarvaroChart', retentionCohorts, 6);
+      window.__renderCohortChart('examenChart', examenCohorts, 6);
+    })();
+    </script>
+
+  </div>
+  <footer>Statsvetenskapliga institutionen, G&ouml;teborgs universitet</footer>
+</body>
+</html>
